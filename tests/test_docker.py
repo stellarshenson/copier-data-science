@@ -161,6 +161,6 @@ class TestDockerWorkflow:
 
         with bake_project(config) as project_directory:
             docker_dir = project_directory / "docker"
-            assert (
-                not docker_dir.exists()
-            ), "docker/ directory should not exist when docker_support=No"
+            assert not docker_dir.exists(), (
+                "docker/ directory should not exist when docker_support=No"
+            )

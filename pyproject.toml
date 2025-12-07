@@ -18,10 +18,7 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-  "black",
   "copier",
-  "flake8",
-  "isort",
   "jinja2-time",
   "mkdocs",
   "mkdocs-material",
@@ -29,6 +26,7 @@ dev = [
   "mkdocs-include-markdown-plugin",
   "pytest",
   "pytest-xdist",
+  "ruff",
   "tomlkit",
   "uv",
   "virtualenv",
@@ -44,13 +42,12 @@ dev = [
 [tool.pytest.ini_options]
 addopts = "-p no:cookies"
 
-[tool.black]
+[tool.ruff]
 line-length = 99
 
-[tool.isort]
-profile = "black"
-line_length = 99
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
 
-[tool.flake8]
-ignore = ["E203", "E402", "E501", "W503"]
-max-line-length = 99
+[tool.ruff.lint.isort]
+known-first-party = ["scripts", "tests"]

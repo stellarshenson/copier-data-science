@@ -6,14 +6,13 @@ requirements:
 
 ## Format code
 format:
-	isort --profile black scripts tests docs/scripts
-	black scripts tests docs/scripts
+	ruff check --fix scripts tests docs/scripts
+	ruff format scripts tests docs/scripts
 
 ## Lint code
 lint:
-	flake8 scripts tests docs/scripts
-	isort --check --profile black scripts tests docs/scripts
-	black --check scripts tests docs/scripts
+	ruff check scripts tests docs/scripts
+	ruff format --check scripts tests docs/scripts
 
 ## Clean artifacts
 clean:

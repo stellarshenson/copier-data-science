@@ -6,6 +6,7 @@ This script performs cleanup and configuration similar to cookiecutter's
 hooks/post_gen_project.py but reads configuration from command-line arguments
 passed by Copier's _tasks.
 """
+
 import argparse
 import shutil
 from pathlib import Path
