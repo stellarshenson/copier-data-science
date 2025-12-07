@@ -54,9 +54,7 @@ def config_generator(fast=False):
     def _is_valid(config):
         config = dict(config)
         # env_location only applies to conda (global is invalid for non-conda)
-        if (config["environment_manager"] != "conda") and (
-            config["env_location"] == "global"
-        ):
+        if (config["environment_manager"] != "conda") and (config["env_location"] == "global"):
             return False
         # environment.yml only valid for conda
         if (config["environment_manager"] != "conda") and (
@@ -72,14 +70,8 @@ def config_generator(fast=False):
     # otherwise, linting "passes" because one linter never runs on any code during tests
     code_format_cycler = cycle(
         product(
-            [
-                ("include_code_scaffold", opt)
-                for opt in CONFIG_OPTIONS["include_code_scaffold"]
-            ],
-            [
-                ("linting_and_formatting", opt)
-                for opt in CONFIG_OPTIONS["linting_and_formatting"]
-            ],
+            [("include_code_scaffold", opt) for opt in CONFIG_OPTIONS["include_code_scaffold"]],
+            [("linting_and_formatting", opt) for opt in CONFIG_OPTIONS["linting_and_formatting"]],
         )
     )
 

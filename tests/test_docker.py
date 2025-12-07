@@ -84,19 +84,11 @@ def run_docker_workflow(project_directory, package_manager):
     # Verify Dockerfile contains expected package manager
     dockerfile_content = dockerfile.read_text()
     if package_manager == "uv":
-        assert (
-            "ghcr.io/astral-sh/uv:latest" in dockerfile_content
-        ), "Dockerfile should use uv"
-        assert (
-            "uv pip install" in dockerfile_content
-        ), "Dockerfile should use uv pip install"
+        assert "ghcr.io/astral-sh/uv:latest" in dockerfile_content, "Dockerfile should use uv"
+        assert "uv pip install" in dockerfile_content, "Dockerfile should use uv pip install"
     else:
-        assert (
-            "pip install --no-cache-dir" in dockerfile_content
-        ), "Dockerfile should use pip"
-        assert (
-            "ghcr.io/astral-sh/uv" not in dockerfile_content
-        ), "Dockerfile should not use uv"
+        assert "pip install --no-cache-dir" in dockerfile_content, "Dockerfile should use pip"
+        assert "ghcr.io/astral-sh/uv" not in dockerfile_content, "Dockerfile should not use uv"
 
     # Run make docker_run (which depends on docker_build -> build)
     result = subprocess.run(
@@ -109,13 +101,9 @@ def run_docker_workflow(project_directory, package_manager):
     stdout = result.stdout.decode("utf-8")
     stderr = result.stderr.decode("utf-8")
 
-    print(
-        f"\n======================= {package_manager.upper()} STDOUT ======================"
-    )
+    print(f"\n======================= {package_manager.upper()} STDOUT ======================")
     print(stdout)
-    print(
-        f"\n======================= {package_manager.upper()} STDERR ======================"
-    )
+    print(f"\n======================= {package_manager.upper()} STDERR ======================")
     print(stderr)
 
     return result, stdout, stderr

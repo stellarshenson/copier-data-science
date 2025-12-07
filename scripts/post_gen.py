@@ -76,9 +76,7 @@ def write_custom_config(user_input_config):
         tmp_zip = test_path
 
     # check if user passed a url to a zip
-    elif user_input_config.startswith("http") and (
-        user_input_config.split(".")[-1] in ["zip"]
-    ):
+    elif user_input_config.startswith("http") and (user_input_config.split(".")[-1] in ["zip"]):
         tmp_zip, _ = urlretrieve(user_input_config)
 
     if tmp_zip:
@@ -94,9 +92,7 @@ def write_custom_config(user_input_config):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Post-generation cleanup for Copier template"
-    )
+    parser = argparse.ArgumentParser(description="Post-generation cleanup for Copier template")
     parser.add_argument("--project-name", required=True)
     parser.add_argument("--repo-name", required=True)
     parser.add_argument("--env-name", required=True)
@@ -182,9 +178,7 @@ def main():
 
         # Remove all remaining docs templates (mkdocs directory, etc.)
         # Collect first to avoid modifying while iterating
-        dirs_to_remove = [
-            d for d in docs_path.iterdir() if d.is_dir() and d.name != "docs"
-        ]
+        dirs_to_remove = [d for d in docs_path.iterdir() if d.is_dir() and d.name != "docs"]
         for docs_template in dirs_to_remove:
             shutil.rmtree(docs_template)
 

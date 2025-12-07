@@ -81,9 +81,7 @@ def build_help_table_rows(data, help_lookup, lookup_prefix=""):
             choices_help = help_lookup[f"{lookup_prefix}{top_key}"]
 
             default = (
-                list(top_value[0].keys())[0]
-                if isinstance(top_value[0], dict)
-                else top_value[0]
+                list(top_value[0].keys())[0] if isinstance(top_value[0], dict) else top_value[0]
             )
 
             section = _new_section(
