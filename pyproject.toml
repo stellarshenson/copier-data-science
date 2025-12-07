@@ -29,6 +29,7 @@ dev = [
   "mkdocs-include-markdown-plugin",
   "pytest",
   "pytest-xdist",
+  "tomlkit",
   "uv",
   "virtualenv",
 ]
