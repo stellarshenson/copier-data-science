@@ -13,6 +13,18 @@ COPIER_DIR = REPO_ROOT  # copier.yml is at repo root
 VENV_BIN = REPO_ROOT / ".venv" / "bin"
 
 
+def get_copier_cmd():
+    """Find the copier executable - check venv first, then system PATH."""
+    venv_copier = VENV_BIN / "copier"
+    if venv_copier.exists():
+        return str(venv_copier)
+    # Fall back to system copier (shutil.which checks PATH)
+    system_copier = shutil.which("copier")
+    if system_copier:
+        return system_copier
+    raise RuntimeError("copier not found in .venv/bin or system PATH")
+
+
 default_args = {
     "project_name": "my_test_project",
     "repo_name": "my-test-repo",
@@ -161,10 +173,8 @@ def bake_project(config):
     project_dir = temp / config["repo_name"]
 
     # Build copier command with data arguments
-    # Use venv copier if available, otherwise fall back to system copier
-    copier_cmd = str(VENV_BIN / "copier") if (VENV_BIN / "copier").exists() else "copier"
     cmd = [
-        copier_cmd,
+        get_copier_cmd(),
         "copy",
         "--trust",
         "--defaults",

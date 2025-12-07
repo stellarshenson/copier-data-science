@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from conftest import bake_project, config_generator
+from conftest import bake_project, config_generator, get_copier_cmd
 from env_matrix import get_absent_files, get_expected_files
 
 BASH_EXECUTABLE = os.getenv("BASH_EXECUTABLE", "bash")
@@ -21,13 +21,14 @@ BASH_EXECUTABLE = os.getenv("BASH_EXECUTABLE", "bash")
 def is_copier_available():
     """Check if copier is installed."""
     try:
+        copier_cmd = get_copier_cmd()
         result = subprocess.run(
-            ["copier", "--version"],
+            [copier_cmd, "--version"],
             capture_output=True,
             text=True,
         )
         return result.returncode == 0
-    except FileNotFoundError:
+    except (FileNotFoundError, RuntimeError):
         return False
 
 
