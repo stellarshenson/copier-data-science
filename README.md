@@ -1,18 +1,19 @@
-# Cookiecutter Data Science - Stellars' Fork
+# Copier Data Science
 
 _A logical, reasonably standardized but flexible project structure for doing and sharing data science work._
 
-[![tests](https://github.com/stellarshenson/cookiecutter-data-science/actions/workflows/tests.yml/badge.svg)](https://github.com/stellarshenson/cookiecutter-data-science/actions/workflows/tests.yml)
-<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
-    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
-</a>
+[![tests](https://github.com/stellarshenson/copier-data-science/actions/workflows/tests.yml/badge.svg)](https://github.com/stellarshenson/copier-data-science/actions/workflows/tests.yml)
+[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-orange.json)](https://github.com/copier-org/copier)
+[![Inspired by CCDS](https://img.shields.io/badge/CCDS-Inspired%20by-328F97?logo=cookiecutter)](https://cookiecutter-data-science.drivendata.org/)
 
-This is **Stellars' fork** of Cookiecutter Data Science with enhanced features for data science workflows. See the [Philosophy Document](docs/docs/stellars-philosophy.md) for design principles.
+> [!NOTE]
+> This project is based on the excellent [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/) by [DrivenData](https://drivendata.co/). We use [Copier](https://copier.readthedocs.io/) instead of Cookiecutter to enable template updates for existing projects. See [Philosophy Document](docs/docs/stellars-philosophy.md) for what makes this fork different.
 
 ## Key Features
 
-| Feature | Upstream ccds | Stellars' Fork |
+| Feature | Original ccds | This Template |
 |---------|--------------|----------------|
+| Template engine | Cookiecutter | Copier (with update support) |
 | Module naming | `<project_name>` | `lib_<project_name>` |
 | Environment managers | 6 (virtualenv, conda, pipenv, uv, pixi, poetry) | 3 (uv, conda, virtualenv) |
 | Default env manager | virtualenv | uv |
@@ -28,9 +29,9 @@ This is **Stellars' fork** of Cookiecutter Data Science with enhanced features f
 | .env encryption | No | Optional (OpenSSL AES-256) |
 | Build versioning | No | Auto-increment on `make build` |
 | Docker support | No | Optional (Dockerfile + Makefile targets) |
-| Copier support | No | Yes (parallel template) |
 
 **Key enhancements:**
+- **Copier template** - Template updates with `copier update`, answers stored in `.copier-answers.yml`
 - **uv default** - Modern, fast Python package manager
 - **Local environments** - `.venv/` directory for project isolation
 - **`lib_` prefix** - Clear module naming (`lib_myproject/`)
@@ -41,41 +42,40 @@ This is **Stellars' fork** of Cookiecutter Data Science with enhanced features f
 - **.env encryption** - Optional AES-256 encryption for secrets (`make .env.enc`)
 - **Build versioning** - Auto-increment build number in pyproject.toml on `make build`
 - **Docker support** - Optional Dockerfile and Makefile targets (`docker_build`, `docker_run`, `docker_push`)
-- **Copier support** - Alternative to cookiecutter with template update support
 
 This template uses [nb_venv_kernels](https://github.com/stellarshenson/nb_venv_kernels) for automatic Jupyter kernel management - your project environments appear as kernels in JupyterLab without manual registration. For conda environments, [nb_conda_kernels](https://github.com/Anaconda-Platform/nb_conda_kernels) is used instead. Both provide automatic kernel discovery and cleanup when environments are removed.
 
-> [!NOTE]
-> This fork works with the standard `ccds` CLI from PyPI. Install it with `pipx install cookiecutter-data-science`.
-
 ## Installation
 
-Requires Python 3.9+. We recommend installing with [pipx](https://pypa.github.io/pipx/):
+Requires Python 3.9+. We recommend installing Copier with [pipx](https://pypa.github.io/pipx/):
 
 ```bash
-# Cookiecutter (ccds command)
-pipx install cookiecutter-data-science
-
-# Copier (alternative with template update support)
 pipx install copier
 ```
 
 ## Starting a new project
 
 ```bash
-# Using Cookiecutter
-ccds gh:stellarshenson/cookiecutter-data-science
-
-# Using Copier (supports template updates)
-copier copy --trust https://github.com/stellarshenson/cookiecutter-data-science.git my-project
+copier copy --trust gh:stellarshenson/copier-data-science my-project
 ```
 
-See [Copier Support](docs/docs/copier-support.md) for Copier details. Then follow the prompts, and once created:
+Then follow the prompts, and once created:
 
 ```bash
-cd my_project
+cd my-project
 make install   # Creates environment, installs dev tools and module
 ```
+
+## Updating an existing project
+
+One of Copier's key advantages is the ability to update projects when the template changes:
+
+```bash
+cd my-project
+copier update --trust
+```
+
+This will merge template updates while preserving your customizations. Your original answers are stored in `.copier-answers.yml`.
 
 ### The resulting directory structure
 
@@ -86,6 +86,7 @@ The directory structure of your new project will look something like this (depen
 ├── Makefile           <- Makefile with convenience commands like `make install` or `make test`
 ├── README.md          <- The top-level README for developers using this project
 ├── pyproject.toml     <- Project configuration with package metadata and dev dependencies
+├── .copier-answers.yml <- Copier answers for template updates
 │
 ├── data
 │   ├── external       <- Data from third party sources
@@ -115,40 +116,25 @@ The directory structure of your new project will look something like this (depen
         └── train.py     <- Code to train models
 ```
 
-## Using a specific branch
-
-To use a specific branch of this fork:
-
-```bash
-ccds gh:stellarshenson/cookiecutter-data-science --checkout master
-```
-
 ## Upstream
 
-This fork stands on the shoulders of [DrivenData's giants](https://github.com/drivendataorg/cookiecutter-data-science) - peeping over their shoulder at the excellent work they've done, then adding some opinionated tweaks while they do the heavy lifting. See the [upstream documentation](https://cookiecutter-data-science.drivendata.org/) for the original project.
+This project builds on the excellent work of [DrivenData's Cookiecutter Data Science](https://github.com/drivendataorg/cookiecutter-data-science). See the [upstream documentation](https://cookiecutter-data-science.drivendata.org/) for the original project and its philosophy.
 
 ## Contributing
 
 Contributions welcome! Fork, make changes, and submit a PR.
 
-### Template Architecture
-
-This project maintains two template formats:
-
-- **`{{ cookiecutter.repo_name }}/`** - Master template (cookiecutter syntax)
-- **`copier/template/`** - Derived template (copier syntax, auto-generated)
-
-**Before pushing changes**, sync the copier template:
-
-```bash
-python copier/scripts/build_copier_template.py
-```
-
-This transforms cookiecutter syntax (`{{ cookiecutter.var }}`) to copier syntax (`{{ var }}`).
-
 ### Running the tests
 
 ```bash
 pip install -r dev-requirements.txt
-SKIP_GITHUB_TESTS=1 pytest tests -v
+pytest tests -v
+```
+
+Fast mode for quick iteration:
+
+```bash
+pytest tests -F   # Single config
+pytest tests -FF  # Skip Makefile validation
+pytest tests -FFF # Both
 ```

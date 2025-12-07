@@ -1,16 +1,32 @@
-# Information for releases and versioning of ccds
+# Releasing copier-data-science
 
-## Background
+## Version Scheme
 
-The release of [ccds v2](https://drivendata.co/blog/ccds-v2) introduced the `ccds` utility and the concept of versioning to cookiecutter data science. Prior to this release, cookiecutter-data-science only provided a project template, which the generic [cookiecutter](https://github.com/cookiecutter/cookiecutter) utility could use to instantiate a project. Branches and forks could be used in the usual way to get different versions of the template.
+This project uses semantic versioning: `1.0.PATCH` where PATCH is incremented for each release.
 
-To give the utility and the template a bit more stability, PR [#336](https://github.com/drivendataorg/cookiecutter-data-science/pull/336) created automated release mechanics for publishing new releases and, by default, pinned the template used by the `ccds` utility to the installed version. 
+## Release Process
 
-## Issuing a new release
+1. **Increment version**
+   ```bash
+   make increment_version
+   ```
 
- - [ ] Update version in `pyproject.toml` file
- - [ ] Ensure `HISTORY.md` is up to date with the changes in this release and add version info and release date
- - [ ] Create new release on the GitHub [releases page](https://github.com/drivendataorg/cookiecutter-data-science/releases) with the tag `vMAJOR.MINOR.PATCH` (e.g., `v2.3.0`) and the contents of the relevant `HISTORY.md` section as the release notes.
- - [ ] Confirm release action runs successfully and the new release is available on [PyPI](https://pypi.org/project/cookiecutter-data-science/).
+2. **Update CHANGELOG.md** with release notes
 
-`ccds` uses [semantic versioning](https://semver.org/). When issuing a new release, **ensure that your release version tag has the format `vMAJOR.MINOR.PATCH`. The `v` prefix is important because the utility will look for the tag with that name to download by default.
+3. **Commit and tag**
+   ```bash
+   git add pyproject.toml CHANGELOG.md
+   git commit -m "chore: bump version to $(grep -oP 'version = "\K[^"]+' pyproject.toml)"
+   git tag v$(grep -oP 'version = "\K[^"]+' pyproject.toml)
+   ```
+
+4. **Push**
+   ```bash
+   git push origin master --tags
+   ```
+
+## Important Notes
+
+- **Do NOT delete old tags** - they are required for `copier update` to work on existing projects
+- Tags must have `v` prefix (e.g., `v1.0.62`)
+- Copier uses tags to determine template versions for updates

@@ -1,7 +1,6 @@
-# Copier configuration for cookiecutter-data-science template
-# This provides Copier support alongside the main cookiecutter template
+# Copier configuration for copier-data-science template
 
-_subdirectory: copier/template
+_subdirectory: template
 
 # Process all files as Jinja templates (not just .jinja files)
 _templates_suffix: ""
@@ -211,7 +210,7 @@ _exclude:
 # Pass all variables as command-line arguments since extra_env isn't supported
 _tasks:
   - >-
-    python3 "{{ _copier_conf.src_path }}/copier/scripts/copier_post_gen.py"
+    python3 "{{ _copier_conf.src_path }}/scripts/post_gen.py"
     --project-name "{{ project_name }}"
     --repo-name "{{ repo_name }}"
     --env-name "{{ env_name }}"

@@ -2,7 +2,7 @@ name: Integration Tests
 
 on:
   push:
-    branches: [master, main, v2-integration]
+    branches: [master, main]
   pull_request:
     branches: [master, main]
   workflow_dispatch:
@@ -27,22 +27,25 @@ jobs:
           activate-environment: test
           auto-activate-base: false
 
-      - name: Install ccds
+      - name: Install copier
         run: |
-          pip install -e .
+          pip install copier
 
       - name: Generate project
         run: |
           cd /tmp
-          ccds $GITHUB_WORKSPACE --no-input \
-            project_name="test_conda_local" \
-            environment_manager="conda" \
-            python_version_number="3.10" \
-            dependency_file="pyproject.toml" \
-            testing_framework="pytest" \
-            linting_and_formatting="ruff" \
-            include_code_scaffold="Yes" \
-            jupyter_kernel_support="Yes"
+          copier copy --trust --defaults $GITHUB_WORKSPACE test_conda_local \
+            -d project_name="test_conda_local" \
+            -d environment_manager="conda" \
+            -d python_version_number="3.10" \
+            -d dependency_file="pyproject.toml" \
+            -d testing_framework="pytest" \
+            -d linting_and_formatting="ruff" \
+            -d include_code_scaffold="Yes" \
+            -d jupyter_kernel_support="Yes" \
+            -d env_encryption="No" \
+            -d dataset_storage="none" \
+            -d docker_support="No"
 
       - name: Verify project structure
         run: |
@@ -111,20 +114,23 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -e . virtualenvwrapper
+          pip install copier virtualenvwrapper
 
       - name: Generate project
         run: |
           cd /tmp
-          ccds $GITHUB_WORKSPACE --no-input \
-            project_name="test_virtualenv" \
-            environment_manager="virtualenv" \
-            python_version_number="3.10" \
-            dependency_file="requirements.txt" \
-            testing_framework="pytest" \
-            linting_and_formatting="ruff" \
-            include_code_scaffold="Yes" \
-            jupyter_kernel_support="Yes"
+          copier copy --trust --defaults $GITHUB_WORKSPACE test_virtualenv \
+            -d project_name="test_virtualenv" \
+            -d environment_manager="virtualenv" \
+            -d python_version_number="3.10" \
+            -d dependency_file="requirements.txt" \
+            -d testing_framework="pytest" \
+            -d linting_and_formatting="ruff" \
+            -d include_code_scaffold="Yes" \
+            -d jupyter_kernel_support="Yes" \
+            -d env_encryption="No" \
+            -d dataset_storage="none" \
+            -d docker_support="No"
 
       - name: Verify project structure
         run: |
@@ -180,22 +186,25 @@ jobs:
       - name: Install UV
         uses: astral-sh/setup-uv@v4
 
-      - name: Install ccds
+      - name: Install copier
         run: |
-          pip install -e .
+          pip install copier
 
       - name: Generate project
         run: |
           cd /tmp
-          ccds $GITHUB_WORKSPACE --no-input \
-            project_name="test_uv" \
-            environment_manager="uv" \
-            python_version_number="3.10" \
-            dependency_file="pyproject.toml" \
-            testing_framework="pytest" \
-            linting_and_formatting="ruff" \
-            include_code_scaffold="Yes" \
-            jupyter_kernel_support="Yes"
+          copier copy --trust --defaults $GITHUB_WORKSPACE test_uv \
+            -d project_name="test_uv" \
+            -d environment_manager="uv" \
+            -d python_version_number="3.10" \
+            -d dependency_file="pyproject.toml" \
+            -d testing_framework="pytest" \
+            -d linting_and_formatting="ruff" \
+            -d include_code_scaffold="Yes" \
+            -d jupyter_kernel_support="Yes" \
+            -d env_encryption="No" \
+            -d dataset_storage="none" \
+            -d docker_support="No"
 
       - name: Verify project structure
         run: |
@@ -254,22 +263,25 @@ jobs:
           activate-environment: test
           auto-activate-base: false
 
-      - name: Install ccds
+      - name: Install copier
         run: |
-          pip install -e .
+          pip install copier
 
       - name: Generate project without scaffold
         run: |
           cd /tmp
-          ccds $GITHUB_WORKSPACE --no-input \
-            project_name="test_no_scaffold" \
-            environment_manager="conda" \
-            python_version_number="3.10" \
-            dependency_file="pyproject.toml" \
-            testing_framework="none" \
-            linting_and_formatting="ruff" \
-            include_code_scaffold="No" \
-            jupyter_kernel_support="No"
+          copier copy --trust --defaults $GITHUB_WORKSPACE test_no_scaffold \
+            -d project_name="test_no_scaffold" \
+            -d environment_manager="conda" \
+            -d python_version_number="3.10" \
+            -d dependency_file="pyproject.toml" \
+            -d testing_framework="none" \
+            -d linting_and_formatting="ruff" \
+            -d include_code_scaffold="No" \
+            -d jupyter_kernel_support="No" \
+            -d env_encryption="No" \
+            -d dataset_storage="none" \
+            -d docker_support="No"
 
       - name: Verify minimal structure
         run: |
@@ -309,22 +321,25 @@ jobs:
           activate-environment: test
           auto-activate-base: false
 
-      - name: Install ccds
+      - name: Install copier
         run: |
-          pip install -e .
+          pip install copier
 
       - name: Generate project with flake8+black+isort
         run: |
           cd /tmp
-          ccds $GITHUB_WORKSPACE --no-input \
-            project_name="test_flake8" \
-            environment_manager="conda" \
-            python_version_number="3.10" \
-            dependency_file="pyproject.toml" \
-            testing_framework="pytest" \
-            linting_and_formatting="flake8+black+isort" \
-            include_code_scaffold="Yes" \
-            jupyter_kernel_support="Yes"
+          copier copy --trust --defaults $GITHUB_WORKSPACE test_flake8 \
+            -d project_name="test_flake8" \
+            -d environment_manager="conda" \
+            -d python_version_number="3.10" \
+            -d dependency_file="pyproject.toml" \
+            -d testing_framework="pytest" \
+            -d linting_and_formatting="flake8+black+isort" \
+            -d include_code_scaffold="Yes" \
+            -d jupyter_kernel_support="Yes" \
+            -d env_encryption="No" \
+            -d dataset_storage="none" \
+            -d docker_support="No"
 
       - name: Verify linting config
         run: |

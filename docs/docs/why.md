@@ -1,6 +1,9 @@
 # Why use this project structure?
 
-> We're not talking about bikeshedding the indentation aesthetics or pedantic formatting standards — ultimately, data science code quality is about correctness and reproducibility.
+> [!NOTE]
+> This document is adapted from [DrivenData's Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/why/). See the original for the authoritative version.
+
+> We're not talking about bikeshedding the indentation aesthetics or pedantic formatting standards - ultimately, data science code quality is about correctness and reproducibility.
 
 When we think about data analysis, we often think just about the resulting reports, insights, or visualizations. While these end products are generally the main event, it's easy to focus on making the products _look nice_ and ignore the _quality of the code that generates them_. Because these end products are created programmatically, **code quality is still important**! And we're not talking about bikeshedding the indentation aesthetics or pedantic formatting standards — ultimately, **data science code quality is about correctness and reproducibility**.
 

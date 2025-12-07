@@ -1,13 +1,6 @@
-[build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
-[tool.flit.module]
-name = "ccds"
-
 [project]
-name = "cookiecutter-data-science"
-version = "2.3.0+stellars60"
+name = "copier-data-science"
+version = "1.0.61"
 description = "A logical, reasonably standardized but flexible project structure for doing and sharing data science work."
 authors = [
   { name = "DrivenData", email = "info@drivendata.org" },
@@ -19,31 +12,43 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Intended Audience :: Science/Research",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-requires-python = ">=3.9"
-dependencies = [
-  "click",
-  "cookiecutter",
-  "tomlkit",
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "copier",
+  "flake8",
+  "isort",
+  "mkdocs",
+  "mkdocs-material",
+  "mkdocs-gen-files",
+  "mkdocs-include-markdown-plugin",
+  "pytest",
+  "pytest-xdist",
+  "uv",
+  "virtualenv",
 ]
 
-[project.scripts]
-ccds = "ccds.__main__:main"
-
 [project.urls]
-"Homepage" = "https://cookiecutter-data-science.drivendata.org/"
-"Source Code" = "https://github.com/drivendataorg/cookiecutter-data-science/"
-"Bug Tracker" = "https://github.com/drivendataorg/cookiecutter-data-science/issues"
+"Homepage" = "https://github.com/stellarshenson/copier-data-science"
+"Source Code" = "https://github.com/stellarshenson/copier-data-science/"
+"Bug Tracker" = "https://github.com/stellarshenson/copier-data-science/issues"
+"Upstream Project" = "https://cookiecutter-data-science.drivendata.org/"
 "DrivenData" = "https://drivendata.co"
 
 [tool.pytest.ini_options]
-# Disable pytest-cookies plugin as it interferes with ccds monkey-patching
 addopts = "-p no:cookies"
+
+[tool.black]
+line-length = 99
+
+[tool.isort]
+profile = "black"
+line_length = 99
+
+[tool.flake8]
+ignore = ["E203", "E402", "E501", "W503"]
+max-line-length = 99

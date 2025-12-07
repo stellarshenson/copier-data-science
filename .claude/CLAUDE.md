@@ -7,9 +7,10 @@ This file extends workspace-level configuration with project-specific rules.
 
 ## Project Context
 
-**Purpose**: Cookiecutter Data Science fork with enhanced features for conda-based data science workflows
+**Purpose**: Copier-based Data Science template with enhanced features for data science workflows
 
-**Key differentiators from upstream ccds**:
+**Key differentiators from upstream cookiecutter-data-science**:
+- Uses Copier (not Cookiecutter) for template updates support
 - Local vs global conda environment choice (`env_location`)
 - `lib_` module prefix for installable packages
 - Rich colored terminal output in Makefile
@@ -19,7 +20,7 @@ This file extends workspace-level configuration with project-specific rules.
 
 ## Technology Stack
 
-- Cookiecutter templating with Jinja2
+- Copier templating with Jinja2
 - Conda/virtualenv/uv environment management
 - pytest for testing
 - ruff or flake8+black+isort for linting

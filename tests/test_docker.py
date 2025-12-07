@@ -1,4 +1,4 @@
-"""Docker integration tests for the cookiecutter template.
+"""Docker integration tests for the Copier template.
 
 These tests verify that:
 - make docker_build creates a valid Docker image
@@ -59,6 +59,17 @@ DOCKER_CONFIG_BASE = {
     "linting_and_formatting": "ruff",
     "docker_support": "Yes",
     "env_encryption": "No",
+    # Copier-specific flat storage options
+    "dataset_storage": "none",
+    "s3_bucket": "",
+    "s3_aws_profile": "default",
+    "azure_container": "",
+    "gcs_bucket": "",
+    "custom_config": "",
+    "pydata_packages": "none",
+    "jupyter_kernel_support": "No",
+    "env_name": "docker_test_project",
+    "env_location": "local",
 }
 
 

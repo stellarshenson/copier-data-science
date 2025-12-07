@@ -6,16 +6,16 @@ Here's a quick guide of the kinds of things we do once our project is ready to g
 
 ## Set up version control
 
-Often, we start by initializing a `git` repository to track the code we write in version control and collaborate with teammates. At the command line, you can do this with the following commands which do the following: turn the folder into a git repository, add all of the files and folders created by CCDS into source control (except for what is in the `.gitignore` file), and then make a commit to the repository.
+Often, we start by initializing a `git` repository to track the code we write in version control and collaborate with teammates. At the command line, you can do this with the following commands which do the following: turn the folder into a git repository, add all of the files and folders created by the template into source control (except for what is in the `.gitignore` file), and then make a commit to the repository.
 
 ```bash
 # From inside your newly created project directory
 git init
 git add .
-git commit -m "CCDS defaults"
+git commit -m "Initial project structure"
 ```
 
-We usually commit the entire default CCDS structure so it is easy to track the changes we make to the structure in version history.
+We usually commit the entire default project structure so it is easy to track the changes we make to the structure in version history.
 
 Now that the default layout is committed, you should push it to a shared repository. You can do this through the interface of whatever source control platform you use. This may be GitHub, GitLab, Bitbucket, or something else.
 
@@ -51,7 +51,7 @@ on its own.
 
 We often use Python for our data science projects. We use a virtual environment to manage the packages we use in our project. This is a way to keep the packages we use in our project separate from the packages we use in other projects. This is especially important when we are working on multiple projects at the same time.
 
-Cookicutter Data Science supports [a few options](opinions.md#build-from-the-environment-up) for Python virtual environment management, but no matter which you choose, you can create an environment with the following commands:
+This template supports [a few options](opinions.md#build-from-the-environment-up) for Python virtual environment management, but no matter which you choose, you can create an environment with the following commands:
 
 ```bash
 make create_environment
@@ -106,7 +106,7 @@ Now that you have your notebook going, start your analysis!
 
 ## Refactoring code into shared modules
 
-As your project goes on, you'll want to refactor your code in a way that makes it easy to share between notebooks and scripts. We recommend creating a module in the `{{ cookiecutter.module_name }}` folder that contains the code you use in your project. This is a good way to make sure that you can use the same code in multiple places without having to copy and paste it.
+As your project goes on, you'll want to refactor your code in a way that makes it easy to share between notebooks and scripts. We recommend creating a module in the `lib_<project_name>` folder that contains the code you use in your project. This is a good way to make sure that you can use the same code in multiple places without having to copy and paste it.
 
 Because the default structure is a Python package and is installed by default, you can do the following to make that code available to you within a Jupyter notebook.
 
@@ -117,10 +117,10 @@ First, we recommend turning on the `autoreload` extension. This will make Jupyte
 %autoreload 2
 ```
 
-Now all your code should be importable. At the start of the CCDS project, you picked a module name. It's the same name as the folder that is in the root project directory. For example, if the module name were `my_project` you could use code by importing it like:
+Now all your code should be importable. At the start of the project, you picked a module name. It's the same name as the folder that is in the root project directory (with `lib_` prefix). For example, if the module name were `lib_my_project` you could use code by importing it like:
 
 ```python
-from my_project.data import make_dataset
+from lib_my_project.dataset import make_dataset
 
 data = make_dataset()
 ```

@@ -1,5 +1,5 @@
 """
-Environment specification matrix for cookiecutter-data-science tests.
+Environment specification matrix for copier-data-science tests.
 
 This module defines the expected files and configurations for each
 environment_manager + dependency_file combination. Used by tests to

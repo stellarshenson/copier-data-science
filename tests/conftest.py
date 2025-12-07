@@ -1,5 +1,5 @@
-import json
 import shutil
+import subprocess
 import sys
 import tempfile
 from contextlib import contextmanager
@@ -8,9 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from ccds.__main__ import api_main
-
-CCDS_ROOT = Path(__file__).parents[1].resolve()
+REPO_ROOT = Path(__file__).parents[1].resolve()
+COPIER_DIR = REPO_ROOT  # copier.yml is at repo root
 
 
 default_args = {
@@ -23,23 +22,33 @@ default_args = {
 }
 
 
-def config_generator(fast=False):
-    cookiecutter_json = json.load((CCDS_ROOT / "ccds.json").open("r"))
+# Configuration options from copier.yml
+CONFIG_OPTIONS = {
+    "environment_manager": ["uv", "conda", "virtualenv", "none"],
+    "env_location": ["local", "global"],
+    "dependency_file": ["pyproject.toml", "requirements.txt", "environment.yml"],
+    "pydata_packages": ["none", "basic"],
+    "include_code_scaffold": ["Yes", "No"],
+    "linting_and_formatting": ["ruff", "flake8+black+isort"],
+    "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
+    "docs": ["mkdocs", "none"],
+    "testing_framework": ["pytest", "unittest", "none"],
+    "jupyter_kernel_support": ["Yes", "No"],
+}
 
-    # python versions for the created environment; match the root
-    # python version since Pipenv needs to be able to find an executable
+
+def config_generator(fast=False):
+    """Generate test configurations for template testing."""
+    # Python version - match the running version
     running_py_version = f"{sys.version_info.major}.{sys.version_info.minor}"
     py_version = [("python_version_number", v) for v in [running_py_version]]
 
     configs = product(
         py_version,
-        [
-            ("environment_manager", opt)
-            for opt in cookiecutter_json["environment_manager"]
-        ],
-        [("env_location", opt) for opt in cookiecutter_json["env_location"]],
-        [("dependency_file", opt) for opt in cookiecutter_json["dependency_file"]],
-        [("pydata_packages", opt) for opt in cookiecutter_json["pydata_packages"]],
+        [("environment_manager", opt) for opt in CONFIG_OPTIONS["environment_manager"]],
+        [("env_location", opt) for opt in CONFIG_OPTIONS["env_location"]],
+        [("dependency_file", opt) for opt in CONFIG_OPTIONS["dependency_file"]],
+        [("pydata_packages", opt) for opt in CONFIG_OPTIONS["pydata_packages"]],
     )
 
     def _is_valid(config):
@@ -65,11 +74,11 @@ def config_generator(fast=False):
         product(
             [
                 ("include_code_scaffold", opt)
-                for opt in cookiecutter_json["include_code_scaffold"]
+                for opt in CONFIG_OPTIONS["include_code_scaffold"]
             ],
             [
                 ("linting_and_formatting", opt)
-                for opt in cookiecutter_json["linting_and_formatting"]
+                for opt in CONFIG_OPTIONS["linting_and_formatting"]
             ],
         )
     )
@@ -77,13 +86,12 @@ def config_generator(fast=False):
     # cycle over values for multi-select fields that should be inter-operable
     # and that we don't need to handle with combinatorics
     cycle_fields = [
-        "dataset_storage",
         "open_source_license",
         "docs",
         "testing_framework",
         "jupyter_kernel_support",
     ]
-    multi_select_cyclers = {k: cycle(cookiecutter_json[k]) for k in cycle_fields}
+    multi_select_cyclers = {k: cycle(CONFIG_OPTIONS[k]) for k in cycle_fields}
 
     for ind, c in enumerate(configs):
         config = dict(c)
@@ -94,6 +102,17 @@ def config_generator(fast=False):
 
         for field, cycler in multi_select_cyclers.items():
             config[field] = next(cycler)
+
+        # Copier uses flat dataset_storage
+        config["dataset_storage"] = "none"
+        config["s3_bucket"] = ""
+        config["s3_aws_profile"] = "default"
+        config["azure_container"] = ""
+        config["gcs_bucket"] = ""
+
+        # Additional copier-specific defaults
+        config["env_encryption"] = "No"  # Skip encryption for tests
+        config["custom_config"] = ""
 
         config["repo_name"] += f"-{ind}"
         # Set env_name to match repo_name to avoid conflicts between tests
@@ -144,17 +163,45 @@ def pytest_generate_tests(metafunc):
 
 @contextmanager
 def bake_project(config):
+    """Context manager to create a project with Copier and clean up after."""
     temp = Path(tempfile.mkdtemp(suffix="data-project")).resolve()
+    project_dir = temp / config["repo_name"]
 
-    api_main.cookiecutter(
-        str(CCDS_ROOT),
-        no_input=True,
-        extra_context=config,
-        output_dir=temp,
-        overwrite_if_exists=True,
+    # Build copier command with data arguments
+    cmd = [
+        "copier",
+        "copy",
+        "--trust",
+        "--defaults",
+        str(COPIER_DIR),
+        str(project_dir),
+    ]
+
+    # Add all config values as --data arguments
+    for key, value in config.items():
+        if key in ("repo_name",):
+            continue  # Skip repo_name as it's the output dir
+        # Convert Python bools/None to strings
+        if isinstance(value, bool):
+            value = str(value).lower()
+        elif value is None:
+            value = ""
+        cmd.extend(["--data", f"{key}={value}"])
+
+    result = subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        cwd=temp,
     )
 
-    yield temp / config["repo_name"]
+    if result.returncode != 0:
+        print(f"Copier command failed:\n{' '.join(cmd)}")
+        print(f"stdout: {result.stdout}")
+        print(f"stderr: {result.stderr}")
+        raise RuntimeError(f"Copier failed with return code {result.returncode}")
+
+    yield project_dir
 
     # cleanup after
     shutil.rmtree(temp)

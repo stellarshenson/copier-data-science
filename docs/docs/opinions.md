@@ -1,5 +1,8 @@
 # Opinions
 
+> [!NOTE]
+> This document is adapted from [DrivenData's Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/opinions/). See the original for the authoritative version.
+
 The default project structure reflects certain opinions about how to do collaborative data science work. These opinions grew out of our own experiences with what works and what doesn't. Some of these opinions are about workflows, and others are about tools that can make the process easier. These opinions are discussed below. If you have any thoughts, please [contribute or share them](contributing.md).
 
 ### Data analysis is a directed acyclic graph
@@ -16,7 +19,7 @@ Some **do**s and **don't**s that follow from treating data analysis as a DAG:
 
 * ✅ **Do** write code that moves the raw data through a pipeline to your final analysis.
 * ✅ **Do** serialize or cache the intermediate outputs of long-running steps.
-* ✅ **Do** make it possible (and ideally, documented and automated) for anyone to reproduce your final data products with only the code in `{{ cookiecutter.module_name }}` and the data in `data/raw/` (and `data/external/`).
+* ✅ **Do** make it possible (and ideally, documented and automated) for anyone to reproduce your final data products with only the code in `lib_<project_name>` and the data in `data/raw/` (and `data/external/`).
 
 * ⛔ **Don't** _ever_ edit your raw data, especially not manually, and _especially_ not in Excel. This includes changing file formats or fixing errors that might break a tool that's trying to read your data file.
 * ⛔ **Don't** overwrite your raw data with a newly processed or cleaned version.
@@ -51,19 +54,19 @@ When we use notebooks in our work, we often subdivide the `notebooks/` folder to
 
 ### Refactor the good parts into source code 
 
-Don't write code to do the same task in multiple notebooks. If it's a data preprocessing task, put it in the pipeline at `{{ cookiecutter.module_name }}/data/make_dataset.py` and load data from `data/interim/`. If it's useful utility code, refactor it to `{{ cookiecutter.module_name }}`. Classic signs that you are ready to move from a notebook to source code include duplicating old notebooks to start new ones, copy/pasting functions between notebooks, and creating object-oriented classes within notebooks.
+Don't write code to do the same task in multiple notebooks. If it's a data preprocessing task, put it in the pipeline at `lib_<project_name>/dataset.py` and load data from `data/interim/`. If it's useful utility code, refactor it to `lib_<project_name>`. Classic signs that you are ready to move from a notebook to source code include duplicating old notebooks to start new ones, copy/pasting functions between notebooks, and creating object-oriented classes within notebooks.
 
-We make it easy to refactor notebook code because the ccds template makes your project a Python package by default and installs it locally in the requirements file of your chosen environment manager. This enables you to import your project's source code and use it in notebooks with a cell like the following:
+We make it easy to refactor notebook code because the template makes your project a Python package by default and installs it locally in the requirements file of your chosen environment manager. This enables you to import your project's source code and use it in notebooks with a cell like the following:
 
 ```python
 # OPTIONAL: Load the "autoreload" extension so that code can change
 %load_ext autoreload
 
 # OPTIONAL: always reload modules so that as you change code
-# in {{ cookiecutter.module_name }}, it gets loaded
+# in lib_<project_name>, it gets loaded
 %autoreload 2
 
-from {{ cookiecutter.module_name }}.data import make_dataset
+from lib_my_project.dataset import make_dataset
 ```
 
 ## Keep your modeling organized
@@ -83,7 +86,7 @@ For data science work, we prefer to use the **conda** package manager because it
 
 You can also use Python-only environment managers. Popular tools in this category include [virtualenv](https://virtualenv.pypa.io/en/latest/), [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/stable/), [Poetry](https://python-poetry.org/), [Pipenv](https://pipenv.pypa.io/en/latest/), and others.
 
-Cookiecutter v2 lets you pick from among many of these, or to initialize your project without one so you can roll your own. 
+This template lets you pick from uv, conda, or virtualenv - or to initialize your project without one so you can roll your own. 
 
 If you have more complex requirements for recreating your environment, consider a virtual machine based approach such as [Docker](https://www.docker.com/) or [Vagrant](https://www.vagrantup.com/). Both of these tools use text-based formats (Dockerfile and Vagrantfile respectively) that you can easily add to source control to describe how to create a virtual machine with the requirements you need. You might also consider using [`pip-tools`](https://github.com/jazzband/pip-tools) or [`conda-lock`](https://github.com/conda/conda-lock) to generate a file that appropriately pins your dependencies.
 
@@ -105,10 +108,10 @@ OTHER_VARIABLE=something
 
 ### Use a package to load these variables automatically.
 
-If you look at the stub script in `{{ cookiecutter.module_name }}/data/make_dataset.py`, it uses a package called [python-dotenv](https://github.com/theskumar/python-dotenv) to load up all the entries in this file as environment variables so they are accessible with `os.environ.get`. Here's an example snippet adapted from the `python-dotenv` documentation:
+If you look at the stub script in `lib_<project_name>/dataset.py`, it uses a package called [python-dotenv](https://github.com/theskumar/python-dotenv) to load up all the entries in this file as environment variables so they are accessible with `os.environ.get`. Here's an example snippet adapted from the `python-dotenv` documentation:
 
 ```python
-# {{ cookiecutter.module_name }}/data/dotenv_example.py
+# lib_my_project/dotenv_example.py
 import os
 from dotenv import load_dotenv, find_dotenv
 

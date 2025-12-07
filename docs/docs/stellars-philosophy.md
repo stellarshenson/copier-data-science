@@ -1,4 +1,4 @@
-# Stellars' Cookiecutter Data Science Philosophy
+# Stellars' Copier Data Science Philosophy
 
 This fork emphasizes **simplicity**, **separation of concerns**, and **minimal boilerplate**.
 
@@ -6,7 +6,7 @@ This fork emphasizes **simplicity**, **separation of concerns**, and **minimal b
 
 **Promote best practices, not proliferate outdated ones.**
 
-Project templates shape how thousands of developers work. A cookiecutter template isn't just scaffolding - it's an opinionated statement about how projects should be structured. We have a responsibility to:
+Project templates shape how thousands of developers work. A project template isn't just scaffolding - it's an opinionated statement about how projects should be structured. We have a responsibility to:
 
 - **Adopt modern tooling** - uv over pip, ruff over flake8+black+isort
 - **Deprecate legacy patterns** - Remove virtualenvwrapper, drop pipenv/poetry/pixi complexity
@@ -118,7 +118,7 @@ Modern practice is the opposite: one explicit .venv in the project root, tracked
 | .env encryption | No | Optional (OpenSSL AES-256) |
 | Build versioning | No | Auto-increment on `make build` |
 | Docker support | No | Optional (Dockerfile + Makefile targets) |
-| Copier support | No | Yes (parallel template) |
+| Template engine | Cookiecutter | Copier (with update support) |
 
 > [!CAUTION]
 > This fork intentionally removes support for pipenv, poetry, and pixi. These tools add complexity without proportional benefit for data science workflows. If you need them, use upstream ccds.

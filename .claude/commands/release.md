@@ -1,15 +1,14 @@
 # Release Command
 
-Release a new version of the cookiecutter-data-science template.
+Release a new version of the copier-data-science template.
 
 ## Instructions
 
-1. Read `.claude/JOURNAL.md` and find the **last entry number** (e.g., if last entry is `55. **Task - ...`, the number is 55)
-2. Update `pyproject.toml` version to `2.3.0+stellars<last_journal_entry_number>`
-3. Commit the version change with message: `chore: bump version to 2.3.0+stellars<last_journal_entry_number>`
-4. Create new tag `v2.3.0+stellars<last_journal_entry_number>`
-5. Push commit and tag to origin
+1. Read `pyproject.toml` and find the current version (e.g., `version = "1.0.61"`)
+2. Increment the patch version by 1 (e.g., `1.0.61` -> `1.0.62`)
+3. Update `pyproject.toml` with the new version
+4. Commit the version change with message: `chore: bump version to <new_version>`
+5. Create new tag `v<new_version>`
+6. Push commit and tag to origin
 
 **IMPORTANT**: Do NOT delete old tags - they are needed for `copier update` to work on existing projects.
-
-**IMPORTANT**: The release number is ALWAYS derived from the last journal entry number. If journal ends at 55, release is stellars55. No exceptions.

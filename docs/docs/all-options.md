@@ -1,14 +1,17 @@
-# Commandline options
+# Template Options
 
-CCDS provides a number of choices that you can use to customize your project. The defaults work well for many projects, but lots of tooling choices are supported. Here are the options for tools that you can use:
+This template provides a number of choices that you can use to customize your project. The defaults work well for many projects, but lots of tooling choices are supported.
 
+See `copier.yml` in the repository root for all available options and their defaults.
 
-<!-- configuration-table.py output -->
+## Using a specific version
 
-## Checking out other branches / using unreleased changes to the template
-
-By default, `ccds` will download the most recently _released_ version of the template. If there are any _unreleased_ changes to the template (or changes in a separate branch) that you want to incorporate, you can do so by checking out whatever branch you'd like to use (checkout `master` for the latest changes):
+By default, Copier will use the latest tagged version. To use a specific version or the latest development changes:
 
 ```bash
-ccds -c master
+# Use specific tag
+copier copy --trust --vcs-ref v1.0.61 gh:stellarshenson/copier-data-science my-project
+
+# Use latest from master
+copier copy --trust --vcs-ref master gh:stellarshenson/copier-data-science my-project
 ```
