@@ -36,7 +36,7 @@ jobs:
       - name: Generate project
         run: |
           cd /tmp
-          copier copy --trust --defaults $GITHUB_WORKSPACE test_conda_local \
+          copier copy --trust --defaults --vcs-ref HEAD $GITHUB_WORKSPACE test_conda_local \
             -d project_name="test_conda_local" \
             -d environment_manager="conda" \
             -d python_version_number="3.10" \
@@ -123,7 +123,7 @@ jobs:
       - name: Generate project
         run: |
           cd /tmp
-          copier copy --trust --defaults $GITHUB_WORKSPACE test_virtualenv \
+          copier copy --trust --defaults --vcs-ref HEAD $GITHUB_WORKSPACE test_virtualenv \
             -d project_name="test_virtualenv" \
             -d environment_manager="virtualenv" \
             -d python_version_number="3.10" \
@@ -199,7 +199,7 @@ jobs:
       - name: Generate project
         run: |
           cd /tmp
-          copier copy --trust --defaults $GITHUB_WORKSPACE test_uv \
+          copier copy --trust --defaults --vcs-ref HEAD $GITHUB_WORKSPACE test_uv \
             -d project_name="test_uv" \
             -d environment_manager="uv" \
             -d python_version_number="3.10" \
@@ -278,7 +278,7 @@ jobs:
       - name: Generate project without scaffold
         run: |
           cd /tmp
-          copier copy --trust --defaults $GITHUB_WORKSPACE test_no_scaffold \
+          copier copy --trust --defaults --vcs-ref HEAD $GITHUB_WORKSPACE test_no_scaffold \
             -d project_name="test_no_scaffold" \
             -d environment_manager="conda" \
             -d python_version_number="3.10" \
@@ -338,7 +338,7 @@ jobs:
       - name: Generate project with flake8+black+isort
         run: |
           cd /tmp
-          copier copy --trust --defaults $GITHUB_WORKSPACE test_flake8 \
+          copier copy --trust --defaults --vcs-ref HEAD $GITHUB_WORKSPACE test_flake8 \
             -d project_name="test_flake8" \
             -d environment_manager="conda" \
             -d python_version_number="3.10" \

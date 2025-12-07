@@ -173,11 +173,14 @@ def bake_project(config):
     project_dir = temp / config["repo_name"]
 
     # Build copier command with data arguments
+    # Use --vcs-ref HEAD to use current working tree, not the latest tag
     cmd = [
         get_copier_cmd(),
         "copy",
         "--trust",
         "--defaults",
+        "--vcs-ref",
+        "HEAD",
         str(COPIER_DIR),
         str(project_dir),
     ]
