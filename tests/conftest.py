@@ -10,6 +10,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).parents[1].resolve()
 COPIER_DIR = REPO_ROOT  # copier.yml is at repo root
+VENV_BIN = REPO_ROOT / ".venv" / "bin"
 
 
 default_args = {
@@ -160,8 +161,10 @@ def bake_project(config):
     project_dir = temp / config["repo_name"]
 
     # Build copier command with data arguments
+    # Use venv copier if available, otherwise fall back to system copier
+    copier_cmd = str(VENV_BIN / "copier") if (VENV_BIN / "copier").exists() else "copier"
     cmd = [
-        "copier",
+        copier_cmd,
         "copy",
         "--trust",
         "--defaults",
