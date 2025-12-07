@@ -1,18 +1,27 @@
-.PHONY: requirements format lint docs docs-serve test clean manual-test increment_version
+.PHONY: create_environment requirements format lint docs docs-serve test clean manual-test increment_version
 
-## Install Python Dependencies
+VENV = .venv
+PYTHON = $(VENV)/bin/python
+UV = uv
+
+## Create virtual environment
+create_environment:
+	$(UV) venv $(VENV)
+	$(UV) pip install -e ".[dev]" --python $(PYTHON)
+
+## Install Python Dependencies (requires venv)
 requirements:
-	python -m pip install -e ".[dev]"
+	$(UV) pip install -e ".[dev]" --python $(PYTHON)
 
 ## Format code
 format:
-	ruff check --fix scripts tests docs/scripts
-	ruff format scripts tests docs/scripts
+	$(VENV)/bin/ruff check --fix scripts tests docs/scripts
+	$(VENV)/bin/ruff format scripts tests docs/scripts
 
 ## Lint code
 lint:
-	ruff check scripts tests docs/scripts
-	ruff format --check scripts tests docs/scripts
+	$(VENV)/bin/ruff check scripts tests docs/scripts
+	$(VENV)/bin/ruff format --check scripts tests docs/scripts
 
 ## Clean artifacts
 clean:
@@ -22,21 +31,21 @@ clean:
 
 ## Build docs
 docs:
-	cd docs && mkdocs build
+	cd docs && $(CURDIR)/$(VENV)/bin/mkdocs build
 
 ## Serve docs locally
 docs-serve:
-	cd docs && mkdocs serve
+	cd docs && $(CURDIR)/$(VENV)/bin/mkdocs serve
 
 ## Run tests
 test:
-	pytest -vvv --durations=0 tests
+	$(VENV)/bin/pytest -vvv --durations=0 tests
 
 ## Manual test - generate project
 manual-test:
 	rm -rf manual_test
 	mkdir -p manual_test
-	copier copy --trust --defaults . manual_test/test_project
+	$(VENV)/bin/copier copy --trust --defaults . manual_test/test_project
 
 ## Increment patch version in pyproject.toml
 increment_version:
