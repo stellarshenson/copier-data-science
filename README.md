@@ -3,8 +3,11 @@
 _A logical, reasonably standardized but flexible project structure for doing and sharing data science work._
 
 [![tests](https://github.com/stellarshenson/copier-data-science/actions/workflows/tests.yml/badge.svg)](https://github.com/stellarshenson/copier-data-science/actions/workflows/tests.yml)
+[![integration-tests](https://github.com/stellarshenson/copier-data-science/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/stellarshenson/copier-data-science/actions/workflows/integration-tests.yml)
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-orange.json)](https://github.com/copier-org/copier)
 [![Inspired by CCDS](https://img.shields.io/badge/CCDS-Inspired%20by-328F97?logo=cookiecutter)](https://cookiecutter-data-science.drivendata.org/)
+[![Brought To You By KOLOMOLO](https://img.shields.io/badge/Brought%20To%20You%20By-KOLOMOLO-00ffff?style=flat)](https://kolomolo.com)
+[![Donate PayPal](https://img.shields.io/badge/Donate-PayPal-blue?style=flat)](https://www.paypal.com/donate/?hosted_button_id=B4KPBJDLLXTSA)
 
 > [!NOTE]
 > This project is based on the excellent [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/) by [DrivenData](https://drivendata.co/). We use [Copier](https://copier.readthedocs.io/) instead of Cookiecutter to enable template updates for existing projects. See [Philosophy Document](docs/docs/stellars-philosophy.md) for what makes this fork different.
