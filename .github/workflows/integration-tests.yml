@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v3
@@ -29,7 +31,7 @@ jobs:
 
       - name: Install copier
         run: |
-          pip install copier
+          pip install copier jinja2-time
 
       - name: Generate project
         run: |
@@ -106,6 +108,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -114,7 +118,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install copier virtualenvwrapper
+          pip install copier jinja2-time virtualenvwrapper
 
       - name: Generate project
         run: |
@@ -177,6 +181,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -188,7 +194,7 @@ jobs:
 
       - name: Install copier
         run: |
-          pip install copier
+          pip install copier jinja2-time
 
       - name: Generate project
         run: |
@@ -254,6 +260,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v3
@@ -265,7 +273,7 @@ jobs:
 
       - name: Install copier
         run: |
-          pip install copier
+          pip install copier jinja2-time
 
       - name: Generate project without scaffold
         run: |
@@ -312,6 +320,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v3
@@ -323,7 +333,7 @@ jobs:
 
       - name: Install copier
         run: |
-          pip install copier
+          pip install copier jinja2-time
 
       - name: Generate project with flake8+black+isort
         run: |
