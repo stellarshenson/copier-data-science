@@ -2,7 +2,6 @@
 
 _A logical, reasonably standardized but flexible project structure for doing and sharing data science work._
 
-[![tests](https://github.com/stellarshenson/copier-data-science/actions/workflows/tests.yml/badge.svg)](https://github.com/stellarshenson/copier-data-science/actions/workflows/tests.yml)
 [![integration-tests](https://github.com/stellarshenson/copier-data-science/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/stellarshenson/copier-data-science/actions/workflows/integration-tests.yml)
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-orange.json)](https://github.com/copier-org/copier)
 [![Inspired by CCDS](https://img.shields.io/badge/CCDS-Inspired%20by-328F97?logo=cookiecutter)](https://cookiecutter-data-science.drivendata.org/)
