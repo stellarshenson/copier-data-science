@@ -134,3 +134,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 64. **Task - CI fixes for copier-only workflow**: Multiple fixes for CI test failures. (1) Added `get_copier_cmd()` helper to `conftest.py` that finds copier in `.venv/bin/` or system PATH - tests now use venv copier. (2) Removed tomlkit dependency from `scripts/post_gen.py` - replaced with regex-based `write_python_version()` using only stdlib modules, since copier runs post-gen script with system python not venv. (3) Added `--vcs-ref HEAD` to all copier commands in `conftest.py` and `integration-tests.yml` to use current working tree instead of latest git tag. (4) Force-added missing template files that were in `.gitignore`: `template/.env` and `template/data/*/.gitkeep`<br>
    **Result**: All CI tests pass. Template generates correctly with data directories
+
+65. **Task - Update README badges**: Added integration-tests workflow badge, KOLOMOLO badge, and PayPal donate badge to README.md. Removed redundant tests badge (keeping only integration-tests)<br>
+   **Result**: README has comprehensive badges showing CI status, template engine, attribution, and support options
