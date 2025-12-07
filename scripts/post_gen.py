@@ -8,14 +8,13 @@ passed by Copier's _tasks.
 """
 
 import argparse
+import re
 import shutil
 from pathlib import Path
 from shutil import copytree
 from tempfile import TemporaryDirectory
 from urllib.request import urlretrieve
 from zipfile import ZipFile
-
-import tomlkit
 
 
 #
@@ -43,12 +42,29 @@ def resolve_python_version_specifier(python_version):
 
 
 def write_python_version(python_version):
-    with open("pyproject.toml", "r") as f:
-        doc = tomlkit.parse(f.read())
+    """Update requires-python in pyproject.toml using regex (no tomlkit dependency)."""
+    pyproject_path = Path("pyproject.toml")
+    if not pyproject_path.exists():
+        return
 
-    doc["project"]["requires-python"] = resolve_python_version_specifier(python_version)
-    with open("pyproject.toml", "w") as f:
-        f.write(tomlkit.dumps(doc))
+    content = pyproject_path.read_text()
+    version_spec = resolve_python_version_specifier(python_version)
+
+    # Replace existing requires-python line or add it if missing
+    pattern = r'requires-python\s*=\s*"[^"]*"'
+    replacement = f'requires-python = "{version_spec}"'
+
+    if re.search(pattern, content):
+        content = re.sub(pattern, replacement, content)
+    else:
+        # Add requires-python after [project] section
+        content = re.sub(
+            r"(\[project\][^\[]*?)(name\s*=)",
+            rf'\1requires-python = "{version_spec}"\n\2',
+            content,
+        )
+
+    pyproject_path.write_text(content)
 
 
 def write_custom_config(user_input_config):

@@ -31,7 +31,7 @@ jobs:
 
       - name: Install copier
         run: |
-          pip install copier jinja2-time tomlkit
+          pip install copier jinja2-time
 
       - name: Generate project
         run: |
@@ -118,7 +118,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install copier jinja2-time tomlkit virtualenvwrapper
+          pip install copier jinja2-time virtualenvwrapper
 
       - name: Generate project
         run: |
@@ -194,7 +194,7 @@ jobs:
 
       - name: Install copier
         run: |
-          pip install copier jinja2-time tomlkit
+          pip install copier jinja2-time
 
       - name: Generate project
         run: |
@@ -273,7 +273,7 @@ jobs:
 
       - name: Install copier
         run: |
-          pip install copier jinja2-time tomlkit
+          pip install copier jinja2-time
 
       - name: Generate project without scaffold
         run: |
@@ -333,7 +333,7 @@ jobs:
 
       - name: Install copier
         run: |
-          pip install copier jinja2-time tomlkit
+          pip install copier jinja2-time
 
       - name: Generate project with flake8+black+isort
         run: |
