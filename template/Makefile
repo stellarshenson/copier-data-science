@@ -293,14 +293,14 @@ sync_data_down:
 	@echo "$(MSG_PREFIX) downloading data from storage"
 {%- if dataset_storage == 's3' %}
 {%- if s3_aws_profile != 'default' %}
-	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --profile $(AWS_PROFILE)
+	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*"
 {%- else %}
-	aws s3 sync s3://$(S3_BUCKET)/data/ data/
+	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --exclude "*/.ipynb_checkpoints/*"
 {%- endif %}
 {%- elif dataset_storage == 'azure' %}
-	az storage blob download-batch -s $(AZURE_CONTAINER)/data/ -d data/
+	az storage blob download-batch -s $(AZURE_CONTAINER)/data/ -d data/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
 {%- elif dataset_storage == 'gcs' %}
-	gsutil -m rsync -r gs://$(GCS_BUCKET)/data/ data/
+	gsutil -m rsync -r -x ".*\.ipynb_checkpoints.*" gs://$(GCS_BUCKET)/data/ data/
 {%- endif %}
 
 ## Upload data to storage system
@@ -308,14 +308,14 @@ sync_data_up:
 	@echo "$(MSG_PREFIX) uploading data to storage"
 {%- if dataset_storage == 's3' %}
 {%- if s3_aws_profile != 'default' %}
-	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --profile $(AWS_PROFILE)
+	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*"
 {%- else %}
-	aws s3 sync data/ s3://$(S3_BUCKET)/data/
+	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --exclude "*/.ipynb_checkpoints/*"
 {%- endif %}
 {%- elif dataset_storage == 'azure' %}
-	az storage blob upload-batch -d $(AZURE_CONTAINER)/data/ -s data/
+	az storage blob upload-batch -d $(AZURE_CONTAINER)/data/ -s data/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
 {%- elif dataset_storage == 'gcs' %}
-	gsutil -m rsync -r data/ gs://$(GCS_BUCKET)/data/
+	gsutil -m rsync -r -x ".*\.ipynb_checkpoints.*" data/ gs://$(GCS_BUCKET)/data/
 {%- endif %}
 
 ## Download models from storage system
@@ -323,14 +323,14 @@ sync_models_down:
 	@echo "$(MSG_PREFIX) downloading models from storage"
 {%- if dataset_storage == 's3' %}
 {%- if s3_aws_profile != 'default' %}
-	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --profile $(AWS_PROFILE)
+	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*"
 {%- else %}
-	aws s3 sync s3://$(S3_BUCKET)/models/ models/
+	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --exclude "*/.ipynb_checkpoints/*"
 {%- endif %}
 {%- elif dataset_storage == 'azure' %}
-	az storage blob download-batch -s $(AZURE_CONTAINER)/models/ -d models/
+	az storage blob download-batch -s $(AZURE_CONTAINER)/models/ -d models/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
 {%- elif dataset_storage == 'gcs' %}
-	gsutil -m rsync -r gs://$(GCS_BUCKET)/models/ models/
+	gsutil -m rsync -r -x ".*\.ipynb_checkpoints.*" gs://$(GCS_BUCKET)/models/ models/
 {%- endif %}
 
 ## Upload models to storage system
@@ -338,14 +338,14 @@ sync_models_up:
 	@echo "$(MSG_PREFIX) uploading models to storage"
 {%- if dataset_storage == 's3' %}
 {%- if s3_aws_profile != 'default' %}
-	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --profile $(AWS_PROFILE)
+	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*"
 {%- else %}
-	aws s3 sync models/ s3://$(S3_BUCKET)/models/
+	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --exclude "*/.ipynb_checkpoints/*"
 {%- endif %}
 {%- elif dataset_storage == 'azure' %}
-	az storage blob upload-batch -d $(AZURE_CONTAINER)/models/ -s models/
+	az storage blob upload-batch -d $(AZURE_CONTAINER)/models/ -s models/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
 {%- elif dataset_storage == 'gcs' %}
-	gsutil -m rsync -r models/ gs://$(GCS_BUCKET)/models/
+	gsutil -m rsync -r -x ".*\.ipynb_checkpoints.*" models/ gs://$(GCS_BUCKET)/models/
 {%- endif %}
 {%- endif %}
 
