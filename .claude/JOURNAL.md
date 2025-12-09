@@ -137,3 +137,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 65. **Task - Update README badges**: Added integration-tests workflow badge, KOLOMOLO badge, and PayPal donate badge to README.md. Removed redundant tests badge (keeping only integration-tests)<br>
    **Result**: README has comprehensive badges showing CI status, template engine, attribution, and support options
+
+66. **Task - Exclude .ipynb_checkpoints from sync**: Added exclusion patterns to all data and models sync commands in template Makefile. AWS S3 uses `--exclude "*/.ipynb_checkpoints/*"`, Azure uses `--pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"`, GCS uses `-x ".*\.ipynb_checkpoints.*"`. Also cleaned up old git tags (v2.x.x, STABLE_*, RELEASE_*, CHECKPOINT_*, BACKUP_*, v1) leaving only v1.0.63-65<br>
+   **Result**: Sync commands no longer upload/download Jupyter checkpoint files
