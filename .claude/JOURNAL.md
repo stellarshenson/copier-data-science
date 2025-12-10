@@ -140,3 +140,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 66. **Task - Exclude .ipynb_checkpoints from sync**: Added exclusion patterns to all data and models sync commands in template Makefile. AWS S3 uses `--exclude "*/.ipynb_checkpoints/*"`, Azure uses `--pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"`, GCS uses `-x ".*\.ipynb_checkpoints.*"`. Also cleaned up old git tags (v2.x.x, STABLE_*, RELEASE_*, CHECKPOINT_*, BACKUP_*, v1) leaving only v1.0.63-65<br>
    **Result**: Sync commands no longer upload/download Jupyter checkpoint files
+
+67. **Task - Use placeholder hints instead of defaults**: Updated `copier.yml` to use empty defaults with `placeholder` hints for user input fields instead of pre-populated default text. Changed `author_name`, `description`, `s3_bucket`, `azure_container`, `gcs_bucket` to have empty defaults with descriptive `help` text and `placeholder` values. Users no longer need to delete placeholder text when entering values<br>
+   **Result**: Cleaner UX - hints shown but not pre-filled. Bumped version to 1.1.0
