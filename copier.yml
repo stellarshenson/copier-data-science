@@ -32,13 +32,15 @@ module_name:
 
 author_name:
   type: str
-  default: "Your name (or your organization/company/team)"
-  help: "Author name"
+  default: ""
+  help: "Author name (e.g., John Doe, Acme Corp)"
+  placeholder: "Your name or organization"
 
 description:
   type: str
-  default: "A short description of the project."
-  help: "Project description"
+  default: ""
+  help: "Brief project description (e.g., ML pipeline for customer churn prediction)"
+  placeholder: "A short description of the project"
 
 python_version_number:
   type: str
@@ -58,27 +60,30 @@ dataset_storage:
 
 s3_bucket:
   type: str
-  default: "bucket-name"
+  default: ""
   when: "{{ dataset_storage == 's3' }}"
-  help: "S3 bucket name"
+  help: "S3 bucket name (e.g., my-project-data)"
+  placeholder: "my-bucket-name"
 
 s3_aws_profile:
   type: str
   default: "default"
   when: "{{ dataset_storage == 's3' }}"
-  help: "AWS profile for S3 access"
+  help: "AWS profile for S3 access (from ~/.aws/credentials)"
 
 azure_container:
   type: str
-  default: "container-name"
+  default: ""
   when: "{{ dataset_storage == 'azure' }}"
-  help: "Azure container name"
+  help: "Azure container name (e.g., my-project-data)"
+  placeholder: "my-container-name"
 
 gcs_bucket:
   type: str
-  default: "bucket-name"
+  default: ""
   when: "{{ dataset_storage == 'gcs' }}"
-  help: "GCS bucket name"
+  help: "GCS bucket name (e.g., my-project-data)"
+  placeholder: "my-bucket-name"
 
 environment_manager:
   type: str
