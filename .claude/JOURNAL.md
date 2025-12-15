@@ -143,3 +143,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 67. **Task - Use placeholder hints instead of defaults**: Updated `copier.yml` to use empty defaults with `placeholder` hints for user input fields instead of pre-populated default text. Changed `author_name`, `description`, `s3_bucket`, `azure_container`, `gcs_bucket` to have empty defaults with descriptive `help` text and `placeholder` values. Users no longer need to delete placeholder text when entering values<br>
    **Result**: Cleaner UX - hints shown but not pre-filled. Bumped version to 1.1.0
+
+68. **Task - Add register_environment target** (v1.1.1): Added `register_environment` Makefile target to re-register Jupyter kernel without recreating the environment. Target available when `jupyter_kernel_support == 'Yes'`. Implemented for all three environment managers: conda (local and global), virtualenv, and uv. Checks if environment exists first, uses `nb_conda_kernels`/`nb_venv_kernels` if available, falls back to `ipykernel` for manual registration. Allows users to re-register kernel if it was accidentally unregistered or needs refresh<br>
+   **Result**: `make register_environment` now available to re-register Jupyter kernel independently of environment creation
