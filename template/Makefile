@@ -1,4 +1,4 @@
-.PHONY: clean data lint format requirements upgrade build sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve
+.PHONY: clean data lint format requirements upgrade build sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve register_environment
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -453,6 +453,38 @@ else
 endif
 endif
 
+{%- if jupyter_kernel_support == 'Yes' %}
+## Register Jupyter kernel for the environment
+register_environment: check_conda
+ifeq (True,$(HAS_CONDA))
+ifeq ($(ENV_LOCATION),local)
+	@if [ ! -d "$(CONDA_ENV_PATH)/conda-meta" ]; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: local environment not found at .venv/$(ENV_NAME). Run 'make create_environment' first$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if python -c "import nb_conda_kernels" 2>/dev/null; then \
+		echo "$(MSG_PREFIX) nb_conda_kernels detected - kernel will be auto-discovered"; \
+	else \
+		echo "$(MSG_PREFIX) registering Jupyter kernel with ipykernel"; \
+		conda run -p $(CONDA_ENV_PATH) $(CONDA_FLAGS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
+		echo "$(OK_STYLE)>>> Kernel registered as $(ENV_NAME)$(NO_STYLE)"; \
+	fi
+else
+	@if ! conda env list | grep -q "^$(ENV_NAME) "; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: conda environment $(ENV_NAME) not found. Run 'make create_environment' first$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if python -c "import nb_conda_kernels" 2>/dev/null; then \
+		echo "$(MSG_PREFIX) nb_conda_kernels detected - kernel will be auto-discovered"; \
+	else \
+		echo "$(MSG_PREFIX) registering Jupyter kernel with ipykernel"; \
+		conda run --name $(ENV_NAME) $(CONDA_FLAGS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
+		echo "$(OK_STYLE)>>> Kernel registered as $(ENV_NAME)$(NO_STYLE)"; \
+	fi
+endif
+endif
+{%- endif %}
+
 ## Test python environment is setup correctly
 test_environment: check_conda
 ifeq ($(ENV_LOCATION),local)
@@ -526,6 +558,24 @@ remove_environment:
 	@rm -rf $(PROJECT_DIR)/.venv
 	@echo "$(OK_STYLE)>>> Environment removed$(NO_STYLE)"
 
+{%- if jupyter_kernel_support == 'Yes' %}
+## Register Jupyter kernel for the environment
+register_environment:
+	@if [ ! -d "$(PROJECT_DIR)/.venv" ]; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: virtual environment not found at .venv. Run 'make create_environment' first$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if command -v nb_venv_kernels >/dev/null 2>&1; then \
+		echo "$(MSG_PREFIX) registering Jupyter kernel for $(HIGHLIGHT_STYLE)$(ENV_NAME)$(NO_STYLE)"; \
+		nb_venv_kernels register --name $(ENV_NAME) $(PROJECT_DIR)/.venv >/dev/null 2>&1; \
+		echo "$(OK_STYLE)>>> Kernel registered successfully$(NO_STYLE)"; \
+	else \
+		echo "$(MSG_PREFIX) registering Jupyter kernel with ipykernel"; \
+		$(PROJECT_DIR)/.venv/bin/python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [venv env:$(ENV_NAME)]"; \
+		echo "$(OK_STYLE)>>> Kernel registered as $(ENV_NAME)$(NO_STYLE)"; \
+	fi
+{%- endif %}
+
 ## Install src modules (editable)
 install: create_environment requirements clean{% if env_encryption == 'Yes' %} .env{% endif %}
 
@@ -591,6 +641,24 @@ remove_environment:
 {%- endif %}
 	@rm -rf $(PROJECT_DIR)/.venv
 	@echo "$(OK_STYLE)>>> Environment removed$(NO_STYLE)"
+
+{%- if jupyter_kernel_support == 'Yes' %}
+## Register Jupyter kernel for the environment
+register_environment:
+	@if [ ! -d "$(PROJECT_DIR)/.venv" ]; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: uv virtual environment not found at .venv. Run 'make create_environment' first$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if command -v nb_venv_kernels >/dev/null 2>&1; then \
+		echo "$(MSG_PREFIX) registering Jupyter kernel for $(HIGHLIGHT_STYLE)$(ENV_NAME)$(NO_STYLE)"; \
+		nb_venv_kernels register --name $(ENV_NAME) $(PROJECT_DIR)/.venv >/dev/null 2>&1; \
+		echo "$(OK_STYLE)>>> Kernel registered successfully$(NO_STYLE)"; \
+	else \
+		echo "$(MSG_PREFIX) registering Jupyter kernel with ipykernel"; \
+		$(PROJECT_DIR)/.venv/bin/python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [uv env:$(ENV_NAME)]"; \
+		echo "$(OK_STYLE)>>> Kernel registered as $(ENV_NAME)$(NO_STYLE)"; \
+	fi
+{%- endif %}
 
 ## Install src modules (editable)
 install: create_environment requirements clean{% if env_encryption == 'Yes' %} .env{% endif %}
