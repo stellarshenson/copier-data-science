@@ -577,19 +577,19 @@ register_environment:
 {%- endif %}
 
 ## Install src modules (editable)
-install: create_environment requirements clean{% if env_encryption == 'Yes' %} .env{% endif %}
+install: create_environment requirements clean increment_version_number{% if env_encryption == 'Yes' %} .env{% endif %}
 
 	@echo "$(MSG_PREFIX) installing $(MODULE_NAME) in editable mode"
 	$(PROJECT_DIR)/.venv/bin/pip install -e .
 	@echo "$(OK_STYLE)>>> $(MODULE_NAME) installed$(NO_STYLE)"
 
 ## Build package
-build: clean install test increment_build_number
+build: clean install test
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	$(PROJECT_DIR)/.venv/bin/python -m build --wheel
 
 ## Increment build number
-increment_build_number:
+increment_version_number:
 	@echo "$(MSG_PREFIX) incrementing build number"
 	@$(PROJECT_DIR)/.venv/bin/python -c "import toml; data=toml.load('pyproject.toml'); ver=data['project']['version'].split('.'); ver[-1]=str(int(ver[-1])+1); data['project']['version']='.'.join(ver); f=open('pyproject.toml','w'); toml.dump(data,f); f.close(); print('New version:',data['project']['version'])"
 
@@ -668,12 +668,12 @@ install: create_environment requirements clean{% if env_encryption == 'Yes' %} .
 	@echo "$(OK_STYLE)>>> $(MODULE_NAME) installed$(NO_STYLE)"
 
 ## Build package
-build: clean install test increment_build_number
+build: clean install test increment_version_number
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	$(PROJECT_DIR)/.venv/bin/python -m build --wheel
 
 ## Increment build number
-increment_build_number:
+increment_version_number:
 	@echo "$(MSG_PREFIX) incrementing build number"
 	@$(PROJECT_DIR)/.venv/bin/python -c "import toml; data=toml.load('pyproject.toml'); ver=data['project']['version'].split('.'); ver[-1]=str(int(ver[-1])+1); data['project']['version']='.'.join(ver); f=open('pyproject.toml','w'); toml.dump(data,f); f.close(); print('New version:',data['project']['version'])"
 
@@ -703,12 +703,12 @@ install: check_conda clean create_environment{% if env_encryption == 'Yes' %} .e
 	@echo "$(MSG_PREFIX) you can now import $(HIGHLIGHT_STYLE)$(MODULE_NAME)$(NO_STYLE) module in your notebooks and scripts\n"
 
 ## Build package and install
-build: check_conda clean install test increment_build_number
+build: check_conda clean install test increment_version_number
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m build --wheel
 
 ## Increment build number
-increment_build_number: check_conda
+increment_version_number: check_conda
 	@echo "$(MSG_PREFIX) incrementing build number"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -c "import toml; data=toml.load('pyproject.toml'); ver=data['project']['version'].split('.'); ver[-1]=str(int(ver[-1])+1); data['project']['version']='.'.join(ver); f=open('pyproject.toml','w'); toml.dump(data,f); f.close(); print('New version:',data['project']['version'])"
 {%- endif %}
