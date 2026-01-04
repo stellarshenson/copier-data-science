@@ -146,3 +146,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 68. **Task - Add register_environment target** (v1.1.1): Added `register_environment` Makefile target to re-register Jupyter kernel without recreating the environment. Target available when `jupyter_kernel_support == 'Yes'`. Implemented for all three environment managers: conda (local and global), virtualenv, and uv. Checks if environment exists first, uses `nb_conda_kernels`/`nb_venv_kernels` if available, falls back to `ipykernel` for manual registration. Allows users to re-register kernel if it was accidentally unregistered or needs refresh<br>
    **Result**: `make register_environment` now available to re-register Jupyter kernel independently of environment creation
+
+69. **Task - Preserve .gitkeep in data directories** (v1.1.3): Fixed `.gitignore` to preserve `.gitkeep` files in data subdirectories. Changed from `/data/` (ignores entire directory) to pattern that ignores contents but explicitly un-ignores `.gitkeep` files in external, interim, processed, and raw subdirectories. Uses `/data/*` then `!/data/subdir/` then `/data/subdir/*` then `!/data/subdir/.gitkeep` pattern for each<br>
+   **Result**: Data directory structure preserved in git via .gitkeep files while still ignoring actual data files
