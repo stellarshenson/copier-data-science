@@ -1,6 +1,6 @@
 # Copier Data Science
 
-_A logical, reasonably standardized but flexible project structure for doing and sharing data science work._
+_A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/) with template updates, streamlined defaults, and enhanced tooling._
 
 [![integration-tests](https://github.com/stellarshenson/copier-data-science/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/stellarshenson/copier-data-science/actions/workflows/integration-tests.yml)
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-orange.json)](https://github.com/copier-org/copier)
