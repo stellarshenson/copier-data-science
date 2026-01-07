@@ -149,3 +149,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 69. **Task - Preserve .gitkeep in data directories** (v1.1.3): Fixed `.gitignore` to preserve `.gitkeep` files in data subdirectories. Changed from `/data/` (ignores entire directory) to pattern that ignores contents but explicitly un-ignores `.gitkeep` files in external, interim, processed, and raw subdirectories. Uses `/data/*` then `!/data/subdir/` then `/data/subdir/*` then `!/data/subdir/.gitkeep` pattern for each<br>
    **Result**: Data directory structure preserved in git via .gitkeep files while still ignoring actual data files
+
+70. **Task - Add options variables and install uv** (v1.1.4): Added `AWS_OPTS` variable (empty by default) to S3 configuration, appended to all 8 aws s3 sync commands for user-specified options. Renamed `CONDA_FLAGS` to `CONDA_OPTS` for consistency (33 occurrences). Added `UV_OPTS` variable to uv configuration, used as `uv $(UV_OPTS) <subcommand>` pattern (9 occurrences). Added `pip install uv` step in uv create_environment to install uv into the venv. Removed Contributing section from README<br>
+   **Result**: Users can now pass additional options to AWS/conda/uv commands via Makefile variables or environment

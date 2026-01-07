@@ -121,22 +121,3 @@ The directory structure of your new project will look something like this (depen
 ## Upstream
 
 This project builds on the excellent work of [DrivenData's Cookiecutter Data Science](https://github.com/drivendataorg/cookiecutter-data-science). See the [upstream documentation](https://cookiecutter-data-science.drivendata.org/) for the original project and its philosophy.
-
-## Contributing
-
-Contributions welcome! Fork, make changes, and submit a PR.
-
-### Running the tests
-
-```bash
-pip install -r dev-requirements.txt
-pytest tests -v
-```
-
-Fast mode for quick iteration:
-
-```bash
-pytest tests -F   # Single config
-pytest tests -FF  # Skip Makefile validation
-pytest tests -FFF # Both
-```

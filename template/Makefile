@@ -15,6 +15,7 @@ PYTHON_INTERPRETER = python
 # AWS S3 configuration
 S3_BUCKET = {{ s3_bucket }}
 AWS_PROFILE = {{ s3_aws_profile }}
+AWS_OPTS =
 {%- elif dataset_storage == 'azure' %}
 
 # Azure Blob Storage configuration
@@ -53,7 +54,7 @@ ENV_NAME = {{ env_name }}
 {% if environment_manager == 'conda' -%}
 # conda environment configuration
 ENV_LOCATION = {{ env_location }}
-CONDA_FLAGS = --no-capture-output
+CONDA_OPTS = --no-capture-output
 CONDA_ENV_PATH = $(PROJECT_DIR)/.venv/$(ENV_NAME)
 
 # set conda env selector based on location (local vs global)
@@ -91,6 +92,7 @@ VENV_PATH = $(PROJECT_DIR)/.venv
 {% elif environment_manager == 'uv' -%}
 # uv configuration
 VENV_PATH = $(PROJECT_DIR)/.venv
+UV_OPTS =
 {% endif %}
 {% if docker_support == 'Yes' -%}
 #################################################################################
@@ -114,14 +116,14 @@ DOCKER_TAG ?= latest
 {%- if environment_manager == 'conda' %}
 requirements: test_environment
 	@echo "$(MSG_PREFIX) installing requirements for $(HIGHLIGHT_STYLE)$(ENV_NAME)$(NO_STYLE) environment"
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m pip install -U pip setuptools wheel
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m pip install -U pip setuptools wheel
 {%- if dependency_file == 'environment.yml' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pip install -e .
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install -e .
 {%- elif dependency_file == 'requirements.txt' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m pip install -r requirements.txt
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m pip install -r requirements-dev.txt
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m pip install -r requirements.txt
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m pip install -r requirements-dev.txt
 {%- elif dependency_file == 'pyproject.toml' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pip install -e ".[dev]"
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install -e ".[dev]"
 {%- endif %}
 {%- elif environment_manager == 'virtualenv' %}
 requirements:
@@ -136,9 +138,9 @@ requirements:
 requirements:
 	@echo "$(MSG_PREFIX) installing requirements with uv"
 {%- if dependency_file == 'requirements.txt' %}
-	uv pip install --python $(PROJECT_DIR)/.venv -r requirements.txt
+	uv $(UV_OPTS) pip install --python $(PROJECT_DIR)/.venv -r requirements.txt
 {%- elif dependency_file == 'pyproject.toml' %}
-	uv sync --python $(PROJECT_DIR)/.venv --extra dev
+	uv $(UV_OPTS) sync --python $(PROJECT_DIR)/.venv --extra dev
 {%- endif %}
 {%- endif %}
 {%- endif %}
@@ -149,15 +151,15 @@ requirements:
 {%- if environment_manager == 'conda' %}
 upgrade: test_environment
 	@echo "$(MSG_PREFIX) upgrading packages in $(HIGHLIGHT_STYLE)$(ENV_NAME)$(NO_STYLE) environment"
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) conda update --all -y
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m pip install -U pip setuptools wheel
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) conda update --all -y
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m pip install -U pip setuptools wheel
 {%- if dependency_file == 'environment.yml' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pip install --upgrade -e .
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install --upgrade -e .
 {%- elif dependency_file == 'requirements.txt' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m pip install --upgrade -r requirements.txt
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m pip install --upgrade -r requirements-dev.txt
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m pip install --upgrade -r requirements.txt
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m pip install --upgrade -r requirements-dev.txt
 {%- elif dependency_file == 'pyproject.toml' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pip install --upgrade -e ".[dev]"
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install --upgrade -e ".[dev]"
 {%- endif %}
 {%- elif environment_manager == 'virtualenv' %}
 upgrade:
@@ -173,9 +175,9 @@ upgrade:
 upgrade:
 	@echo "$(MSG_PREFIX) upgrading packages with uv"
 {%- if dependency_file == 'requirements.txt' %}
-	uv pip install --python $(PROJECT_DIR)/.venv --upgrade -r requirements.txt
+	uv $(UV_OPTS) pip install --python $(PROJECT_DIR)/.venv --upgrade -r requirements.txt
 {%- elif dependency_file == 'pyproject.toml' %}
-	uv sync --python $(PROJECT_DIR)/.venv --extra dev --upgrade
+	uv $(UV_OPTS) sync --python $(PROJECT_DIR)/.venv --extra dev --upgrade
 {%- endif %}
 {%- endif %}
 {%- endif %}
@@ -242,15 +244,15 @@ test:
 	@echo "$(MSG_PREFIX) checking for tests"
 {%- if environment_manager == 'conda' %}
 {%- if testing_framework == 'pytest' %}
-	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pytest --collect-only ./tests > /dev/null 2>&1; RESULT="$$?"; \
+	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pytest --collect-only ./tests > /dev/null 2>&1; RESULT="$$?"; \
 	if [ "$$RESULT" != "5" ]; then \
 		echo "$(MSG_PREFIX) executing python tests"; \
-		conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pytest --cov -v ./tests; \
+		conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pytest --cov -v ./tests; \
 	else \
 		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: no tests present$(NO_STYLE)"; \
 	fi
 {%- elif testing_framework == 'unittest' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m unittest discover -s tests
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m unittest discover -s tests
 {%- endif %}
 {%- else %}
 {%- if testing_framework == 'pytest' %}
@@ -272,7 +274,7 @@ test:
 docs:
 	@echo "$(MSG_PREFIX) building documentation"
 {%- if environment_manager == 'conda' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) mkdocs build -f docs/mkdocs.yml
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) mkdocs build -f docs/mkdocs.yml
 {%- else %}
 	$(PROJECT_DIR)/.venv/bin/mkdocs build -f docs/mkdocs.yml
 {%- endif %}
@@ -281,7 +283,7 @@ docs:
 docs_serve:
 	@echo "$(MSG_PREFIX) serving documentation at http://127.0.0.1:8000"
 {%- if environment_manager == 'conda' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) mkdocs serve -f docs/mkdocs.yml
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) mkdocs serve -f docs/mkdocs.yml
 {%- else %}
 	$(PROJECT_DIR)/.venv/bin/mkdocs serve -f docs/mkdocs.yml
 {%- endif %}
@@ -293,9 +295,9 @@ sync_data_down:
 	@echo "$(MSG_PREFIX) downloading data from storage"
 {%- if dataset_storage == 's3' %}
 {%- if s3_aws_profile != 'default' %}
-	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*"
+	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
 {%- else %}
-	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --exclude "*/.ipynb_checkpoints/*"
+	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
 {%- endif %}
 {%- elif dataset_storage == 'azure' %}
 	az storage blob download-batch -s $(AZURE_CONTAINER)/data/ -d data/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
@@ -308,9 +310,9 @@ sync_data_up:
 	@echo "$(MSG_PREFIX) uploading data to storage"
 {%- if dataset_storage == 's3' %}
 {%- if s3_aws_profile != 'default' %}
-	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*"
+	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
 {%- else %}
-	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --exclude "*/.ipynb_checkpoints/*"
+	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
 {%- endif %}
 {%- elif dataset_storage == 'azure' %}
 	az storage blob upload-batch -d $(AZURE_CONTAINER)/data/ -s data/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
@@ -323,9 +325,9 @@ sync_models_down:
 	@echo "$(MSG_PREFIX) downloading models from storage"
 {%- if dataset_storage == 's3' %}
 {%- if s3_aws_profile != 'default' %}
-	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*"
+	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
 {%- else %}
-	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --exclude "*/.ipynb_checkpoints/*"
+	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
 {%- endif %}
 {%- elif dataset_storage == 'azure' %}
 	az storage blob download-batch -s $(AZURE_CONTAINER)/models/ -d models/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
@@ -338,9 +340,9 @@ sync_models_up:
 	@echo "$(MSG_PREFIX) uploading models to storage"
 {%- if dataset_storage == 's3' %}
 {%- if s3_aws_profile != 'default' %}
-	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*"
+	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
 {%- else %}
-	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --exclude "*/.ipynb_checkpoints/*"
+	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
 {%- endif %}
 {%- elif dataset_storage == 'azure' %}
 	az storage blob upload-batch -d $(AZURE_CONTAINER)/models/ -s models/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
@@ -379,18 +381,18 @@ ifeq ($(ENV_LOCATION),local)
 		echo "$(MSG_PREFIX) new conda env created successfully. Activate with: $(HIGHLIGHT_STYLE)conda activate $(CONDA_ENV_PATH)$(NO_STYLE)"; \
 		echo "$(MSG_PREFIX) installing dependencies"; \
 {%- if dependency_file == 'requirements.txt' %}
-		conda run -p $(CONDA_ENV_PATH) $(CONDA_FLAGS) pip install -q -r requirements.txt -r requirements-dev.txt; \
+		conda run -p $(CONDA_ENV_PATH) $(CONDA_OPTS) pip install -q -r requirements.txt -r requirements-dev.txt; \
 {%- elif dependency_file == 'pyproject.toml' %}
-		conda run -p $(CONDA_ENV_PATH) $(CONDA_FLAGS) pip install -q -e ".[dev]"; \
+		conda run -p $(CONDA_ENV_PATH) $(CONDA_OPTS) pip install -q -e ".[dev]"; \
 {%- endif %}
-		conda run -p $(CONDA_ENV_PATH) $(CONDA_FLAGS) nbdime config-git --enable --global; \
+		conda run -p $(CONDA_ENV_PATH) $(CONDA_OPTS) nbdime config-git --enable --global; \
 		echo "$(MSG_PREFIX) environment was configured to integrate git with jupyter notebooks"; \
 {%- if jupyter_kernel_support == 'Yes' %}
 		if python -c "import nb_conda_kernels" 2>/dev/null; then \
 			echo "$(MSG_PREFIX) nb_conda_kernels detected - kernel will be auto-discovered"; \
 		else \
 			echo "$(MSG_PREFIX) registering Jupyter kernel with ipykernel"; \
-			conda run -p $(CONDA_ENV_PATH) $(CONDA_FLAGS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
+			conda run -p $(CONDA_ENV_PATH) $(CONDA_OPTS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
 			echo "$(OK_STYLE)>>> Kernel registered as $(ENV_NAME)$(NO_STYLE)"; \
 		fi; \
 {%- endif %}
@@ -409,18 +411,18 @@ else
 		echo "$(MSG_PREFIX) new conda env created successfully. Activate with: $(HIGHLIGHT_STYLE)conda activate $(ENV_NAME)$(NO_STYLE)"; \
 		echo "$(MSG_PREFIX) installing dependencies"; \
 {%- if dependency_file == 'requirements.txt' %}
-		conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pip install -q -r requirements.txt -r requirements-dev.txt; \
+		conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install -q -r requirements.txt -r requirements-dev.txt; \
 {%- elif dependency_file == 'pyproject.toml' %}
-		conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pip install -q -e ".[dev]"; \
+		conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install -q -e ".[dev]"; \
 {%- endif %}
-		conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) nbdime config-git --enable --global; \
+		conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) nbdime config-git --enable --global; \
 		echo "$(MSG_PREFIX) environment $(ENV_NAME) was configured to integrate git with jupyter notebooks"; \
 {%- if jupyter_kernel_support == 'Yes' %}
 		if python -c "import nb_conda_kernels" 2>/dev/null; then \
 			echo "$(MSG_PREFIX) nb_conda_kernels detected - kernel will be auto-discovered"; \
 		else \
 			echo "$(MSG_PREFIX) registering Jupyter kernel with ipykernel"; \
-			conda run --name $(ENV_NAME) $(CONDA_FLAGS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
+			conda run --name $(ENV_NAME) $(CONDA_OPTS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
 			echo "$(OK_STYLE)>>> Kernel registered as $(ENV_NAME)$(NO_STYLE)"; \
 		fi; \
 {%- endif %}
@@ -466,7 +468,7 @@ ifeq ($(ENV_LOCATION),local)
 		echo "$(MSG_PREFIX) nb_conda_kernels detected - kernel will be auto-discovered"; \
 	else \
 		echo "$(MSG_PREFIX) registering Jupyter kernel with ipykernel"; \
-		conda run -p $(CONDA_ENV_PATH) $(CONDA_FLAGS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
+		conda run -p $(CONDA_ENV_PATH) $(CONDA_OPTS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
 		echo "$(OK_STYLE)>>> Kernel registered as $(ENV_NAME)$(NO_STYLE)"; \
 	fi
 else
@@ -478,7 +480,7 @@ else
 		echo "$(MSG_PREFIX) nb_conda_kernels detected - kernel will be auto-discovered"; \
 	else \
 		echo "$(MSG_PREFIX) registering Jupyter kernel with ipykernel"; \
-		conda run --name $(ENV_NAME) $(CONDA_FLAGS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
+		conda run --name $(ENV_NAME) $(CONDA_OPTS) python -m ipykernel install --user --name=$(ENV_NAME) --display-name "Python [conda env:$(ENV_NAME)]"; \
 		echo "$(OK_STYLE)>>> Kernel registered as $(ENV_NAME)$(NO_STYLE)"; \
 	fi
 endif
@@ -494,7 +496,7 @@ ifeq ($(ENV_LOCATION),local)
 		exit 1; \
 	fi
 	@echo "$(MSG_PREFIX) checking Python version"
-	@conda run -p $(CONDA_ENV_PATH) $(CONDA_FLAGS) python --version
+	@conda run -p $(CONDA_ENV_PATH) $(CONDA_OPTS) python --version
 	@echo "$(OK_STYLE)>>> Local environment .venv/$(ENV_NAME) is properly configured$(NO_STYLE)"
 else
 	@echo "$(MSG_PREFIX) testing environment $(HIGHLIGHT_STYLE)$(ENV_NAME)$(NO_STYLE) if ready"
@@ -503,7 +505,7 @@ else
 		exit 1; \
 	fi
 	@echo "$(MSG_PREFIX) checking Python version"
-	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python --version
+	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python --version
 	@echo "$(OK_STYLE)>>> Environment $(ENV_NAME) is properly configured$(NO_STYLE)"
 endif
 
@@ -604,15 +606,17 @@ create_environment:
 		echo "$(MSG_PREFIX) virtual environment already exists at $(HIGHLIGHT_STYLE).venv$(NO_STYLE). Skipping creation."; \
 	else \
 		echo "$(MSG_PREFIX) creating uv virtual environment"; \
-		uv venv -q --python $(PYTHON_VERSION); \
+		uv $(UV_OPTS) venv -q --python $(PYTHON_VERSION); \
 		echo "$(MSG_PREFIX) new uv virtual environment created. Activate with:"; \
 		echo "$(MSG_PREFIX) Windows: $(HIGHLIGHT_STYLE).\\\.venv\\\Scripts\\\activate$(NO_STYLE)"; \
 		echo "$(MSG_PREFIX) Unix/macOS: $(HIGHLIGHT_STYLE)source ./.venv/bin/activate$(NO_STYLE)"; \
+		echo "$(MSG_PREFIX) installing uv into environment"; \
+		$(PROJECT_DIR)/.venv/bin/pip install -q uv; \
 		echo "$(MSG_PREFIX) installing dependencies"; \
 {%- if dependency_file == 'pyproject.toml' %}
-		uv pip install -q --python $(PROJECT_DIR)/.venv -e ".[dev]"; \
+		uv $(UV_OPTS) pip install -q --python $(PROJECT_DIR)/.venv -e ".[dev]"; \
 {%- else %}
-		uv pip install -q --python $(PROJECT_DIR)/.venv -r requirements.txt -r requirements-dev.txt; \
+		uv $(UV_OPTS) pip install -q --python $(PROJECT_DIR)/.venv -r requirements.txt -r requirements-dev.txt; \
 {%- endif %}
 {%- if jupyter_kernel_support == 'Yes' %}
 		if command -v nb_venv_kernels >/dev/null 2>&1; then \
@@ -664,7 +668,7 @@ register_environment:
 install: create_environment requirements clean{% if env_encryption == 'Yes' %} .env{% endif %}
 
 	@echo "$(MSG_PREFIX) installing $(MODULE_NAME) in editable mode"
-	@uv pip install -q --python $(PROJECT_DIR)/.venv -e .
+	@uv $(UV_OPTS) pip install -q --python $(PROJECT_DIR)/.venv -e .
 	@echo "$(OK_STYLE)>>> $(MODULE_NAME) installed$(NO_STYLE)"
 
 ## Build package
@@ -688,7 +692,7 @@ increment_version_number:
 data: requirements
 	@echo "$(MSG_PREFIX) generating dataset"
 {%- if environment_manager == 'conda' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) $(PYTHON_INTERPRETER) {{ module_name }}/dataset.py
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) $(PYTHON_INTERPRETER) {{ module_name }}/dataset.py
 {%- else %}
 	$(PYTHON_INTERPRETER) {{ module_name }}/dataset.py
 {%- endif %}
@@ -699,18 +703,18 @@ data: requirements
 install: check_conda clean create_environment{% if env_encryption == 'Yes' %} .env{% endif %}
 
 	@echo "$(MSG_PREFIX) installing $(MODULE_NAME) in the $(ENV_NAME) environment $(OK_STYLE)EDITABLE$(NO_STYLE)"
-	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) pip install --editable .
+	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install --editable .
 	@echo "$(MSG_PREFIX) you can now import $(HIGHLIGHT_STYLE)$(MODULE_NAME)$(NO_STYLE) module in your notebooks and scripts\n"
 
 ## Build package and install
 build: check_conda clean install test increment_version_number
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
-	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -m build --wheel
+	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m build --wheel
 
 ## Increment build number
 increment_version_number: check_conda
 	@echo "$(MSG_PREFIX) incrementing build number"
-	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_FLAGS) python -c "import toml; data=toml.load('pyproject.toml'); ver=data['project']['version'].split('.'); ver[-1]=str(int(ver[-1])+1); data['project']['version']='.'.join(ver); f=open('pyproject.toml','w'); toml.dump(data,f); f.close(); print('New version:',data['project']['version'])"
+	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -c "import toml; data=toml.load('pyproject.toml'); ver=data['project']['version'].split('.'); ver[-1]=str(int(ver[-1])+1); data['project']['version']='.'.join(ver); f=open('pyproject.toml','w'); toml.dump(data,f); f.close(); print('New version:',data['project']['version'])"
 {%- endif %}
 
 {% if docker_support == 'Yes' -%}
