@@ -155,3 +155,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 71. **Task - Add preflight target** (v1.1.5): Added `preflight` Makefile target for virtualenv and uv environment managers that checks if python and pip are available before creating environment. Exits with helpful error messages if tools are missing. Made uv installation conditional - only installs via pip if uv not already available globally. Added `preflight` to .PHONY. `create_environment` now depends on `preflight` for virtualenv/uv (conda already has `check_conda`)<br>
    **Result**: Early failure with clear error messages if required tools missing; uv not reinstalled if already present
+
+72. **Task - Enhance preflight checks** (v1.1.5): Renamed `check_conda` to `preflight` for consistency across all env managers. Added venv module check for virtualenv (error if missing). Added cloud storage CLI warnings: aws for S3, az for Azure, gsutil for GCS - shown when respective storage selected. Added docker warning when docker_support enabled. Required tools cause errors, optional tools cause warnings<br>
+   **Result**: Comprehensive preflight checks: conda/python/pip/venv as errors; aws/az/gsutil/docker as warnings
