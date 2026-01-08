@@ -356,16 +356,34 @@ sync_models_up:
 # CONDA ENVIRONMENT MANAGEMENT                                                  #
 #################################################################################
 
-## Check conda is available
-check_conda:
+## Preflight check for required tools
+preflight:
 ifeq (False,$(HAS_CONDA))
 	@echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: conda not installed$(NO_STYLE)"
 	@echo "$(ERR_PREFIX) $(ERR_STYLE)install anaconda or miniforge from https://github.com/conda-forge/miniforge$(NO_STYLE)"
 	@exit 1
 endif
+{%- if dataset_storage == 's3' %}
+	@if ! command -v aws >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: aws CLI not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- elif dataset_storage == 'azure' %}
+	@if ! command -v az >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: az CLI not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- elif dataset_storage == 'gcs' %}
+	@if ! command -v gsutil >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: gsutil not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- endif %}
+{%- if docker_support == 'Yes' %}
+	@if ! command -v docker >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: docker not found - docker commands will fail$(NO_STYLE)"; \
+	fi
+{%- endif %}
 
 ## Set up conda environment
-create_environment: check_conda
+create_environment: preflight
 ifeq (True,$(HAS_CONDA))
 ifeq ($(ENV_LOCATION),local)
 	@echo "$(MSG_PREFIX) detected conda. Checking if local environment exists at .venv/$(ENV_NAME)"
@@ -431,7 +449,7 @@ endif
 endif
 
 ## Remove previously created environment
-remove_environment: check_conda
+remove_environment: preflight
 ifeq (True,$(HAS_CONDA))
 ifeq ($(ENV_LOCATION),local)
 	@echo "$(MSG_PREFIX) detected conda, removing local environment at $(HIGHLIGHT_STYLE).venv/$(ENV_NAME)$(NO_STYLE)"
@@ -457,7 +475,7 @@ endif
 
 {%- if jupyter_kernel_support == 'Yes' %}
 ## Register Jupyter kernel for the environment
-register_environment: check_conda
+register_environment: preflight
 ifeq (True,$(HAS_CONDA))
 ifeq ($(ENV_LOCATION),local)
 	@if [ ! -d "$(CONDA_ENV_PATH)/conda-meta" ]; then \
@@ -488,7 +506,7 @@ endif
 {%- endif %}
 
 ## Test python environment is setup correctly
-test_environment: check_conda
+test_environment: preflight
 ifeq ($(ENV_LOCATION),local)
 	@echo "$(MSG_PREFIX) testing local environment at $(HIGHLIGHT_STYLE).venv/$(ENV_NAME)$(NO_STYLE) if ready"
 	@if [ ! -d "$(CONDA_ENV_PATH)/conda-meta" ]; then \
@@ -526,6 +544,29 @@ preflight:
 		echo "$(ERR_PREFIX) $(ERR_STYLE)install pip: $(PYTHON_INTERPRETER) -m ensurepip --upgrade$(NO_STYLE)"; \
 		exit 1; \
 	fi
+	@if ! $(PYTHON_INTERPRETER) -c "import venv" 2>/dev/null; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: venv module not found$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)install venv: apt install python3-venv (Debian/Ubuntu)$(NO_STYLE)"; \
+		exit 1; \
+	fi
+{%- if dataset_storage == 's3' %}
+	@if ! command -v aws >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: aws CLI not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- elif dataset_storage == 'azure' %}
+	@if ! command -v az >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: az CLI not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- elif dataset_storage == 'gcs' %}
+	@if ! command -v gsutil >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: gsutil not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- endif %}
+{%- if docker_support == 'Yes' %}
+	@if ! command -v docker >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: docker not found - docker commands will fail$(NO_STYLE)"; \
+	fi
+{%- endif %}
 
 ## Set up Python interpreter environment
 create_environment: preflight
@@ -625,6 +666,24 @@ preflight:
 		echo "$(ERR_PREFIX) $(ERR_STYLE)install pip: $(PYTHON_INTERPRETER) -m ensurepip --upgrade$(NO_STYLE)"; \
 		exit 1; \
 	fi
+{%- if dataset_storage == 's3' %}
+	@if ! command -v aws >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: aws CLI not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- elif dataset_storage == 'azure' %}
+	@if ! command -v az >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: az CLI not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- elif dataset_storage == 'gcs' %}
+	@if ! command -v gsutil >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: gsutil not found - sync commands will fail$(NO_STYLE)"; \
+	fi
+{%- endif %}
+{%- if docker_support == 'Yes' %}
+	@if ! command -v docker >/dev/null 2>&1; then \
+		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: docker not found - docker commands will fail$(NO_STYLE)"; \
+	fi
+{%- endif %}
 
 ## Set up Python interpreter environment
 create_environment: preflight
@@ -728,19 +787,19 @@ data: requirements
 
 {%- if environment_manager == 'conda' %}
 ## Install src modules without dependencies (editable)
-install: check_conda clean create_environment{% if env_encryption == 'Yes' %} .env{% endif %}
+install: preflight clean create_environment{% if env_encryption == 'Yes' %} .env{% endif %}
 
 	@echo "$(MSG_PREFIX) installing $(MODULE_NAME) in the $(ENV_NAME) environment $(OK_STYLE)EDITABLE$(NO_STYLE)"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install --editable .
 	@echo "$(MSG_PREFIX) you can now import $(HIGHLIGHT_STYLE)$(MODULE_NAME)$(NO_STYLE) module in your notebooks and scripts\n"
 
 ## Build package and install
-build: check_conda clean install test increment_version_number
+build: preflight clean install test increment_version_number
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m build --wheel
 
 ## Increment build number
-increment_version_number: check_conda
+increment_version_number: preflight
 	@echo "$(MSG_PREFIX) incrementing build number"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -c "import toml; data=toml.load('pyproject.toml'); ver=data['project']['version'].split('.'); ver[-1]=str(int(ver[-1])+1); data['project']['version']='.'.join(ver); f=open('pyproject.toml','w'); toml.dump(data,f); f.close(); print('New version:',data['project']['version'])"
 {%- endif %}
