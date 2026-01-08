@@ -152,3 +152,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 70. **Task - Add options variables and install uv** (v1.1.4): Added `AWS_OPTS` variable (empty by default) to S3 configuration, appended to all 8 aws s3 sync commands for user-specified options. Renamed `CONDA_FLAGS` to `CONDA_OPTS` for consistency (33 occurrences). Added `UV_OPTS` variable to uv configuration, used as `uv $(UV_OPTS) <subcommand>` pattern (9 occurrences). Added `pip install uv` step in uv create_environment to install uv into the venv. Removed Contributing section from README<br>
    **Result**: Users can now pass additional options to AWS/conda/uv commands via Makefile variables or environment
+
+71. **Task - Add preflight target** (v1.1.5): Added `preflight` Makefile target for virtualenv and uv environment managers that checks if python and pip are available before creating environment. Exits with helpful error messages if tools are missing. Made uv installation conditional - only installs via pip if uv not already available globally. Added `preflight` to .PHONY. `create_environment` now depends on `preflight` for virtualenv/uv (conda already has `check_conda`)<br>
+   **Result**: Early failure with clear error messages if required tools missing; uv not reinstalled if already present

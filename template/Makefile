@@ -1,4 +1,4 @@
-.PHONY: clean data lint format requirements upgrade build sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve register_environment
+.PHONY: clean data lint format requirements upgrade build sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve register_environment preflight
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -514,8 +514,21 @@ endif
 # VIRTUALENV ENVIRONMENT MANAGEMENT                                             #
 #################################################################################
 
+## Preflight check for required tools
+preflight:
+	@if ! command -v $(PYTHON_INTERPRETER) >/dev/null 2>&1; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: $(PYTHON_INTERPRETER) not found$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)install Python from https://www.python.org/downloads/$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if ! $(PYTHON_INTERPRETER) -m pip --version >/dev/null 2>&1; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: pip not found$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)install pip: $(PYTHON_INTERPRETER) -m ensurepip --upgrade$(NO_STYLE)"; \
+		exit 1; \
+	fi
+
 ## Set up Python interpreter environment
-create_environment:
+create_environment: preflight
 	@if [ -d "$(PROJECT_DIR)/.venv" ]; then \
 		echo "$(MSG_PREFIX) virtual environment already exists at $(HIGHLIGHT_STYLE).venv$(NO_STYLE). Skipping creation."; \
 	else \
@@ -600,18 +613,33 @@ increment_version_number:
 # UV ENVIRONMENT MANAGEMENT                                                     #
 #################################################################################
 
+## Preflight check for required tools
+preflight:
+	@if ! command -v $(PYTHON_INTERPRETER) >/dev/null 2>&1; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: $(PYTHON_INTERPRETER) not found$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)install Python from https://www.python.org/downloads/$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if ! $(PYTHON_INTERPRETER) -m pip --version >/dev/null 2>&1; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: pip not found$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)install pip: $(PYTHON_INTERPRETER) -m ensurepip --upgrade$(NO_STYLE)"; \
+		exit 1; \
+	fi
+
 ## Set up Python interpreter environment
-create_environment:
+create_environment: preflight
 	@if [ -d "$(PROJECT_DIR)/.venv" ]; then \
 		echo "$(MSG_PREFIX) virtual environment already exists at $(HIGHLIGHT_STYLE).venv$(NO_STYLE). Skipping creation."; \
 	else \
+		if ! command -v uv >/dev/null 2>&1; then \
+			echo "$(MSG_PREFIX) installing uv"; \
+			pip install -q uv; \
+		fi; \
 		echo "$(MSG_PREFIX) creating uv virtual environment"; \
 		uv $(UV_OPTS) venv -q --python $(PYTHON_VERSION); \
 		echo "$(MSG_PREFIX) new uv virtual environment created. Activate with:"; \
 		echo "$(MSG_PREFIX) Windows: $(HIGHLIGHT_STYLE).\\\.venv\\\Scripts\\\activate$(NO_STYLE)"; \
 		echo "$(MSG_PREFIX) Unix/macOS: $(HIGHLIGHT_STYLE)source ./.venv/bin/activate$(NO_STYLE)"; \
-		echo "$(MSG_PREFIX) installing uv into environment"; \
-		$(PROJECT_DIR)/.venv/bin/pip install -q uv; \
 		echo "$(MSG_PREFIX) installing dependencies"; \
 {%- if dependency_file == 'pyproject.toml' %}
 		uv $(UV_OPTS) pip install -q --python $(PROJECT_DIR)/.venv -e ".[dev]"; \
