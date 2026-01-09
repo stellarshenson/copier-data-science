@@ -74,23 +74,20 @@ def is_copier_temp_directory():
 
     We only want to run post-generation cleanup for #2.
 
-    Copier uses Python's TemporaryDirectory which creates dirs like:
-    - /tmp/tmpXXXXXXXX/ (Linux)
-    - /var/folders/.../T/tmpXXXXXXXX/ (macOS)
-    - C:\\Users\\...\\Temp\\tmpXXXXXXXX\\ (Windows)
+    Copier creates temp directories with patterns like:
+    - /tmp/copier._main.new_copy.XXXXXXXX/ (for update diff)
+    - /tmp/copier._vcs.clone.XXXXXXXX/ (for cloning repos)
     """
     cwd = os.getcwd()
 
-    # Check for Python's tempfile pattern: TemporaryDirectory() creates
-    # tmp + exactly 8 random alphanumeric chars (e.g., /tmp/tmpXXXXXXXX/)
-    # We must be precise to avoid matching test fixtures that use suffixes
-    # like /tmp/tmpXXXXXXdata-project/
+    # Match copier's temp directory patterns (not Python's generic tmpXXXXXXXX)
+    # Copier uses prefixes like "copier._main.new_copy." or "copier._vcs.clone."
     temp_patterns = [
-        r"/tmp/tmp[a-zA-Z0-9_]{8}(/|$)",  # Linux: /tmp/tmpXXXXXXXX/ (8 chars)
-        r"/var/folders/.*/T/tmp[a-zA-Z0-9_]{8}(/|$)",  # macOS
-        r"\\Temp\\tmp[a-zA-Z0-9_]{8}(\\|$)",  # Windows
+        r"/tmp/copier\.[^/]+\.[a-z0-9_]+(/|$)",  # Linux: /tmp/copier.xxx.xxx/
+        r"/var/folders/.*/T/copier\.[^/]+\.[a-z0-9_]+(/|$)",  # macOS
+        r"\\Temp\\copier\.[^\\]+\.[a-z0-9_]+(\\|$)",  # Windows
     ]
-    return any(re.search(pattern, cwd) for pattern in temp_patterns)
+    return any(re.search(pattern, cwd, re.IGNORECASE) for pattern in temp_patterns)
 
 
 #
@@ -220,11 +217,7 @@ def parse_args():
 def main():
     # Skip execution in temp directories - copier update runs tasks there too
     # We only want to run for the actual project directory copy
-    cwd = os.getcwd()
-    is_temp = is_copier_temp_directory()
-    print(f"DEBUG: cwd={cwd}, is_temp={is_temp}")
-    if is_temp:
-        print("DEBUG: Skipping (temp directory)")
+    if is_copier_temp_directory():
         return
 
     _do_post_gen()

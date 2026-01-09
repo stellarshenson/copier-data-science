@@ -24,17 +24,20 @@ class TestIsCopierTempDirectory:
     @pytest.mark.parametrize(
         "cwd,expected",
         [
-            # Linux copier temp directories - exactly 8 random chars (should be detected)
-            ("/tmp/tmpabcd1234/my_project", True),  # 8 chars: abcd1234
-            ("/tmp/tmp_xyz7890/subdir", True),  # 8 chars: _xyz7890
-            ("/tmp/tmpk8s_name", True),  # 8 chars: k8s_name (no trailing slash)
+            # Copier temp directories (should be detected)
+            ("/tmp/copier._main.new_copy.5c_dx15j", True),  # copier update diff
+            ("/tmp/copier._main.new_copy.5c_dx15j/project", True),  # subdir of temp
+            ("/tmp/copier._vcs.clone.fvvn1ivq", True),  # copier clone
+            ("/tmp/copier._vcs.clone.fvvn1ivq/repo/subdir", True),  # nested in clone
             # macOS copier temp directories (should be detected)
-            ("/var/folders/ab/cd123/T/tmpxyz78901/project", True),  # 8 chars after tmp
+            ("/var/folders/ab/cd123/T/copier._main.new_copy.xyz12345", True),
             # Windows copier temp directories (should be detected)
-            ("C:\\Users\\test\\AppData\\Local\\Temp\\tmpabcd1234\\project", True),
-            # Test directories with suffixes (should NOT be detected - not copier's pattern)
-            ("/tmp/tmp0_odqejbdata-project/docker_test_project", False),  # suffix after random
-            ("/tmp/tmpabcdefghsuffix/project", False),  # has suffix after 8 chars
+            ("C:\\Users\\test\\AppData\\Local\\Temp\\copier._main.new_copy.xyz12345", True),
+            # Python tempfile directories (should NOT be detected - not copier)
+            ("/tmp/tmpabcd1234/my_project", False),
+            ("/tmp/tmp_xyz7890/subdir", False),
+            # Test directories with suffixes (should NOT be detected)
+            ("/tmp/tmp0_odqejbdata-project/docker_test_project", False),
             # Actual project directories (should NOT be detected)
             ("/home/user/projects/my_project", False),
             ("/home/user/workspace/data-science", False),
@@ -46,9 +49,6 @@ class TestIsCopierTempDirectory:
             ("/", False),
             ("/home", False),
             (".", False),
-            # Short random strings (should NOT be detected - less than 8 chars)
-            ("/tmp/tmpabc/project", False),  # only 3 chars
-            ("/tmp/tmpab12/project", False),  # only 4 chars
         ],
     )
     def test_temp_directory_detection(self, cwd, expected):
