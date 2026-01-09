@@ -8,6 +8,8 @@ passed by Copier's _tasks.
 """
 
 import argparse
+import hashlib
+import os
 import re
 import shutil
 from pathlib import Path
@@ -15,6 +17,49 @@ from shutil import copytree
 from tempfile import TemporaryDirectory
 from urllib.request import urlretrieve
 from zipfile import ZipFile
+
+
+def get_run_marker():
+    """Get a marker file path unique to this copier invocation.
+
+    Uses parent PID (copier process) and working directory hash to create
+    a unique marker that persists across multiple subprocess calls within
+    the same copier run, preventing duplicate task execution.
+    """
+    ppid = os.getppid()
+    cwd_hash = hashlib.md5(os.getcwd().encode()).hexdigest()[:8]
+    marker = Path("/tmp") / f".copier_post_gen_{ppid}_{cwd_hash}"
+
+    # Clean up stale markers from previous runs (older than 1 hour)
+    import time
+
+    for old_marker in Path("/tmp").glob(".copier_post_gen_*"):
+        try:
+            if time.time() - old_marker.stat().st_mtime > 3600:
+                old_marker.unlink()
+        except (OSError, FileNotFoundError):
+            pass
+
+    return marker
+
+
+def check_already_ran():
+    """Check if this script already ran in current copier invocation.
+
+    Returns True if we should skip execution (already ran).
+    Creates marker file if this is the first run.
+    """
+    marker = get_run_marker()
+    if marker.exists():
+        return True  # Already ran, skip
+    marker.touch()
+    return False
+
+
+def cleanup_marker():
+    """Remove the run marker file."""
+    marker = get_run_marker()
+    marker.unlink(missing_ok=True)
 
 
 #
@@ -142,6 +187,18 @@ def parse_args():
 
 
 def main():
+    # Prevent duplicate execution - copier may run tasks multiple times during update
+    # The marker persists for the duration of the parent process (copier)
+    if check_already_ran():
+        return
+
+    _do_post_gen()
+    # Note: marker is NOT cleaned up here - it persists until the copier process ends
+    # or until the next copier run with a different PID cleans up old markers
+
+
+def _do_post_gen():
+    """Actual post-generation logic."""
     args = parse_args()
 
     # Linting setup

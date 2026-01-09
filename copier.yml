@@ -226,6 +226,11 @@ _exclude:
   - __pycache__
   - .git
 
+# Skip these files on update if they already exist (user-customized files)
+_skip_if_exists:
+  - README.md
+  - .env
+
 # Post-generation tasks
 # Pass all variables as command-line arguments since extra_env isn't supported
 _tasks:
