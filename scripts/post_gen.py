@@ -8,7 +8,6 @@ passed by Copier's _tasks.
 """
 
 import argparse
-import hashlib
 import os
 import re
 import shutil
@@ -19,47 +18,79 @@ from urllib.request import urlretrieve
 from zipfile import ZipFile
 
 
-def get_run_marker():
-    """Get a marker file path unique to this copier invocation.
+def resolve_pyproject_conflicts():
+    """Resolve conflict markers in pyproject.toml, preserving custom license.
 
-    Uses parent PID (copier process) and working directory hash to create
-    a unique marker that persists across multiple subprocess calls within
-    the same copier run, preventing duplicate task execution.
+    During `copier update`, if pyproject.toml differs from template, copier adds
+    conflict markers like:
+        <<<<<<< before updating
+        [project.license]
+        text = "Proprietary - Kolomolo LTD"
+        =======
+        license = "MIT"
+        >>>>>>> after updating
+
+    This function resolves conflicts by:
+    - License-related conflicts: keep user's version (before updating)
+    - Other conflicts: keep template version (after updating)
     """
-    ppid = os.getppid()
-    cwd_hash = hashlib.md5(os.getcwd().encode()).hexdigest()[:8]
-    marker = Path("/tmp") / f".copier_post_gen_{ppid}_{cwd_hash}"
+    pyproject_path = Path("pyproject.toml")
+    if not pyproject_path.exists():
+        return
 
-    # Clean up stale markers from previous runs (older than 1 hour)
-    import time
+    content = pyproject_path.read_text()
 
-    for old_marker in Path("/tmp").glob(".copier_post_gen_*"):
-        try:
-            if time.time() - old_marker.stat().st_mtime > 3600:
-                old_marker.unlink()
-        except (OSError, FileNotFoundError):
-            pass
+    # Check if there are conflict markers
+    if "<<<<<<< before updating" not in content:
+        return
 
-    return marker
+    # Pattern to match conflict blocks
+    conflict_pattern = re.compile(
+        r"<<<<<<< before updating\n(.*?)\n=======\n(.*?)\n>>>>>>> after updating",
+        re.DOTALL,
+    )
+
+    def resolve_conflict(match):
+        before = match.group(1)  # User's version
+        after = match.group(2)  # Template's version
+
+        # If this conflict involves license, keep user's version
+        if "license" in before.lower() or "[project.license]" in before:
+            return before
+        # Otherwise keep template's version
+        return after
+
+    resolved = conflict_pattern.sub(resolve_conflict, content)
+    pyproject_path.write_text(resolved)
 
 
-def check_already_ran():
-    """Check if this script already ran in current copier invocation.
+def is_copier_temp_directory():
+    """Check if current directory is a copier-created temporary directory.
 
-    Returns True if we should skip execution (already ran).
-    Creates marker file if this is the first run.
+    During `copier update`, tasks run THREE times:
+    1. In temp dir (old template copy for baseline)
+    2. In actual project (new template - this is the one we want)
+    3. In temp dir (new template copy for diff)
+
+    We only want to run post-generation cleanup for #2.
+
+    Copier uses Python's TemporaryDirectory which creates dirs like:
+    - /tmp/tmpXXXXXXXX/ (Linux)
+    - /var/folders/.../T/tmpXXXXXXXX/ (macOS)
+    - C:\\Users\\...\\Temp\\tmpXXXXXXXX\\ (Windows)
     """
-    marker = get_run_marker()
-    if marker.exists():
-        return True  # Already ran, skip
-    marker.touch()
-    return False
+    cwd = os.getcwd()
 
-
-def cleanup_marker():
-    """Remove the run marker file."""
-    marker = get_run_marker()
-    marker.unlink(missing_ok=True)
+    # Check for Python's tempfile pattern: TemporaryDirectory() creates
+    # tmp + exactly 8 random alphanumeric chars (e.g., /tmp/tmpXXXXXXXX/)
+    # We must be precise to avoid matching test fixtures that use suffixes
+    # like /tmp/tmpXXXXXXdata-project/
+    temp_patterns = [
+        r"/tmp/tmp[a-zA-Z0-9_]{8}(/|$)",  # Linux: /tmp/tmpXXXXXXXX/ (8 chars)
+        r"/var/folders/.*/T/tmp[a-zA-Z0-9_]{8}(/|$)",  # macOS
+        r"\\Temp\\tmp[a-zA-Z0-9_]{8}(\\|$)",  # Windows
+    ]
+    return any(re.search(pattern, cwd) for pattern in temp_patterns)
 
 
 #
@@ -187,19 +218,20 @@ def parse_args():
 
 
 def main():
-    # Prevent duplicate execution - copier may run tasks multiple times during update
-    # The marker persists for the duration of the parent process (copier)
-    if check_already_ran():
+    # Skip execution in temp directories - copier update runs tasks there too
+    # We only want to run for the actual project directory copy
+    if is_copier_temp_directory():
         return
 
     _do_post_gen()
-    # Note: marker is NOT cleaned up here - it persists until the copier process ends
-    # or until the next copier run with a different PID cleans up old markers
 
 
 def _do_post_gen():
     """Actual post-generation logic."""
     args = parse_args()
+
+    # Resolve any conflict markers in pyproject.toml (preserves custom license)
+    resolve_pyproject_conflicts()
 
     # Linting setup
     if args.linting_and_formatting == "ruff":
