@@ -173,3 +173,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 77. **Task - Add post_gen.py tests** (v1.1.8): Created `tests/test_post_gen.py` with 23 tests. `TestIsCopierTempDirectory` (17 parametrized tests): verifies Linux/macOS/Windows copier temp dirs detected, user dirs not detected, pytest fixture dirs with suffixes not detected, short random strings not detected. `TestResolvePyprojectConflicts` (6 tests): no-conflict unchanged, license conflict keeps user version, non-license conflict keeps template, multiple mixed conflicts, missing file handled, various license formats<br>
    **Result**: All 23 post_gen tests pass. Critical temp directory detection has coverage for edge cases
+
+78. **Task - Fix copier temp directory pattern** (v1.1.13): Discovered copier uses its own temp directory naming (`copier._main.new_copy.XXX`, `copier._main.old_copy.XXX`, `copier._vcs.clone.XXX`) not Python's standard `tmpXXXXXXXX`. Updated `is_copier_temp_directory()` regex to match `/tmp/copier\.[^/]+\.[a-z0-9_]+`. Tested full update cycle - when both old and new template use v1.1.13+, only ONE cleanup message appears. Old projects updating TO this version will see 2 messages (one from old script), but future updates will show just 1<br>
+   **Result**: Post-generation cleanup runs exactly once during copier update for projects on v1.1.13+
