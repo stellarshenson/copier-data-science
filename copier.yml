@@ -193,6 +193,21 @@ docker_package_manager:
   help: "Package manager for Docker image"
   when: "{{ docker_support == 'Yes' }}"
 
+package_repository:
+  type: str
+  choices:
+    - "No"
+    - "Yes"
+  default: "No"
+  help: "Enable publishing to a Python package repository"
+
+package_repository_url:
+  type: str
+  default: ""
+  when: "{{ package_repository == 'Yes' }}"
+  help: "Package repository URL (e.g., https://upload.pypi.org/legacy/)"
+  placeholder: "https://upload.pypi.org/legacy/"
+
 custom_config:
   type: str
   default: ""
@@ -241,6 +256,8 @@ _tasks:
     --env-encryption "{{ env_encryption }}"
     --docker-support "{{ docker_support }}"
     --docker-package-manager "{{ docker_package_manager | default('uv') }}"
+    --package-repository "{{ package_repository }}"
+    --package-repository-url "{{ package_repository_url | default('') }}"
     --custom-config "{{ custom_config }}"
 
 # Answers file for template updates

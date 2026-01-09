@@ -72,6 +72,9 @@ dev = [
 {%- elif dataset_storage == 'gcs' %}
     "gsutil",
 {%- endif %}
+{%- if package_repository == 'Yes' %}
+    "twine",
+{%- endif %}
 ]
 {%- endif %}
 

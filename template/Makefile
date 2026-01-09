@@ -1,4 +1,4 @@
-.PHONY: clean data lint format requirements upgrade build sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve register_environment preflight
+.PHONY: clean data lint format requirements upgrade build{% if package_repository == 'Yes' %} publish{% endif %} sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve register_environment preflight
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -25,6 +25,11 @@ AZURE_CONTAINER = {{ azure_container }}
 # Google Cloud Storage configuration
 GCS_BUCKET = {{ gcs_bucket }}
 {%- endif %}
+{%- endif %}
+
+{%- if package_repository == 'Yes' %}
+# Package repository URL (set to publish packages, e.g., https://upload.pypi.org/legacy/)
+PACKAGE_REPOSITORY = {{ package_repository_url }}
 {%- endif %}
 
 #################################################################################
@@ -643,6 +648,24 @@ install: create_environment requirements clean increment_version_number{% if env
 build: clean install test
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	$(PROJECT_DIR)/.venv/bin/python -m build --wheel
+{%- if package_repository == 'Yes' %}
+
+## Publish package to repository
+publish: build
+	@if [ -z "$(PACKAGE_REPOSITORY)" ]; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: PACKAGE_REPOSITORY not configured$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)set PACKAGE_REPOSITORY in Makefile (e.g., https://upload.pypi.org/legacy/)$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if [ ! -f "$(PROJECT_DIR)/.venv/bin/twine" ]; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: twine not found$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)install twine: pip install twine$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@echo "$(MSG_PREFIX) publishing $(MODULE_NAME) to $(HIGHLIGHT_STYLE)$(PACKAGE_REPOSITORY)$(NO_STYLE)"
+	$(PROJECT_DIR)/.venv/bin/twine upload --repository-url $(PACKAGE_REPOSITORY) dist/*
+	@echo "$(OK_STYLE)>>> $(MODULE_NAME) published successfully$(NO_STYLE)"
+{%- endif %}
 
 ## Increment build number
 increment_version_number:
@@ -762,6 +785,24 @@ install: create_environment requirements clean{% if env_encryption == 'Yes' %} .
 build: clean install test increment_version_number
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	$(PROJECT_DIR)/.venv/bin/python -m build --wheel
+{%- if package_repository == 'Yes' %}
+
+## Publish package to repository
+publish: build
+	@if [ -z "$(PACKAGE_REPOSITORY)" ]; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: PACKAGE_REPOSITORY not configured$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)set PACKAGE_REPOSITORY in Makefile (e.g., https://upload.pypi.org/legacy/)$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if [ ! -f "$(PROJECT_DIR)/.venv/bin/twine" ]; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: twine not found$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)install twine: pip install twine$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@echo "$(MSG_PREFIX) publishing $(MODULE_NAME) to $(HIGHLIGHT_STYLE)$(PACKAGE_REPOSITORY)$(NO_STYLE)"
+	$(PROJECT_DIR)/.venv/bin/twine upload --repository-url $(PACKAGE_REPOSITORY) dist/*
+	@echo "$(OK_STYLE)>>> $(MODULE_NAME) published successfully$(NO_STYLE)"
+{%- endif %}
 
 ## Increment build number
 increment_version_number:
@@ -797,6 +838,24 @@ install: preflight clean create_environment{% if env_encryption == 'Yes' %} .env
 build: preflight clean install test increment_version_number
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m build --wheel
+{%- if package_repository == 'Yes' %}
+
+## Publish package to repository
+publish: build
+	@if [ -z "$(PACKAGE_REPOSITORY)" ]; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: PACKAGE_REPOSITORY not configured$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)set PACKAGE_REPOSITORY in Makefile (e.g., https://upload.pypi.org/legacy/)$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@if ! conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -c "import twine" 2>/dev/null; then \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: twine not found$(NO_STYLE)"; \
+		echo "$(ERR_PREFIX) $(ERR_STYLE)install twine: pip install twine$(NO_STYLE)"; \
+		exit 1; \
+	fi
+	@echo "$(MSG_PREFIX) publishing $(MODULE_NAME) to $(HIGHLIGHT_STYLE)$(PACKAGE_REPOSITORY)$(NO_STYLE)"
+	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) twine upload --repository-url $(PACKAGE_REPOSITORY) dist/*
+	@echo "$(OK_STYLE)>>> $(MODULE_NAME) published successfully$(NO_STYLE)"
+{%- endif %}
 
 ## Increment build number
 increment_version_number: preflight
