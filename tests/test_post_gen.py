@@ -206,3 +206,55 @@ license = { file = "LICENSE.txt" }
                 resolve_pyproject_conflicts()
 
         assert pyproject.read_text() == expected
+
+    def test_multiline_dev_dependencies_conflict(self, tmp_path):
+        """Test that multi-line dev dependencies conflict is resolved to template version."""
+        pyproject = tmp_path / "pyproject.toml"
+        content_with_conflict = """\
+[project]
+name = "my-project"
+
+[project.optional-dependencies]
+<<<<<<< before updating
+dev = [ "build", "ipykernel", "ipython", "nbdime", "pip", "pytest", "pytest-cov", "toml", "ruff",]
+=======
+dev = [
+    "build",
+    "ipykernel",
+    "ipython",
+    "nbdime",
+    "pip",
+    "pytest",
+    "pytest-cov",
+    "toml",
+    "ruff",
+    "twine",
+]
+>>>>>>> after updating
+"""
+        expected = """\
+[project]
+name = "my-project"
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "ipykernel",
+    "ipython",
+    "nbdime",
+    "pip",
+    "pytest",
+    "pytest-cov",
+    "toml",
+    "ruff",
+    "twine",
+]
+"""
+        pyproject.write_text(content_with_conflict)
+
+        with patch("os.getcwd", return_value=str(tmp_path)):
+            original_path = Path
+            with patch("post_gen.Path", side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x)):
+                resolve_pyproject_conflicts()
+
+        assert pyproject.read_text() == expected

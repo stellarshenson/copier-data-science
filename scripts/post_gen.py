@@ -45,8 +45,10 @@ def resolve_pyproject_conflicts():
         return
 
     # Pattern to match conflict blocks
+    # Use [\r\n]+ to handle both Unix and Windows line endings
+    # and multiple newlines between sections
     conflict_pattern = re.compile(
-        r"<<<<<<< before updating\n(.*?)\n=======\n(.*?)\n>>>>>>> after updating",
+        r"<<<<<<< before updating[\r\n]+(.*?)[\r\n]+=======[\r\n]+(.*?)[\r\n]+>>>>>>> after updating",
         re.DOTALL,
     )
 
