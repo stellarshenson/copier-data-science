@@ -245,6 +245,8 @@ def _do_post_gen():
 
     # Skip test/docs reorganization during update - user's files should be preserved
     is_update = is_copier_update()
+    cwd = os.getcwd()
+    print(f"DEBUG: cwd={cwd}, is_update={is_update}")
 
     # Linting setup
     if args.linting_and_formatting == "ruff":

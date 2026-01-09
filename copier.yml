@@ -227,9 +227,12 @@ _exclude:
   - .git
 
 # Skip these files on update if they already exist (user-customized files)
+# Note: tests/test_data.py is created by post_gen from tests/pytest/, not directly by template
 _skip_if_exists:
   - README.md
   - .env
+  - tests/test_data.py
+  - .copier-answers.yml
 
 # Post-generation tasks
 # Pass all variables as command-line arguments since extra_env isn't supported
