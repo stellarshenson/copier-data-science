@@ -220,7 +220,11 @@ def parse_args():
 def main():
     # Skip execution in temp directories - copier update runs tasks there too
     # We only want to run for the actual project directory copy
-    if is_copier_temp_directory():
+    import sys
+    cwd = os.getcwd()
+    is_temp = is_copier_temp_directory()
+    print(f"DEBUG: cwd={cwd}, is_temp={is_temp}", file=sys.stderr)
+    if is_temp:
         return
 
     _do_post_gen()
