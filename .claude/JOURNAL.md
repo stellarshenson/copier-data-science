@@ -185,3 +185,6 @@ This journal tracks substantive work on documents, diagrams, and documentation c
 
 81. **Task - Improve pyproject conflict resolution** (v1.1.17): Fixed regex pattern in `resolve_pyproject_conflicts()` to handle multi-line content. Changed from `\n` to `[\r\n]+` to support Windows line endings and multi-line array conflicts like dev dependencies. Added test for multi-line dev deps conflict where user's single-line format conflicts with template's multi-line format with new packages<br>
    **Result**: All 24 post_gen tests pass including new multi-line conflict test
+
+82. **Task - Fix version increment reformatting pyproject.toml** (v1.1.18): Replaced `toml.dump()` with regex-based version update in Makefile `increment_version_number` target. The toml library was reformatting the entire file during version increment (e.g., multi-line arrays to single-line), causing conflicts during `copier update`. New approach uses regex to update only the version line, preserving original formatting. Removed `toml` from dev dependencies in requirements-dev.txt and pyproject.toml since it's no longer needed<br>
+   **Result**: Version increment now preserves pyproject.toml formatting, preventing copier update conflicts
