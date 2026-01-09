@@ -257,11 +257,12 @@ def _do_post_gen():
                         dest.unlink()
                 shutil.move(str(obj), str(tests_path))
 
-        # Remove all remaining tests templates (pytest, unittest directories)
-        # Collect first to avoid modifying while iterating
-        dirs_to_remove = [d for d in tests_path.iterdir() if d.is_dir()]
-        for tests_template in dirs_to_remove:
-            shutil.rmtree(tests_template)
+        # Remove only the template directories (pytest, unittest), not user's custom dirs
+        template_test_dirs = ["pytest", "unittest"]
+        for template_dir in template_test_dirs:
+            template_path = tests_path / template_dir
+            if template_path.exists():
+                shutil.rmtree(template_path)
 
     # Use the selected documentation package specified in the config,
     # or none if none selected
@@ -281,11 +282,12 @@ def _do_post_gen():
                             dest.unlink()
                     shutil.move(str(obj), str(docs_path))
 
-        # Remove all remaining docs templates (mkdocs directory, etc.)
-        # Collect first to avoid modifying while iterating
-        dirs_to_remove = [d for d in docs_path.iterdir() if d.is_dir() and d.name != "docs"]
-        for docs_template in dirs_to_remove:
-            shutil.rmtree(docs_template)
+        # Remove only the template directories (mkdocs), not user's custom dirs
+        template_doc_dirs = ["mkdocs"]
+        for template_dir in template_doc_dirs:
+            template_path = docs_path / template_dir
+            if template_path.exists():
+                shutil.rmtree(template_path)
 
     # environment.yml only kept when dependency_file == "environment.yml" (conda-native dev deps)
     # See docs/docs/env-management.md for the full matrix
@@ -345,12 +347,23 @@ def _do_post_gen():
 
     # Rename .copier-answers.yml.jinja to .copier-answers.yml
     # (needed because _templates_suffix: "" doesn't strip .jinja suffix)
+    # Only do this for fresh copy - during update, copier manages the answers file
     answers_jinja = Path(".copier-answers.yml.jinja")
     answers_yml = Path(".copier-answers.yml")
     if answers_jinja.exists():
+        # Check if existing answers file has _commit (indicates copier update scenario)
         if answers_yml.exists():
-            answers_yml.unlink()
-        answers_jinja.rename(answers_yml)
+            content = answers_yml.read_text()
+            if "_commit:" in content:
+                # During update - copier manages the file, just remove the jinja
+                answers_jinja.unlink()
+            else:
+                # Fresh copy with placeholder - replace it
+                answers_yml.unlink()
+                answers_jinja.rename(answers_yml)
+        else:
+            # No existing answers file - rename jinja to yml
+            answers_jinja.rename(answers_yml)
 
     print("Post-generation cleanup complete!")
 
