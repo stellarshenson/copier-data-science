@@ -243,10 +243,7 @@ def _do_post_gen():
     # Resolve any conflict markers in pyproject.toml (preserves custom license)
     resolve_pyproject_conflicts()
 
-    # Skip test/docs reorganization during update - user's files should be preserved
     is_update = is_copier_update()
-    cwd = os.getcwd()
-    print(f"DEBUG: cwd={cwd}, is_update={is_update}")
 
     # Linting setup
     if args.linting_and_formatting == "ruff":
@@ -255,50 +252,71 @@ def _do_post_gen():
         Path("setup.cfg").unlink(missing_ok=True)
     # flake8+black+isort are in dev dependencies, not project dependencies
 
-    # Select testing framework - only reorganize on fresh copy, not update
-    if not is_update:
-        tests_path = Path("tests")
+    # Select testing framework
+    tests_path = Path("tests")
 
-        if args.testing_framework == "none":
-            if tests_path.exists():
-                shutil.rmtree(tests_path)
-        elif tests_path.exists():
-            tests_subpath = tests_path / args.testing_framework
-            if tests_subpath.exists():
-                # Move template files only if they don't already exist (preserve user's files)
-                items_to_move = list(tests_subpath.iterdir())
+    if args.testing_framework == "none":
+        # Only delete tests on fresh copy, not update
+        if not is_update and tests_path.exists():
+            shutil.rmtree(tests_path)
+    elif tests_path.exists():
+        tests_subpath = tests_path / args.testing_framework
+        if tests_subpath.exists():
+            # Move template files to tests/ root
+            # Fresh copy: overwrite (user hasn't modified yet)
+            # Update: only move if dest doesn't exist (preserve user's files)
+            items_to_move = list(tests_subpath.iterdir())
+            for obj in items_to_move:
+                dest = tests_path / obj.name
+                if is_update and dest.exists():
+                    # During update, don't overwrite user's files
+                    pass
+                else:
+                    # Fresh copy or dest doesn't exist
+                    if dest.exists():
+                        if dest.is_dir():
+                            shutil.rmtree(dest)
+                        else:
+                            dest.unlink()
+                    shutil.move(str(obj), str(tests_path))
+
+        # Always remove template directories (pytest, unittest)
+        template_test_dirs = ["pytest", "unittest"]
+        for template_dir in template_test_dirs:
+            template_path = tests_path / template_dir
+            if template_path.exists():
+                shutil.rmtree(template_path)
+
+    # Use the selected documentation package specified in the config
+    docs_path = Path("docs")
+    if docs_path.exists():
+        if args.docs != "none":
+            docs_subpath = docs_path / args.docs
+            if docs_subpath.exists():
+                # Move template files to docs/ root
+                # Fresh copy: overwrite (user hasn't modified yet)
+                # Update: only move if dest doesn't exist (preserve user's files)
+                items_to_move = list(docs_subpath.iterdir())
                 for obj in items_to_move:
-                    dest = tests_path / obj.name
-                    if not dest.exists():
-                        shutil.move(str(obj), str(tests_path))
+                    dest = docs_path / obj.name
+                    if is_update and dest.exists():
+                        # During update, don't overwrite user's files
+                        pass
+                    else:
+                        # Fresh copy or dest doesn't exist
+                        if dest.exists():
+                            if dest.is_dir():
+                                shutil.rmtree(dest)
+                            else:
+                                dest.unlink()
+                        shutil.move(str(obj), str(docs_path))
 
-            # Remove only the template directories (pytest, unittest), not user's custom dirs
-            template_test_dirs = ["pytest", "unittest"]
-            for template_dir in template_test_dirs:
-                template_path = tests_path / template_dir
-                if template_path.exists():
-                    shutil.rmtree(template_path)
-
-    # Use the selected documentation package specified in the config - only on fresh copy
-    if not is_update:
-        docs_path = Path("docs")
-        if docs_path.exists():
-            if args.docs != "none":
-                docs_subpath = docs_path / args.docs
-                if docs_subpath.exists():
-                    # Move template files only if they don't already exist (preserve user's files)
-                    items_to_move = list(docs_subpath.iterdir())
-                    for obj in items_to_move:
-                        dest = docs_path / obj.name
-                        if not dest.exists():
-                            shutil.move(str(obj), str(docs_path))
-
-            # Remove only the template directories (mkdocs), not user's custom dirs
-            template_doc_dirs = ["mkdocs"]
-            for template_dir in template_doc_dirs:
-                template_path = docs_path / template_dir
-                if template_path.exists():
-                    shutil.rmtree(template_path)
+        # Always remove template directories (mkdocs)
+        template_doc_dirs = ["mkdocs"]
+        for template_dir in template_doc_dirs:
+            template_path = docs_path / template_dir
+            if template_path.exists():
+                shutil.rmtree(template_path)
 
     # environment.yml only kept when dependency_file == "environment.yml" (conda-native dev deps)
     # See docs/docs/env-management.md for the full matrix
