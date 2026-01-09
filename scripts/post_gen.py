@@ -246,16 +246,12 @@ def _do_post_gen():
     elif tests_path.exists():
         tests_subpath = tests_path / args.testing_framework
         if tests_subpath.exists():
-            # First, collect all items to move
+            # Move template files only if they don't already exist (preserve user's files)
             items_to_move = list(tests_subpath.iterdir())
             for obj in items_to_move:
                 dest = tests_path / obj.name
-                if dest.exists():
-                    if dest.is_dir():
-                        shutil.rmtree(dest)
-                    else:
-                        dest.unlink()
-                shutil.move(str(obj), str(tests_path))
+                if not dest.exists():
+                    shutil.move(str(obj), str(tests_path))
 
         # Remove only the template directories (pytest, unittest), not user's custom dirs
         template_test_dirs = ["pytest", "unittest"]
@@ -271,16 +267,12 @@ def _do_post_gen():
         if args.docs != "none":
             docs_subpath = docs_path / args.docs
             if docs_subpath.exists():
-                # First, collect all items to move
+                # Move template files only if they don't already exist (preserve user's files)
                 items_to_move = list(docs_subpath.iterdir())
                 for obj in items_to_move:
                     dest = docs_path / obj.name
-                    if dest.exists():
-                        if dest.is_dir():
-                            shutil.rmtree(dest)
-                        else:
-                            dest.unlink()
-                    shutil.move(str(obj), str(docs_path))
+                    if not dest.exists():
+                        shutil.move(str(obj), str(docs_path))
 
         # Remove only the template directories (mkdocs), not user's custom dirs
         template_doc_dirs = ["mkdocs"]
