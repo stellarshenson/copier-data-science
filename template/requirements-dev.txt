@@ -14,7 +14,6 @@ nbdime
 pytest
 pytest-cov
 {%- endif %}
-toml
 {%- if linting_and_formatting == 'ruff' %}
 ruff
 {%- elif linting_and_formatting == 'flake8+black+isort' %}
