@@ -19,19 +19,19 @@ from zipfile import ZipFile
 
 
 def resolve_pyproject_conflicts():
-    """Resolve conflict markers in pyproject.toml, preserving custom license.
+    """Resolve conflict markers in pyproject.toml, preserving user changes.
 
     During `copier update`, if pyproject.toml differs from template, copier adds
     conflict markers like:
         <<<<<<< before updating
-        [project.license]
-        text = "Proprietary - Kolomolo LTD"
+        version = "1.2.6"
         =======
-        license = "MIT"
+        version = "0.1.0"
         >>>>>>> after updating
 
     This function resolves conflicts by:
     - License-related conflicts: keep user's version (before updating)
+    - Version-related conflicts: keep user's version (before updating)
     - Other conflicts: keep template version (after updating)
     """
     pyproject_path = Path("pyproject.toml")
@@ -56,8 +56,10 @@ def resolve_pyproject_conflicts():
         before = match.group(1)  # User's version
         after = match.group(2)  # Template's version
 
-        # If this conflict involves license, keep user's version
+        # Keep user's version for license and version fields
         if "license" in before.lower() or "[project.license]" in before:
+            return before
+        if "version" in before.lower() and "=" in before:
             return before
         # Otherwise keep template's version
         return after

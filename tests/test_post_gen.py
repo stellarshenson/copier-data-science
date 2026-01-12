@@ -109,22 +109,22 @@ text = "Proprietary - Kolomolo LTD"
 
         assert pyproject.read_text() == expected
 
-    def test_non_license_conflict_keeps_template_version(self, tmp_path):
-        """Test that non-license conflicts keep template's new version."""
+    def test_version_conflict_keeps_user_version(self, tmp_path):
+        """Test that version conflicts preserve user's bumped version."""
         pyproject = tmp_path / "pyproject.toml"
         content_with_conflict = """\
 [project]
 name = "my-project"
 <<<<<<< before updating
-version = "0.1.0"
+version = "1.2.6"
 =======
-version = "0.2.0"
+version = "0.1.0"
 >>>>>>> after updating
 """
         expected = """\
 [project]
 name = "my-project"
-version = "0.2.0"
+version = "1.2.6"
 """
         pyproject.write_text(content_with_conflict)
 
@@ -136,15 +136,15 @@ version = "0.2.0"
         assert pyproject.read_text() == expected
 
     def test_multiple_conflicts_mixed_resolution(self, tmp_path):
-        """Test multiple conflicts with mixed resolution (license kept, others updated)."""
+        """Test multiple conflicts with mixed resolution (license and version kept, others updated)."""
         pyproject = tmp_path / "pyproject.toml"
         content_with_conflicts = """\
 [project]
 name = "my-project"
 <<<<<<< before updating
-version = "1.0.0"
+version = "1.2.6"
 =======
-version = "1.1.0"
+version = "0.1.0"
 >>>>>>> after updating
 <<<<<<< before updating
 [project.license]
@@ -161,7 +161,7 @@ description = "New description"
         expected = """\
 [project]
 name = "my-project"
-version = "1.1.0"
+version = "1.2.6"
 [project.license]
 text = "Proprietary - Custom License"
 description = "New description"
