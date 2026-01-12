@@ -6,6 +6,8 @@
 
 {{ description }}
 
+> **Note**: Generated with copier-data-science template v1.2+
+
 ## Quick Start
 
 ```bash
