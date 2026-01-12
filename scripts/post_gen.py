@@ -217,12 +217,20 @@ def parse_args():
 
 
 def main():
+    import sys
+    print(f"\n=== POST_GEN STARTING ===", file=sys.stderr)
+    print(f"CWD: {os.getcwd()}", file=sys.stderr)
+    print(f"Script: {__file__}", file=sys.stderr)
+
     # Skip execution in temp directories - copier update runs tasks there too
     # We only want to run for the actual project directory copy
     if is_copier_temp_directory():
+        print(f"SKIPPED: temp directory", file=sys.stderr)
         return
 
+    print(f"RUNNING _do_post_gen", file=sys.stderr)
     _do_post_gen()
+    print(f"=== POST_GEN COMPLETED ===\n", file=sys.stderr)
 
 
 def is_copier_update():
@@ -379,8 +387,14 @@ def _do_post_gen():
     # Create .copier-answers.yml for fresh copy
     # During fresh copy, copier doesn't create this file - we must create it
     # During update, copier manages it - we don't touch it
+    answers_yml = Path(".copier-answers.yml")
+    import sys
+    print(f"DEBUG post_gen: is_update={is_update}, answers_yml.exists()={answers_yml.exists()}", file=sys.stderr)
+    if answers_yml.exists():
+        content = answers_yml.read_text()
+        print(f"DEBUG post_gen: first 200 chars of answers file:\n{content[:200]}", file=sys.stderr)
+
     if not is_update:
-        answers_yml = Path(".copier-answers.yml")
         if not answers_yml.exists():
             # Determine source path
             import sys
