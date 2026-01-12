@@ -7,6 +7,7 @@
 {{ description }}
 
 > **Note**: Generated with copier-data-science template v1.2+
+> For template documentation, visit [copier-data-science](https://github.com/stellarshenson/copier-data-science)
 
 ## Quick Start
 
