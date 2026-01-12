@@ -1,2 +1,0 @@
-{% for key in _copier_answers.keys() %}{{ key }}
-{% endfor %}

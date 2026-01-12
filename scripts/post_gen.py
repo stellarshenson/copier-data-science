@@ -376,21 +376,50 @@ def _do_post_gen():
     if checkpoints_path.exists():
         shutil.rmtree(checkpoints_path)
 
-    # Handle .copier-answers.yml.jinja -> .copier-answers.yml
-    # Template file exists due to _templates_suffix: "" not stripping suffixes
-    # Fresh copy: rename .jinja to .yml
-    # Update: delete .jinja (copier manages .yml internally)
-    answers_jinja = Path(".copier-answers.yml.jinja")
-    if answers_jinja.exists():
-        if is_update:
-            # During update, copier updates .yml internally - just delete .jinja
-            answers_jinja.unlink()
-        else:
-            # Fresh copy - rename .jinja to .yml
-            answers_yml = Path(".copier-answers.yml")
-            if answers_yml.exists():
-                answers_yml.unlink()
-            answers_jinja.rename(answers_yml)
+    # Create .copier-answers.yml for fresh copy
+    # During fresh copy, copier doesn't create this file - we must create it
+    # During update, copier manages it - we don't touch it
+    if not is_update:
+        answers_yml = Path(".copier-answers.yml")
+        if not answers_yml.exists():
+            # Determine source path
+            import sys
+            # Try to get from environment or infer from script location
+            src_path = os.environ.get("COPIER_SRC_PATH", "")
+            if not src_path:
+                # Script is in template/scripts/, so parent.parent is template root
+                template_root = Path(__file__).parent.parent
+                # Check if this looks like a git repo
+                if (template_root / ".git").exists():
+                    src_path = str(template_root)
+                else:
+                    # Might be a temp clone
+                    src_path = ""
+
+            content = f"""# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_src_path: {src_path}
+author_name: '{args.author_name}'
+custom_config: '{args.custom_config}'
+dataset_storage: {args.dataset_storage}
+dependency_file: {args.dependency_file}
+description: '{args.description}'
+docker_support: '{args.docker_support}'
+docs: {args.docs}
+env_encryption: '{args.env_encryption}'
+env_name: {args.env_name}
+environment_manager: {args.environment_manager}
+include_code_scaffold: '{args.include_code_scaffold}'
+jupyter_kernel_support: '{args.jupyter_kernel_support}'
+linting_and_formatting: {args.linting_and_formatting}
+module_name: {args.module_name}
+open_source_license: {args.open_source_license}
+package_repository: '{args.package_repository}'
+pydata_packages: {args.pydata_packages}
+python_version_number: '{args.python_version}'
+repo_name: {args.repo_name}
+testing_framework: {args.testing_framework}
+"""
+            answers_yml.write_text(content)
 
     print("Post-generation cleanup complete!")
 
