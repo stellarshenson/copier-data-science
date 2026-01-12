@@ -376,26 +376,6 @@ def _do_post_gen():
     if checkpoints_path.exists():
         shutil.rmtree(checkpoints_path)
 
-    # Rename .copier-answers.yml.jinja to .copier-answers.yml
-    # (needed because _templates_suffix: "" doesn't strip .jinja suffix)
-    # Only do this for fresh copy - during update, copier manages the answers file
-    answers_jinja = Path(".copier-answers.yml.jinja")
-    answers_yml = Path(".copier-answers.yml")
-    if answers_jinja.exists():
-        # Check if existing answers file has _commit (indicates copier update scenario)
-        if answers_yml.exists():
-            content = answers_yml.read_text()
-            if "_commit:" in content:
-                # During update - copier manages the file, just remove the jinja
-                answers_jinja.unlink()
-            else:
-                # Fresh copy with placeholder - replace it
-                answers_yml.unlink()
-                answers_jinja.rename(answers_yml)
-        else:
-            # No existing answers file - rename jinja to yml
-            answers_jinja.rename(answers_yml)
-
     print("Post-generation cleanup complete!")
 
 
