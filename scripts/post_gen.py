@@ -54,6 +54,47 @@ def debug_answers_file_state(checkpoint_name):
     print(f"=== END [{checkpoint_name}] ===\n", file=sys.stderr)
 
 
+def update_answers_commit_field(new_commit):
+    """Update _commit field in .copier-answers.yml during update.
+
+    This fixes the issue where template rendering with {{ _copier_answers }}
+    writes stale _commit value. We update it in place with the new version.
+
+    Args:
+        new_commit: New template version (from copier's _commit variable)
+    """
+    answers_file = Path(".copier-answers.yml")
+
+    if not answers_file.exists():
+        print(f"\nWARNING: .copier-answers.yml missing during update!", file=sys.stderr)
+        return
+
+    if not new_commit:
+        print(f"\nWARNING: No template commit provided, cannot update _commit field!", file=sys.stderr)
+        return
+
+    content = answers_file.read_text()
+
+    # Update _commit field
+    if "_commit:" in content:
+        # Replace existing _commit line
+        updated_content = re.sub(
+            r"_commit:\s+.*",
+            f"_commit: {new_commit}",
+            content
+        )
+    else:
+        # Add _commit field if missing - insert after _src_path line
+        updated_content = re.sub(
+            r"(_src_path:.*\n)",
+            rf"\1_commit: {new_commit}\n",
+            content
+        )
+
+    answers_file.write_text(updated_content)
+    print(f"\nDEBUG: Updated _commit field to {new_commit}", file=sys.stderr)
+
+
 def resolve_pyproject_conflicts():
     """Resolve conflict markers in pyproject.toml, preserving custom license.
 
@@ -249,6 +290,7 @@ def parse_args():
     parser.add_argument("--package-repository", default="No")
     parser.add_argument("--package-repository-url", default="")
     parser.add_argument("--custom-config", default="")
+    parser.add_argument("--template-commit", default="")
     return parser.parse_args()
 
 
@@ -436,21 +478,21 @@ def _do_post_gen():
 
     # Handle .copier-answers.yml
     # Fresh copy: create it if copier didn't
-    # Update: DELETE it if it exists - let copier write updated version AFTER tasks complete
+    # Update: UPDATE _commit field to fix stale value from template rendering
     answers_yml = Path(".copier-answers.yml")
 
     # Checkpoint 5: Before answers file handling
     debug_answers_file_state("BEFORE_ANSWERS_HANDLING")
 
     if is_update:
-        # During update: delete the file to let copier write the updated version after tasks
-        # Old template may have rendered it with stale data - we need copier's fresh version
+        # During update: update _commit field with new template version
+        # Old template's .copier-answers.yml.jinja rendered with stale {{ _copier_answers }}
+        # We fix it by updating _commit in place
         if answers_yml.exists():
-            print(f"\nDEBUG: DELETING stale answers file to let copier write updated version", file=sys.stderr)
-            answers_yml.unlink()
+            update_answers_commit_field(args.template_commit)
 
-            # Checkpoint 6: After deletion
-            debug_answers_file_state("AFTER_DELETE")
+            # Checkpoint 6: After update
+            debug_answers_file_state("AFTER_UPDATE")
     else:
         # Fresh copy: create if doesn't exist
         if not answers_yml.exists():

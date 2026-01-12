@@ -266,6 +266,7 @@ _tasks:
     --package-repository "{{ package_repository }}"
     --package-repository-url "{{ package_repository_url | default('') }}"
     --custom-config "{{ custom_config }}"
+    --template-commit "{{ _commit | default('') }}"
 
 # Answers file for template updates
 _answers_file: .copier-answers.yml
