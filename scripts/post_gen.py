@@ -11,88 +11,11 @@ import argparse
 import os
 import re
 import shutil
-import sys
-import time
 from pathlib import Path
 from shutil import copytree
 from tempfile import TemporaryDirectory
 from urllib.request import urlretrieve
 from zipfile import ZipFile
-
-
-def debug_answers_file_state(checkpoint_name):
-    """Log detailed state of .copier-answers.yml at a checkpoint.
-
-    This function logs comprehensive information about the answers file to help
-    trace when and how it gets modified during copier update operations.
-    """
-    answers_file = Path(".copier-answers.yml")
-    timestamp = time.strftime("%H:%M:%S.%f")[:-3]
-
-    print(f"\n=== DEBUG [{checkpoint_name}] @ {timestamp} ===", file=sys.stderr)
-    print(f"CWD: {os.getcwd()}", file=sys.stderr)
-
-    if answers_file.exists():
-        stat = answers_file.stat()
-        content = answers_file.read_text()
-
-        # Extract just the _commit line if present
-        commit_line = "NOT FOUND"
-        for line in content.split('\n'):
-            if '_commit:' in line:
-                commit_line = line.strip()
-                break
-
-        print(f"File EXISTS", file=sys.stderr)
-        print(f"  Size: {stat.st_size} bytes", file=sys.stderr)
-        print(f"  Modified: {time.ctime(stat.st_mtime)}", file=sys.stderr)
-        print(f"  _commit: {commit_line}", file=sys.stderr)
-        print(f"  First 300 chars:\n{content[:300]}", file=sys.stderr)
-    else:
-        print(f"File DOES NOT EXIST", file=sys.stderr)
-
-    print(f"=== END [{checkpoint_name}] ===\n", file=sys.stderr)
-
-
-def update_answers_commit_field(new_commit):
-    """Update _commit field in .copier-answers.yml during update.
-
-    This fixes the issue where template rendering with {{ _copier_answers }}
-    writes stale _commit value. We update it in place with the new version.
-
-    Args:
-        new_commit: New template version (from copier's _commit variable)
-    """
-    answers_file = Path(".copier-answers.yml")
-
-    if not answers_file.exists():
-        print(f"\nWARNING: .copier-answers.yml missing during update!", file=sys.stderr)
-        return
-
-    if not new_commit:
-        print(f"\nWARNING: No template commit provided, cannot update _commit field!", file=sys.stderr)
-        return
-
-    content = answers_file.read_text()
-
-    # Update _commit field
-    if "_commit:" in content:
-        # Replace existing _commit line
-        updated_content = re.sub(
-            r"_commit:\s+.*",
-            f"_commit: {new_commit}",
-            content
-        )
-    else:
-        # Add _commit field if missing - insert after _src_path line
-        updated_content = re.sub(
-            r"(_src_path:.*\n)",
-            rf"\1_commit: {new_commit}\n",
-            content
-        )
-
-    answers_file.write_text(updated_content)
-    print(f"\nDEBUG: Updated _commit field to {new_commit}", file=sys.stderr)
 
 
 def resolve_pyproject_conflicts():
@@ -290,32 +213,16 @@ def parse_args():
     parser.add_argument("--package-repository", default="No")
     parser.add_argument("--package-repository-url", default="")
     parser.add_argument("--custom-config", default="")
-    parser.add_argument("--template-commit", default="")
     return parser.parse_args()
 
 
 def main():
-    print(f"\n=== POST_GEN STARTING ===", file=sys.stderr)
-    print(f"CWD: {os.getcwd()}", file=sys.stderr)
-    print(f"Script: {__file__}", file=sys.stderr)
-
-    # Checkpoint 1: At start of main()
-    debug_answers_file_state("POST_GEN_START")
-
     # Skip execution in temp directories - copier update runs tasks there too
     # We only want to run for the actual project directory copy
     if is_copier_temp_directory():
-        print(f"SKIPPED: temp directory", file=sys.stderr)
         return
 
-    print(f"RUNNING _do_post_gen", file=sys.stderr)
-
-    # Checkpoint 2: Before _do_post_gen() call
-    debug_answers_file_state("BEFORE_DO_POST_GEN")
-
     _do_post_gen()
-
-    print(f"=== POST_GEN COMPLETED ===\n", file=sys.stderr)
 
 
 def is_copier_update():
@@ -333,19 +240,12 @@ def is_copier_update():
 
 def _do_post_gen():
     """Actual post-generation logic."""
-    # Checkpoint 3: Start of _do_post_gen()
-    debug_answers_file_state("START_DO_POST_GEN")
-
     args = parse_args()
 
     # Resolve any conflict markers in pyproject.toml (preserves custom license)
     resolve_pyproject_conflicts()
 
     is_update = is_copier_update()
-
-    # Checkpoint 4: After is_copier_update() check
-    print(f"\nDEBUG: is_update={is_update}", file=sys.stderr)
-    debug_answers_file_state("AFTER_UPDATE_CHECK")
 
     # Linting setup
     if args.linting_and_formatting == "ruff":
@@ -476,69 +376,8 @@ def _do_post_gen():
     if checkpoints_path.exists():
         shutil.rmtree(checkpoints_path)
 
-    # Handle .copier-answers.yml
-    # Fresh copy: create it if copier didn't
-    # Update: UPDATE _commit field to fix stale value from template rendering
-    answers_yml = Path(".copier-answers.yml")
-
-    # Checkpoint 5: Before answers file handling
-    debug_answers_file_state("BEFORE_ANSWERS_HANDLING")
-
-    if is_update:
-        # During update: update _commit field with new template version
-        # Old template's .copier-answers.yml.jinja rendered with stale {{ _copier_answers }}
-        # We fix it by updating _commit in place
-        if answers_yml.exists():
-            update_answers_commit_field(args.template_commit)
-
-            # Checkpoint 6: After update
-            debug_answers_file_state("AFTER_UPDATE")
-    else:
-        # Fresh copy: create if doesn't exist
-        if not answers_yml.exists():
-            # Determine source path
-            # Try to get from environment or infer from script location
-            src_path = os.environ.get("COPIER_SRC_PATH", "")
-            if not src_path:
-                # Script is in template/scripts/, so parent.parent is template root
-                template_root = Path(__file__).parent.parent
-                # Check if this looks like a git repo
-                if (template_root / ".git").exists():
-                    src_path = str(template_root)
-                else:
-                    # Might be a temp clone
-                    src_path = ""
-
-            content = f"""# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_src_path: {src_path}
-author_name: '{args.author_name}'
-custom_config: '{args.custom_config}'
-dataset_storage: {args.dataset_storage}
-dependency_file: {args.dependency_file}
-description: '{args.description}'
-docker_support: '{args.docker_support}'
-docs: {args.docs}
-env_encryption: '{args.env_encryption}'
-env_name: {args.env_name}
-environment_manager: {args.environment_manager}
-include_code_scaffold: '{args.include_code_scaffold}'
-jupyter_kernel_support: '{args.jupyter_kernel_support}'
-linting_and_formatting: {args.linting_and_formatting}
-module_name: {args.module_name}
-open_source_license: {args.open_source_license}
-package_repository: '{args.package_repository}'
-pydata_packages: {args.pydata_packages}
-python_version_number: '{args.python_version}'
-repo_name: {args.repo_name}
-testing_framework: {args.testing_framework}
-"""
-            answers_yml.write_text(content)
-
-            # Checkpoint 7: After creation (fresh copy)
-            debug_answers_file_state("AFTER_CREATE")
-
-    # Checkpoint 8: End of _do_post_gen()
-    debug_answers_file_state("END_DO_POST_GEN")
+    # .copier-answers.yml is now managed entirely by copier itself
+    # We don't touch it in post_gen to avoid conflicts
 
     print("Post-generation cleanup complete!")
 
