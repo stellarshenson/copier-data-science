@@ -85,3 +85,4 @@ make install
     └── plots.py       <- Visualization code
 ```
 # Test change for v1.2.5
+# Test comment for v1.2.6
