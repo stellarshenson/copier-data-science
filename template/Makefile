@@ -299,11 +299,7 @@ docs_serve:
 sync_data_down:
 	@echo "$(MSG_PREFIX) downloading data from storage"
 {%- if dataset_storage == 's3' %}
-{%- if s3_aws_profile != 'default' %}
 	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
-{%- else %}
-	aws s3 sync s3://$(S3_BUCKET)/data/ data/ --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
-{%- endif %}
 {%- elif dataset_storage == 'azure' %}
 	az storage blob download-batch -s $(AZURE_CONTAINER)/data/ -d data/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
 {%- elif dataset_storage == 'gcs' %}
@@ -314,11 +310,7 @@ sync_data_down:
 sync_data_up:
 	@echo "$(MSG_PREFIX) uploading data to storage"
 {%- if dataset_storage == 's3' %}
-{%- if s3_aws_profile != 'default' %}
 	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
-{%- else %}
-	aws s3 sync data/ s3://$(S3_BUCKET)/data/ --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
-{%- endif %}
 {%- elif dataset_storage == 'azure' %}
 	az storage blob upload-batch -d $(AZURE_CONTAINER)/data/ -s data/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
 {%- elif dataset_storage == 'gcs' %}
@@ -329,11 +321,7 @@ sync_data_up:
 sync_models_down:
 	@echo "$(MSG_PREFIX) downloading models from storage"
 {%- if dataset_storage == 's3' %}
-{%- if s3_aws_profile != 'default' %}
 	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
-{%- else %}
-	aws s3 sync s3://$(S3_BUCKET)/models/ models/ --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
-{%- endif %}
 {%- elif dataset_storage == 'azure' %}
 	az storage blob download-batch -s $(AZURE_CONTAINER)/models/ -d models/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
 {%- elif dataset_storage == 'gcs' %}
@@ -344,11 +332,7 @@ sync_models_down:
 sync_models_up:
 	@echo "$(MSG_PREFIX) uploading models to storage"
 {%- if dataset_storage == 's3' %}
-{%- if s3_aws_profile != 'default' %}
 	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --profile $(AWS_PROFILE) --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
-{%- else %}
-	aws s3 sync models/ s3://$(S3_BUCKET)/models/ --exclude "*/.ipynb_checkpoints/*" $(AWS_OPTS)
-{%- endif %}
 {%- elif dataset_storage == 'azure' %}
 	az storage blob upload-batch -d $(AZURE_CONTAINER)/models/ -s models/ --pattern "*" --exclude-pattern "*/.ipynb_checkpoints/*"
 {%- elif dataset_storage == 'gcs' %}
