@@ -376,6 +376,24 @@ def _do_post_gen():
     if checkpoints_path.exists():
         shutil.rmtree(checkpoints_path)
 
+    # Handle .copier-answers.yml.jinja file
+    # Due to _templates_suffix: "" the .jinja extension isn't stripped automatically
+    # Fresh copy: rename .jinja to .yml
+    # Update: copier manages .yml, we just need to clean up the .jinja file
+    answers_jinja = Path(".copier-answers.yml.jinja")
+    answers_yml = Path(".copier-answers.yml")
+    if answers_jinja.exists():
+        if is_update:
+            # During update, copier manages .copier-answers.yml
+            # Just delete the .jinja file
+            answers_jinja.unlink()
+        else:
+            # Fresh copy: rename .jinja to .yml
+            if answers_yml.exists():
+                answers_jinja.unlink()
+            else:
+                answers_jinja.rename(answers_yml)
+
     print("Post-generation cleanup complete!")
 
 

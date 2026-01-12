@@ -79,6 +79,9 @@ copier update --trust
 
 This will merge template updates while preserving your customizations. Your original answers are stored in `.copier-answers.yml`.
 
+> [!WARNING]
+> **Updating from v1.1.7 or earlier**: Projects created with template versions before v1.1.8 lack temp directory detection in post-generation tasks. When updating these projects, `.copier-answers.yml` and other files may be deleted. Use `copier recopy --trust` instead and manually merge your changes.
+
 ### The resulting directory structure
 
 The directory structure of your new project will look something like this (depending on the settings that you choose):
