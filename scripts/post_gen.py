@@ -11,11 +11,47 @@ import argparse
 import os
 import re
 import shutil
+import sys
+import time
 from pathlib import Path
 from shutil import copytree
 from tempfile import TemporaryDirectory
 from urllib.request import urlretrieve
 from zipfile import ZipFile
+
+
+def debug_answers_file_state(checkpoint_name):
+    """Log detailed state of .copier-answers.yml at a checkpoint.
+
+    This function logs comprehensive information about the answers file to help
+    trace when and how it gets modified during copier update operations.
+    """
+    answers_file = Path(".copier-answers.yml")
+    timestamp = time.strftime("%H:%M:%S.%f")[:-3]
+
+    print(f"\n=== DEBUG [{checkpoint_name}] @ {timestamp} ===", file=sys.stderr)
+    print(f"CWD: {os.getcwd()}", file=sys.stderr)
+
+    if answers_file.exists():
+        stat = answers_file.stat()
+        content = answers_file.read_text()
+
+        # Extract just the _commit line if present
+        commit_line = "NOT FOUND"
+        for line in content.split('\n'):
+            if '_commit:' in line:
+                commit_line = line.strip()
+                break
+
+        print(f"File EXISTS", file=sys.stderr)
+        print(f"  Size: {stat.st_size} bytes", file=sys.stderr)
+        print(f"  Modified: {time.ctime(stat.st_mtime)}", file=sys.stderr)
+        print(f"  _commit: {commit_line}", file=sys.stderr)
+        print(f"  First 300 chars:\n{content[:300]}", file=sys.stderr)
+    else:
+        print(f"File DOES NOT EXIST", file=sys.stderr)
+
+    print(f"=== END [{checkpoint_name}] ===\n", file=sys.stderr)
 
 
 def resolve_pyproject_conflicts():
@@ -217,10 +253,12 @@ def parse_args():
 
 
 def main():
-    import sys
     print(f"\n=== POST_GEN STARTING ===", file=sys.stderr)
     print(f"CWD: {os.getcwd()}", file=sys.stderr)
     print(f"Script: {__file__}", file=sys.stderr)
+
+    # Checkpoint 1: At start of main()
+    debug_answers_file_state("POST_GEN_START")
 
     # Skip execution in temp directories - copier update runs tasks there too
     # We only want to run for the actual project directory copy
@@ -229,7 +267,12 @@ def main():
         return
 
     print(f"RUNNING _do_post_gen", file=sys.stderr)
+
+    # Checkpoint 2: Before _do_post_gen() call
+    debug_answers_file_state("BEFORE_DO_POST_GEN")
+
     _do_post_gen()
+
     print(f"=== POST_GEN COMPLETED ===\n", file=sys.stderr)
 
 
@@ -248,12 +291,19 @@ def is_copier_update():
 
 def _do_post_gen():
     """Actual post-generation logic."""
+    # Checkpoint 3: Start of _do_post_gen()
+    debug_answers_file_state("START_DO_POST_GEN")
+
     args = parse_args()
 
     # Resolve any conflict markers in pyproject.toml (preserves custom license)
     resolve_pyproject_conflicts()
 
     is_update = is_copier_update()
+
+    # Checkpoint 4: After is_copier_update() check
+    print(f"\nDEBUG: is_update={is_update}", file=sys.stderr)
+    debug_answers_file_state("AFTER_UPDATE_CHECK")
 
     # Linting setup
     if args.linting_and_formatting == "ruff":
@@ -388,23 +438,23 @@ def _do_post_gen():
     # Fresh copy: create it if copier didn't
     # Update: DELETE it if it exists - let copier write updated version AFTER tasks complete
     answers_yml = Path(".copier-answers.yml")
-    import sys
-    print(f"DEBUG post_gen: is_update={is_update}, answers_yml.exists()={answers_yml.exists()}", file=sys.stderr)
-    if answers_yml.exists():
-        content = answers_yml.read_text()
-        print(f"DEBUG post_gen: first 200 chars of answers file:\n{content[:200]}", file=sys.stderr)
+
+    # Checkpoint 5: Before answers file handling
+    debug_answers_file_state("BEFORE_ANSWERS_HANDLING")
 
     if is_update:
         # During update: delete the file to let copier write the updated version after tasks
         # Old template may have rendered it with stale data - we need copier's fresh version
         if answers_yml.exists():
-            print(f"DEBUG post_gen: DELETING stale answers file to let copier write updated version", file=sys.stderr)
+            print(f"\nDEBUG: DELETING stale answers file to let copier write updated version", file=sys.stderr)
             answers_yml.unlink()
+
+            # Checkpoint 6: After deletion
+            debug_answers_file_state("AFTER_DELETE")
     else:
         # Fresh copy: create if doesn't exist
         if not answers_yml.exists():
             # Determine source path
-            import sys
             # Try to get from environment or infer from script location
             src_path = os.environ.get("COPIER_SRC_PATH", "")
             if not src_path:
@@ -441,6 +491,12 @@ repo_name: {args.repo_name}
 testing_framework: {args.testing_framework}
 """
             answers_yml.write_text(content)
+
+            # Checkpoint 7: After creation (fresh copy)
+            debug_answers_file_state("AFTER_CREATE")
+
+    # Checkpoint 8: End of _do_post_gen()
+    debug_answers_file_state("END_DO_POST_GEN")
 
     print("Post-generation cleanup complete!")
 
