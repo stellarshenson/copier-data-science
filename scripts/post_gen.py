@@ -384,9 +384,9 @@ def _do_post_gen():
     if checkpoints_path.exists():
         shutil.rmtree(checkpoints_path)
 
-    # Create .copier-answers.yml for fresh copy
-    # During fresh copy, copier doesn't create this file - we must create it
-    # During update, copier manages it - we don't touch it
+    # Handle .copier-answers.yml
+    # Fresh copy: create it if copier didn't
+    # Update: DELETE it if it exists - let copier write updated version AFTER tasks complete
     answers_yml = Path(".copier-answers.yml")
     import sys
     print(f"DEBUG post_gen: is_update={is_update}, answers_yml.exists()={answers_yml.exists()}", file=sys.stderr)
@@ -394,7 +394,14 @@ def _do_post_gen():
         content = answers_yml.read_text()
         print(f"DEBUG post_gen: first 200 chars of answers file:\n{content[:200]}", file=sys.stderr)
 
-    if not is_update:
+    if is_update:
+        # During update: delete the file to let copier write the updated version after tasks
+        # Old template may have rendered it with stale data - we need copier's fresh version
+        if answers_yml.exists():
+            print(f"DEBUG post_gen: DELETING stale answers file to let copier write updated version", file=sys.stderr)
+            answers_yml.unlink()
+    else:
+        # Fresh copy: create if doesn't exist
         if not answers_yml.exists():
             # Determine source path
             import sys
