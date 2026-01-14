@@ -263,6 +263,7 @@ format:
 	@echo "$(MSG_PREFIX) formatting the sourcecode"
 	isort {{ module_name }}
 	black {{ module_name }}
+
 {%- endif %}
 
 {%- if testing_framework != 'none' %}
