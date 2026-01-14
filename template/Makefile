@@ -220,14 +220,36 @@ clean:
 ## Lint using ruff (use `make format` to do formatting)
 lint:
 	@echo "$(MSG_PREFIX) linting the sourcecode"
+{% if environment_manager == 'uv' -%}
+	uvx ruff format --check
+	uvx ruff check
+{%- elif environment_manager == 'conda' -%}
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) ruff format --check
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) ruff check
+{%- elif environment_manager == 'virtualenv' -%}
+	$(PROJECT_DIR)/.venv/bin/ruff format --check
+	$(PROJECT_DIR)/.venv/bin/ruff check
+{%- else -%}
 	ruff format --check
 	ruff check
+{%- endif %}
 
 ## Format source code with ruff
 format:
 	@echo "$(MSG_PREFIX) formatting the sourcecode"
+{% if environment_manager == 'uv' -%}
+	uvx ruff check --fix
+	uvx ruff format
+{%- elif environment_manager == 'conda' -%}
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) ruff check --fix
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) ruff format
+{%- elif environment_manager == 'virtualenv' -%}
+	$(PROJECT_DIR)/.venv/bin/ruff check --fix
+	$(PROJECT_DIR)/.venv/bin/ruff format
+{%- else -%}
 	ruff check --fix
 	ruff format
+{%- endif %}
 {%- elif linting_and_formatting == 'flake8+black+isort' -%}
 ## Lint using flake8, black, and isort (use `make format` to do formatting)
 lint:
