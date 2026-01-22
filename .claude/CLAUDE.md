@@ -36,3 +36,10 @@ Fast mode for quick iteration:
 ```bash
 pytest tests/ -F
 ```
+
+### Update Scenario Testing
+
+Testing `copier update` behavior requires git-tracked templates. See [COPIER_UPDATE_TESTING.md](COPIER_UPDATE_TESTING.md) for the tag-based integration testing methodology used for:
+- Features that only manifest during update (not fresh copy)
+- Conflict resolution testing
+- Migration paths from old template versions

@@ -192,34 +192,62 @@ class TestDockerUpdateScenario:
             [
                 sys.executable,
                 str(post_gen_script),
-                "--project-name", "test_project",
-                "--repo-name", "test_project",
-                "--env-name", "test_project",
-                "--module-name", "lib_test_project",
-                "--author-name", "Test Author",
-                "--description", "Test project",
-                "--python-version", "3.12",
-                "--dataset-storage", "none",
-                "--s3-bucket", "",
-                "--s3-aws-profile", "default",
-                "--azure-container", "",
-                "--gcs-bucket", "",
-                "--environment-manager", "uv",
-                "--env-location", "local",
-                "--dependency-file", "pyproject.toml",
-                "--pydata-packages", "none",
-                "--testing-framework", "pytest",
-                "--linting-and-formatting", "ruff",
-                "--open-source-license", "MIT",
-                "--docs", "none",
-                "--include-code-scaffold", "Yes",
-                "--jupyter-kernel-support", "No",
-                "--env-encryption", "No",
-                "--docker-support", "Yes",
-                "--docker-package-manager", "uv",
-                "--package-repository", "No",
-                "--package-repository-url", "",
-                "--custom-config", "",
+                "--project-name",
+                "test_project",
+                "--repo-name",
+                "test_project",
+                "--env-name",
+                "test_project",
+                "--module-name",
+                "lib_test_project",
+                "--author-name",
+                "Test Author",
+                "--description",
+                "Test project",
+                "--python-version",
+                "3.12",
+                "--dataset-storage",
+                "none",
+                "--s3-bucket",
+                "",
+                "--s3-aws-profile",
+                "default",
+                "--azure-container",
+                "",
+                "--gcs-bucket",
+                "",
+                "--environment-manager",
+                "uv",
+                "--env-location",
+                "local",
+                "--dependency-file",
+                "pyproject.toml",
+                "--pydata-packages",
+                "none",
+                "--testing-framework",
+                "pytest",
+                "--linting-and-formatting",
+                "ruff",
+                "--open-source-license",
+                "MIT",
+                "--docs",
+                "none",
+                "--include-code-scaffold",
+                "Yes",
+                "--jupyter-kernel-support",
+                "No",
+                "--env-encryption",
+                "No",
+                "--docker-support",
+                "Yes",
+                "--docker-package-manager",
+                "uv",
+                "--package-repository",
+                "No",
+                "--package-repository-url",
+                "",
+                "--custom-config",
+                "",
             ],
             cwd=tmp_path,
             capture_output=True,
@@ -241,11 +269,15 @@ class TestDockerUpdateScenario:
         dockerfile_content = dockerfile.read_text()
         assert "{{" not in dockerfile_content, "Dockerfile should be rendered, not raw template"
         assert "ghcr.io/astral-sh/uv:latest" in dockerfile_content, "Dockerfile should use uv"
-        assert "PYTHON_VERSION=3.12" in dockerfile_content, "Dockerfile should have correct Python version"
+        assert "PYTHON_VERSION=3.12" in dockerfile_content, (
+            "Dockerfile should have correct Python version"
+        )
 
         entrypoint_content = entrypoint.read_text()
         assert "{{" not in entrypoint_content, "entrypoint.py should be rendered, not raw template"
-        assert "lib_test_project" in entrypoint_content, "entrypoint.py should have correct module name"
+        assert "lib_test_project" in entrypoint_content, (
+            "entrypoint.py should have correct module name"
+        )
 
     def test_docker_not_created_when_disabled(self, tmp_path):
         """Test that post_gen.py does not create docker folder when docker_support=No."""
@@ -263,34 +295,62 @@ class TestDockerUpdateScenario:
             [
                 sys.executable,
                 str(post_gen_script),
-                "--project-name", "test_project",
-                "--repo-name", "test_project",
-                "--env-name", "test_project",
-                "--module-name", "lib_test_project",
-                "--author-name", "Test Author",
-                "--description", "Test project",
-                "--python-version", "3.12",
-                "--dataset-storage", "none",
-                "--s3-bucket", "",
-                "--s3-aws-profile", "default",
-                "--azure-container", "",
-                "--gcs-bucket", "",
-                "--environment-manager", "uv",
-                "--env-location", "local",
-                "--dependency-file", "pyproject.toml",
-                "--pydata-packages", "none",
-                "--testing-framework", "pytest",
-                "--linting-and-formatting", "ruff",
-                "--open-source-license", "MIT",
-                "--docs", "none",
-                "--include-code-scaffold", "Yes",
-                "--jupyter-kernel-support", "No",
-                "--env-encryption", "No",
-                "--docker-support", "No",
-                "--docker-package-manager", "uv",
-                "--package-repository", "No",
-                "--package-repository-url", "",
-                "--custom-config", "",
+                "--project-name",
+                "test_project",
+                "--repo-name",
+                "test_project",
+                "--env-name",
+                "test_project",
+                "--module-name",
+                "lib_test_project",
+                "--author-name",
+                "Test Author",
+                "--description",
+                "Test project",
+                "--python-version",
+                "3.12",
+                "--dataset-storage",
+                "none",
+                "--s3-bucket",
+                "",
+                "--s3-aws-profile",
+                "default",
+                "--azure-container",
+                "",
+                "--gcs-bucket",
+                "",
+                "--environment-manager",
+                "uv",
+                "--env-location",
+                "local",
+                "--dependency-file",
+                "pyproject.toml",
+                "--pydata-packages",
+                "none",
+                "--testing-framework",
+                "pytest",
+                "--linting-and-formatting",
+                "ruff",
+                "--open-source-license",
+                "MIT",
+                "--docs",
+                "none",
+                "--include-code-scaffold",
+                "Yes",
+                "--jupyter-kernel-support",
+                "No",
+                "--env-encryption",
+                "No",
+                "--docker-support",
+                "No",
+                "--docker-package-manager",
+                "uv",
+                "--package-repository",
+                "No",
+                "--package-repository-url",
+                "",
+                "--custom-config",
+                "",
             ],
             cwd=tmp_path,
             capture_output=True,
@@ -302,3 +362,90 @@ class TestDockerUpdateScenario:
         # Verify docker folder was NOT created
         docker_dir = tmp_path / "docker"
         assert not docker_dir.exists(), "docker/ should NOT be created when docker_support=No"
+
+
+class TestDockerUpdateIntegration:
+    """Integration tests for docker update using actual copier update.
+
+    These tests verify the full copier update workflow, not just post_gen.py.
+    They require network access to fetch from GitHub and are marked accordingly.
+
+    See .claude/COPIER_UPDATE_TESTING.md for methodology documentation.
+    """
+
+    @pytest.mark.integration
+    def test_docker_enabled_during_copier_update(self, tmp_path):
+        """Test enabling docker_support during actual copier update.
+
+        Full integration test that:
+        1. Creates project at v1.2.15 with docker_support=No
+        2. Initializes git (required for copier update)
+        3. Runs copier update to v1.2.18+ with docker_support=Yes
+        4. Verifies docker folder is created with rendered templates
+        """
+        project_path = tmp_path / "test-docker-update"
+
+        # Step 1: Create project at old version without docker
+        result = subprocess.run(
+            [
+                "copier",
+                "copy",
+                "--trust",
+                "--defaults",
+                "--vcs-ref",
+                "v1.2.15",
+                "-d",
+                "docker_support=No",
+                "https://github.com/stellarshenson/copier-data-science.git",
+                str(project_path),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, f"copier copy failed: {result.stderr}"
+
+        # Verify no docker folder initially
+        docker_dir = project_path / "docker"
+        assert not docker_dir.exists(), "docker/ should not exist after initial creation"
+
+        # Step 2: Initialize git (required for copier update)
+        subprocess.run(["git", "init"], cwd=project_path, check=True, capture_output=True)
+        subprocess.run(["git", "add", "-A"], cwd=project_path, check=True, capture_output=True)
+        subprocess.run(
+            ["git", "commit", "-m", "Initial"], cwd=project_path, check=True, capture_output=True
+        )
+
+        # Step 3: Update to newer version with docker enabled
+        result = subprocess.run(
+            [
+                "copier",
+                "update",
+                "--trust",
+                "--defaults",
+                "--vcs-ref",
+                "v1.2.18",
+                "-d",
+                "docker_support=Yes",
+            ],
+            cwd=project_path,
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, f"copier update failed: {result.stderr}"
+
+        # Step 4: Verify docker folder was created
+        assert docker_dir.exists(), "docker/ should exist after update with docker_support=Yes"
+
+        dockerfile = docker_dir / "Dockerfile"
+        entrypoint = docker_dir / "entrypoint.py"
+        assert dockerfile.exists(), "Dockerfile should exist"
+        assert entrypoint.exists(), "entrypoint.py should exist"
+
+        # Verify templates are rendered correctly
+        dockerfile_content = dockerfile.read_text()
+        assert "{{" not in dockerfile_content, "Dockerfile should be rendered"
+        assert "PYTHON_VERSION=3.12" in dockerfile_content
+
+        entrypoint_content = entrypoint.read_text()
+        assert "{{" not in entrypoint_content, "entrypoint.py should be rendered"
+        assert "lib_test_docker_update" in entrypoint_content

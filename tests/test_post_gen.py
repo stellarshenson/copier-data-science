@@ -73,7 +73,10 @@ license = "MIT"
         with patch("os.getcwd", return_value=str(tmp_path)):
             # Need to also patch Path to work in the function's context
             original_path = Path
-            with patch("post_gen.Path", side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x)):
+            with patch(
+                "post_gen.Path",
+                side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x),
+            ):
                 resolve_pyproject_conflicts()
 
         assert pyproject.read_text() == original_content
@@ -103,7 +106,10 @@ text = "Proprietary - Kolomolo LTD"
 
         with patch("os.getcwd", return_value=str(tmp_path)):
             original_path = Path
-            with patch("post_gen.Path", side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x)):
+            with patch(
+                "post_gen.Path",
+                side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x),
+            ):
                 resolve_pyproject_conflicts()
 
         assert pyproject.read_text() == expected
@@ -129,7 +135,10 @@ version = "1.2.6"
 
         with patch("os.getcwd", return_value=str(tmp_path)):
             original_path = Path
-            with patch("post_gen.Path", side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x)):
+            with patch(
+                "post_gen.Path",
+                side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x),
+            ):
                 resolve_pyproject_conflicts()
 
         assert pyproject.read_text() == expected
@@ -169,7 +178,10 @@ description = "New description"
 
         with patch("os.getcwd", return_value=str(tmp_path)):
             original_path = Path
-            with patch("post_gen.Path", side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x)):
+            with patch(
+                "post_gen.Path",
+                side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x),
+            ):
                 resolve_pyproject_conflicts()
 
         assert pyproject.read_text() == expected
@@ -178,7 +190,10 @@ description = "New description"
         """Test that missing pyproject.toml doesn't cause errors."""
         with patch("os.getcwd", return_value=str(tmp_path)):
             original_path = Path
-            with patch("post_gen.Path", side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x)):
+            with patch(
+                "post_gen.Path",
+                side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x),
+            ):
                 # Should not raise any exception
                 resolve_pyproject_conflicts()
 
@@ -201,7 +216,10 @@ license = { file = "LICENSE.txt" }
 
         with patch("os.getcwd", return_value=str(tmp_path)):
             original_path = Path
-            with patch("post_gen.Path", side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x)):
+            with patch(
+                "post_gen.Path",
+                side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x),
+            ):
                 resolve_pyproject_conflicts()
 
         assert pyproject.read_text() == expected
@@ -253,7 +271,10 @@ dev = [
 
         with patch("os.getcwd", return_value=str(tmp_path)):
             original_path = Path
-            with patch("post_gen.Path", side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x)):
+            with patch(
+                "post_gen.Path",
+                side_effect=lambda x: tmp_path / x if x == "pyproject.toml" else original_path(x),
+            ):
                 resolve_pyproject_conflicts()
 
         assert pyproject.read_text() == expected
