@@ -232,6 +232,7 @@ _skip_if_exists:
   - README.md
   - .env
   - tests/test_data.py
+  - docker/
 
 # Post-generation tasks
 # Pass all variables as command-line arguments since extra_env isn't supported
