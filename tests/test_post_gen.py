@@ -5,7 +5,6 @@ These tests verify:
 - resolve_pyproject_conflicts() properly handles conflict markers, preserving custom license
 """
 
-import os
 import sys
 from pathlib import Path
 from unittest.mock import patch
