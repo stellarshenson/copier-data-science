@@ -1,6 +1,10 @@
 #!/bin/bash
 set -ex
 
+# Clean any parent .venv from PATH to avoid python resolution conflicts
+# This happens when tests run from an activated virtualenv
+export PATH=$(echo "$PATH" | tr ':' '\n' | grep -v '\.venv' | tr '\n' ':' | sed 's/:$//')
+
 PROJECT_NAME=$(basename $1)
 CCDS_ROOT=$(dirname $0)
 MODULE_NAME=$2
