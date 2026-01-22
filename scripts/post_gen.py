@@ -268,7 +268,9 @@ def _do_post_gen():
     elif args.testing_framework in ("pytest", "unittest"):
         # Ensure tests folder exists with properly rendered templates
         # During update from testing_framework=none, folder won't exist - need to create it
-        template_tests = Path(__file__).parent.parent / "template" / "tests" / args.testing_framework
+        template_tests = (
+            Path(__file__).parent.parent / "template" / "tests" / args.testing_framework
+        )
         if template_tests.exists():
             tests_path.mkdir(parents=True, exist_ok=True)
             # Template context for rendering test files

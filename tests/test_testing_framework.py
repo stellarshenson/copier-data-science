@@ -285,9 +285,7 @@ class TestTestingFrameworkUpdateScenario:
         assert result.returncode == 0, f"post_gen.py failed: {result.stderr}"
 
         # Verify tests folder was deleted
-        assert (
-            not tests_dir.exists()
-        ), "tests/ should NOT exist when testing_framework=none"
+        assert not tests_dir.exists(), "tests/ should NOT exist when testing_framework=none"
 
 
 class TestTestingFrameworkUpdateIntegration:
@@ -330,9 +328,9 @@ class TestTestingFrameworkUpdateIntegration:
 
         # Verify no tests folder initially (v1.2.15+ correctly deletes it)
         tests_dir = project_path / "tests"
-        assert (
-            not tests_dir.exists()
-        ), "tests/ should not exist after creation with testing_framework=none at v1.2.15+"
+        assert not tests_dir.exists(), (
+            "tests/ should not exist after creation with testing_framework=none at v1.2.15+"
+        )
 
         # Step 2: Initialize git (required for copier update)
         subprocess.run(["git", "init"], cwd=project_path, check=True, capture_output=True)
@@ -375,7 +373,9 @@ class TestTestingFrameworkUpdateIntegration:
         assert result.returncode == 0, f"copier update failed: {result.stderr}"
 
         # Step 4: Verify tests folder was created with rendered templates
-        assert tests_dir.exists(), "tests/ should be created after update to testing_framework=pytest"
+        assert tests_dir.exists(), (
+            "tests/ should be created after update to testing_framework=pytest"
+        )
         assert tests_dir.is_dir(), "tests/ should be a directory"
 
         # Check for pytest template files
