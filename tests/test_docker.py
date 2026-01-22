@@ -411,7 +411,10 @@ class TestDockerUpdateIntegration:
         # Step 2: Initialize git (required for copier update)
         subprocess.run(["git", "init"], cwd=project_path, check=True, capture_output=True)
         subprocess.run(
-            ["git", "config", "user.name", "Test User"], cwd=project_path, check=True, capture_output=True
+            ["git", "config", "user.name", "Test User"],
+            cwd=project_path,
+            check=True,
+            capture_output=True,
         )
         subprocess.run(
             ["git", "config", "user.email", "test@example.com"],
