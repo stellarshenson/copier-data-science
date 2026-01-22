@@ -378,9 +378,9 @@ class TestDockerUpdateIntegration:
         """Test enabling docker_support during actual copier update.
 
         Full integration test that:
-        1. Creates project at v1.2.15 with docker_support=No
+        1. Creates project at v1.2.13 with docker_support=No
         2. Initializes git (required for copier update)
-        3. Runs copier update to v1.2.18+ with docker_support=Yes
+        3. Runs copier update to v1.2.14 with docker_support=Yes
         4. Verifies docker folder is created with rendered templates
         """
         project_path = tmp_path / "test-docker-update"
@@ -393,7 +393,7 @@ class TestDockerUpdateIntegration:
                 "--trust",
                 "--defaults",
                 "--vcs-ref",
-                "v1.2.15",
+                "v1.2.13",
                 "-d",
                 "docker_support=No",
                 "https://github.com/stellarshenson/copier-data-science.git",
@@ -423,7 +423,7 @@ class TestDockerUpdateIntegration:
                 "--trust",
                 "--defaults",
                 "--vcs-ref",
-                "v1.2.18",
+                "v1.2.14",
                 "-d",
                 "docker_support=Yes",
             ],

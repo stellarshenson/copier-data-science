@@ -691,11 +691,6 @@ preflight:
 		echo "$(ERR_PREFIX) $(ERR_STYLE)install Python from https://www.python.org/downloads/$(NO_STYLE)"; \
 		exit 1; \
 	fi
-	@if ! $(PYTHON_INTERPRETER) -m pip --version >/dev/null 2>&1; then \
-		echo "$(ERR_PREFIX) $(ERR_STYLE)ERROR: pip not found$(NO_STYLE)"; \
-		echo "$(ERR_PREFIX) $(ERR_STYLE)install pip: $(PYTHON_INTERPRETER) -m ensurepip --upgrade$(NO_STYLE)"; \
-		exit 1; \
-	fi
 {%- if dataset_storage == 's3' %}
 	@if ! command -v aws >/dev/null 2>&1; then \
 		echo "$(WARN_PREFIX) $(WARN_STYLE)WARNING: aws CLI not found - sync commands will fail$(NO_STYLE)"; \
