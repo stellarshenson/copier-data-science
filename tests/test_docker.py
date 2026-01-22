@@ -10,6 +10,7 @@ Tests are skipped if Docker is not available or not running.
 
 import shutil
 import subprocess
+from pathlib import Path
 
 import pytest
 from conftest import bake_project
@@ -164,3 +165,140 @@ class TestDockerWorkflow:
             assert not docker_dir.exists(), (
                 "docker/ directory should not exist when docker_support=No"
             )
+
+
+class TestDockerUpdateScenario:
+    """Test enabling docker during copier update."""
+
+    def test_docker_created_by_post_gen_when_missing(self, tmp_path):
+        """Test that post_gen.py creates docker folder when docker_support=Yes but folder missing.
+
+        This simulates the update scenario where:
+        1. Project was created with docker_support=No (no docker folder)
+        2. User runs update with docker_support=Yes
+        3. post_gen.py should create and render the docker templates
+        """
+        import subprocess
+        import sys
+
+        # Create .copier-answers.yml to simulate existing project
+        answers_file = tmp_path / ".copier-answers.yml"
+        answers_file.write_text("_commit: v1.2.12\n")
+
+        # Run post_gen.py with docker_support=Yes
+        post_gen_script = Path(__file__).parent.parent / "scripts" / "post_gen.py"
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(post_gen_script),
+                "--project-name", "test_project",
+                "--repo-name", "test_project",
+                "--env-name", "test_project",
+                "--module-name", "lib_test_project",
+                "--author-name", "Test Author",
+                "--description", "Test project",
+                "--python-version", "3.12",
+                "--dataset-storage", "none",
+                "--s3-bucket", "",
+                "--s3-aws-profile", "default",
+                "--azure-container", "",
+                "--gcs-bucket", "",
+                "--environment-manager", "uv",
+                "--env-location", "local",
+                "--dependency-file", "pyproject.toml",
+                "--pydata-packages", "none",
+                "--testing-framework", "pytest",
+                "--linting-and-formatting", "ruff",
+                "--open-source-license", "MIT",
+                "--docs", "none",
+                "--include-code-scaffold", "Yes",
+                "--jupyter-kernel-support", "No",
+                "--env-encryption", "No",
+                "--docker-support", "Yes",
+                "--docker-package-manager", "uv",
+                "--package-repository", "No",
+                "--package-repository-url", "",
+                "--custom-config", "",
+            ],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+        )
+
+        assert result.returncode == 0, f"post_gen.py failed: {result.stderr}"
+
+        # Verify docker folder was created
+        docker_dir = tmp_path / "docker"
+        assert docker_dir.exists(), "docker/ should be created by post_gen.py"
+
+        dockerfile = docker_dir / "Dockerfile"
+        entrypoint = docker_dir / "entrypoint.py"
+        assert dockerfile.exists(), "Dockerfile should exist"
+        assert entrypoint.exists(), "entrypoint.py should exist"
+
+        # Verify templates are rendered (not raw Jinja)
+        dockerfile_content = dockerfile.read_text()
+        assert "{{" not in dockerfile_content, "Dockerfile should be rendered, not raw template"
+        assert "ghcr.io/astral-sh/uv:latest" in dockerfile_content, "Dockerfile should use uv"
+        assert "PYTHON_VERSION=3.12" in dockerfile_content, "Dockerfile should have correct Python version"
+
+        entrypoint_content = entrypoint.read_text()
+        assert "{{" not in entrypoint_content, "entrypoint.py should be rendered, not raw template"
+        assert "lib_test_project" in entrypoint_content, "entrypoint.py should have correct module name"
+
+    def test_docker_not_created_when_disabled(self, tmp_path):
+        """Test that post_gen.py does not create docker folder when docker_support=No."""
+        import subprocess
+        import sys
+
+        # Create .copier-answers.yml to simulate existing project
+        answers_file = tmp_path / ".copier-answers.yml"
+        answers_file.write_text("_commit: v1.2.12\n")
+
+        # Run post_gen.py with docker_support=No
+        post_gen_script = Path(__file__).parent.parent / "scripts" / "post_gen.py"
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(post_gen_script),
+                "--project-name", "test_project",
+                "--repo-name", "test_project",
+                "--env-name", "test_project",
+                "--module-name", "lib_test_project",
+                "--author-name", "Test Author",
+                "--description", "Test project",
+                "--python-version", "3.12",
+                "--dataset-storage", "none",
+                "--s3-bucket", "",
+                "--s3-aws-profile", "default",
+                "--azure-container", "",
+                "--gcs-bucket", "",
+                "--environment-manager", "uv",
+                "--env-location", "local",
+                "--dependency-file", "pyproject.toml",
+                "--pydata-packages", "none",
+                "--testing-framework", "pytest",
+                "--linting-and-formatting", "ruff",
+                "--open-source-license", "MIT",
+                "--docs", "none",
+                "--include-code-scaffold", "Yes",
+                "--jupyter-kernel-support", "No",
+                "--env-encryption", "No",
+                "--docker-support", "No",
+                "--docker-package-manager", "uv",
+                "--package-repository", "No",
+                "--package-repository-url", "",
+                "--custom-config", "",
+            ],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+        )
+
+        assert result.returncode == 0, f"post_gen.py failed: {result.stderr}"
+
+        # Verify docker folder was NOT created
+        docker_dir = tmp_path / "docker"
+        assert not docker_dir.exists(), "docker/ should NOT be created when docker_support=No"
