@@ -265,28 +265,28 @@ def _do_post_gen():
         # Delete entire tests folder when testing is disabled
         if tests_path.exists():
             shutil.rmtree(tests_path)
-    elif tests_path.exists():
-        tests_subpath = tests_path / args.testing_framework
-        if tests_subpath.exists():
-            # Move template files to tests/ root
-            # Fresh copy: overwrite (user hasn't modified yet)
-            # Update: only move if dest doesn't exist (preserve user's files)
-            items_to_move = list(tests_subpath.iterdir())
-            for obj in items_to_move:
-                dest = tests_path / obj.name
-                if is_update and dest.exists():
-                    # During update, don't overwrite user's files
-                    pass
-                else:
-                    # Fresh copy or dest doesn't exist
-                    if dest.exists():
-                        if dest.is_dir():
-                            shutil.rmtree(dest)
-                        else:
-                            dest.unlink()
-                    shutil.move(str(obj), str(tests_path))
+    elif args.testing_framework in ("pytest", "unittest"):
+        # Ensure tests folder exists with properly rendered templates
+        # During update from testing_framework=none, folder won't exist - need to create it
+        template_tests = Path(__file__).parent.parent / "template" / "tests" / args.testing_framework
+        if template_tests.exists():
+            tests_path.mkdir(parents=True, exist_ok=True)
+            # Template context for rendering test files
+            context = {
+                "module_name": args.module_name,
+                "project_name": args.project_name,
+                "repo_name": args.repo_name,
+            }
+            for template_file in template_tests.iterdir():
+                if template_file.is_file():
+                    dest = tests_path / template_file.name
+                    # During update, don't overwrite user's existing test files
+                    if not (is_update and dest.exists()):
+                        content = template_file.read_text()
+                        rendered = Template(content).render(**context)
+                        dest.write_text(rendered)
 
-        # Always remove template directories (pytest, unittest)
+        # Remove template directories (pytest, unittest) if they still exist
         template_test_dirs = ["pytest", "unittest"]
         for template_dir in template_test_dirs:
             template_path = tests_path / template_dir

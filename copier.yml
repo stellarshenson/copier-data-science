@@ -228,10 +228,12 @@ _exclude:
 
 # Skip these files on update if they already exist (user-customized files)
 # Note: tests/test_data.py is created by post_gen from tests/pytest/, not directly by template
+# tests/ and docker/ can be created by post_gen during updates (from none to enabled)
 _skip_if_exists:
   - README.md
   - .env
   - tests/test_data.py
+  - tests/
   - docker/
 
 # Post-generation tasks
