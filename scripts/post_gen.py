@@ -17,8 +17,6 @@ from tempfile import TemporaryDirectory
 from urllib.request import urlretrieve
 from zipfile import ZipFile
 
-from jinja2 import Template
-
 
 def resolve_pyproject_conflicts():
     """Resolve conflict markers in pyproject.toml, preserving user changes.
@@ -382,17 +380,20 @@ def _do_post_gen():
         template_docker = Path(__file__).parent.parent / "template" / "docker"
         if template_docker.exists():
             docker_path.mkdir(parents=True, exist_ok=True)
-            # Template context for rendering docker files
-            context = {
-                "module_name": args.module_name,
-                "python_version_number": args.python_version,
-                "docker_package_manager": args.docker_package_manager,
+            # Simple string replacement for docker templates (no jinja2 dependency)
+            replacements = {
+                "{{ module_name }}": args.module_name,
+                "{{ python_version_number }}": args.python_version,
+                "{{ docker_package_manager }}": args.docker_package_manager,
+                "{{ project_name }}": args.project_name,
+                "{{ description }}": args.description,
             }
             for template_file in template_docker.iterdir():
                 if template_file.is_file():
                     content = template_file.read_text()
-                    rendered = Template(content).render(**context)
-                    (docker_path / template_file.name).write_text(rendered)
+                    for placeholder, value in replacements.items():
+                        content = content.replace(placeholder, value)
+                    (docker_path / template_file.name).write_text(content)
 
     # Remove .ipynb_checkpoints if present
     checkpoints_path = Path(".ipynb_checkpoints")
