@@ -371,6 +371,9 @@ def _do_post_gen():
 
     # Handle docker folder based on docker_support setting
     docker_path = Path("docker")
+    import sys
+    print(f"DEBUG: docker_support={args.docker_support}, docker_path.exists()={docker_path.exists()}", file=sys.stderr)
+    print(f"DEBUG: CWD={os.getcwd()}, __file__={__file__}", file=sys.stderr)
     if args.docker_support == "No":
         # Remove docker folder when docker support is not selected
         if docker_path.exists():
@@ -379,6 +382,7 @@ def _do_post_gen():
         # During update, if user enables docker but folder doesn't exist,
         # render and copy it from the template (copier doesn't create new folders during update)
         template_docker = Path(__file__).parent.parent / "template" / "docker"
+        print(f"DEBUG: template_docker={template_docker}, exists={template_docker.exists()}", file=sys.stderr)
         if template_docker.exists():
             docker_path.mkdir(parents=True, exist_ok=True)
             # Template context for rendering docker files
