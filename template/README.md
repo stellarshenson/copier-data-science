@@ -1,9 +1,5 @@
 # {{ project_name }}
 
-<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
-    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
-</a>
-
 {{ description }}
 
 > **Note**: Generated with copier-data-science template v1.2+
@@ -84,5 +80,3 @@ make install
     │   └── train.py   <- Model training
     └── plots.py       <- Visualization code
 ```
-# Test change for v1.2.5
-# Test comment for v1.2.6
