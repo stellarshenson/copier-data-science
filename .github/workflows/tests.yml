@@ -74,6 +74,9 @@ jobs:
         run: |
           make create_environment
 
+      - name: Install jinja2 for copier post_gen tasks
+        run: pip install jinja2
+
       - name: Check dependencies
         run: |
           which conda && conda --version
