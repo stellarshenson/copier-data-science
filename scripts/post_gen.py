@@ -262,8 +262,8 @@ def _do_post_gen():
     tests_path = Path("tests")
 
     if args.testing_framework == "none":
-        # Only delete tests on fresh copy, not update
-        if not is_update and tests_path.exists():
+        # Delete entire tests folder when testing is disabled
+        if tests_path.exists():
             shutil.rmtree(tests_path)
     elif tests_path.exists():
         tests_subpath = tests_path / args.testing_framework
