@@ -154,11 +154,16 @@ docs:
 
 include_code_scaffold:
   type: str
+  default: "Yes"
+  when: false
+
+git_init:
+  type: str
   choices:
     - "Yes"
     - "No"
   default: "Yes"
-  help: "Include example code scaffold"
+  help: "Initialize git repository with main branch"
 
 jupyter_kernel_support:
   type: str
@@ -269,6 +274,7 @@ _tasks:
     --package-repository "{{ package_repository }}"
     --package-repository-url "{{ package_repository_url | default('') }}"
     --custom-config "{{ custom_config }}"
+  - "{% if git_init == 'Yes' %}git init -b main{% endif %}"
 
 # Answers file for template updates
 _answers_file: .copier-answers.yml

@@ -118,6 +118,7 @@ def config_generator(fast=False):
         # Additional copier-specific defaults
         config["env_encryption"] = "No"  # Skip encryption for tests
         config["custom_config"] = ""
+        config["git_init"] = "No"  # Skip git init for tests
 
         config["repo_name"] += f"-{ind}"
         # Set env_name to match repo_name to avoid conflicts between tests
