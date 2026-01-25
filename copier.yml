@@ -157,14 +157,6 @@ include_code_scaffold:
   default: "Yes"
   when: false
 
-git_init:
-  type: str
-  choices:
-    - "Yes"
-    - "No"
-  default: "Yes"
-  help: "Initialize git repository with main branch"
-
 jupyter_kernel_support:
   type: str
   choices:
@@ -217,6 +209,14 @@ custom_config:
   type: str
   default: ""
   help: "Path to custom config overlay (optional)"
+
+git_init:
+  type: str
+  choices:
+    - "Yes"
+    - "No"
+  default: "Yes"
+  help: "Initialize git repository with main branch"
 
 # Computed cookiecutter namespace for template compatibility
 # This creates a dict that allows {{ cookiecutter.var }} syntax in templates
