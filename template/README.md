@@ -35,7 +35,7 @@ make install
 
 ## Best Practices
 
-- **Notebooks**: Name with number prefix, initials, description - `1.0-jqp-data-exploration.ipynb`
+- **Notebooks**: Name with number prefix, initials, description - `01-jqp-data-exploration.ipynb`
 - **Data**: Keep `raw/` immutable, use `interim/` for transforms, `processed/` for final datasets
 - **Source code**: Refactor reusable notebook code into `{{ module_name }}/` modules
 - **Models**: Store trained models in `models/` with clear naming
