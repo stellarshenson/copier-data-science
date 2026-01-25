@@ -205,11 +205,6 @@ package_repository_url:
   help: "Package repository URL (e.g., https://upload.pypi.org/legacy/)"
   placeholder: "https://upload.pypi.org/legacy/"
 
-custom_config:
-  type: str
-  default: ""
-  help: "Path to custom config overlay (optional)"
-
 git_init:
   type: str
   choices:
@@ -217,6 +212,11 @@ git_init:
     - "No"
   default: "Yes"
   help: "Initialize git repository with main branch"
+
+custom_config:
+  type: str
+  default: ""
+  help: "Path to custom config overlay (optional)"
 
 # Computed cookiecutter namespace for template compatibility
 # This creates a dict that allows {{ cookiecutter.var }} syntax in templates
