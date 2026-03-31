@@ -54,7 +54,7 @@
   <!-- Connector lines (behind everything) -->
   <g id="connectors" opacity="0.2">
     <line x1="355" y1="190" x2="180" y2="190" stroke="#005f7a" stroke-width="1"/>
-    <line x1="362" y1="162" x2="175" y2="100" stroke="#005f7a" stroke-width="1"/>
+    <line x1="362" y1="168" x2="180" y2="125" stroke="#005f7a" stroke-width="1"/>
     <line x1="375" y1="148" x2="280" y2="92" stroke="#005f7a" stroke-width="1"/>
     <line x1="400" y1="142" x2="430" y2="92" stroke="#005f7a" stroke-width="1"/>
     <line x1="425" y1="148" x2="580" y2="92" stroke="#005f7a" stroke-width="1"/>
@@ -86,18 +86,18 @@
     <text x="52" y="213" font-family="Segoe UI, Arial, sans-serif" font-size="8" class="fg-4">Local by default</text>
   </g>
 
-  <!-- Node 2: Cloud Storage (upper-left) -->
+  <!-- Node 2: Cloud Storage (left, between Env and Docker) -->
   <g id="node-cloud">
-    <path d="M105,65 H245 V122 Q245,125 242,125 H108 Q105,125 105,122 Z" fill="#7a4a15" fill-opacity="0.06"/>
-    <path d="M105,65 H245 V122 Q245,125 242,125 H108 Q105,125 105,122 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
-    <rect x="105" y="65" width="140" height="5" fill="#7a4a15" opacity="0.5"/>
+    <path d="M40,95 H180 V152 Q180,155 177,155 H43 Q40,155 40,152 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M40,95 H180 V152 Q180,155 177,155 H43 Q40,155 40,152 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="40" y="95" width="140" height="5" fill="#7a4a15" opacity="0.5"/>
     <!-- Icon: cloud (Lucide, ISC license) -->
-    <g transform="translate(115, 78) scale(0.5)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+    <g transform="translate(50, 108) scale(0.5)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
       <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
     </g>
-    <text x="133" y="90" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-1">Cloud Storage</text>
-    <text x="117" y="106" font-family="Segoe UI, Arial, sans-serif" font-size="9" class="fg-3">S3, Azure, GCS</text>
-    <text x="117" y="119" font-family="Segoe UI, Arial, sans-serif" font-size="8" class="fg-4">sync_data + sync_models</text>
+    <text x="68" y="120" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-1">Cloud Storage</text>
+    <text x="52" y="136" font-family="Segoe UI, Arial, sans-serif" font-size="9" class="fg-3">S3, Azure, GCS</text>
+    <text x="52" y="149" font-family="Segoe UI, Arial, sans-serif" font-size="8" class="fg-4">sync_data + sync_models</text>
   </g>
 
   <!-- Node 3: Docker (upper-left of center) -->
