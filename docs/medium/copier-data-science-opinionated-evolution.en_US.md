@@ -33,6 +33,20 @@ A standardized template should eliminate repetitive setup, not create it. That r
 
 So I built [something different](https://github.com/stellarshenson/copier-data-science).
 
+## Quickstart
+
+Three commands. That is it.
+
+```bash
+pipx install copier
+copier copy --trust gh:stellarshenson/copier-data-science my-project
+cd my-project && make install
+```
+
+Copier walks you through interactive prompts - environment manager, dependency file, cloud storage, Docker, linting, testing framework. Every question is conditional: S3 bucket names only appear if you picked S3, Docker package manager only if you enabled Docker. Then `make install` creates the environment, installs dependencies, decrypts secrets, and registers the Jupyter kernel. Done.
+
+This template is also integrated into [stellars-jupyterhub-ds](https://github.com/stellarshenson/stellars_jupyterhub_ds) via a `lab-utils` shell script, so JupyterHub users can scaffold new projects directly from the terminal with a single `new-project` command that pre-fills the template URL and prompts for the project name.
+
 ![Project at a Glance](images/05-project-stats.svg)
 
 ## What cookiecutter-data-science got right
@@ -175,20 +189,6 @@ dev = [
 ![What Happens When You Run make install](images/07-make-install-pipeline.svg)
 
 ![What The Template Builds For You](images/12-template-layers.svg)
-
-## Quickstart
-
-Three commands. That is it.
-
-```bash
-pipx install copier
-copier copy --trust gh:stellarshenson/copier-data-science my-project
-cd my-project && make install
-```
-
-Copier walks you through interactive prompts - environment manager, dependency file, cloud storage, Docker, linting, testing framework. Every question is conditional: S3 bucket names only appear if you picked S3, Docker package manager only if you enabled Docker. Then `make install` creates the environment, installs dependencies, decrypts secrets, and registers the Jupyter kernel. Done.
-
-This template is also integrated into [stellars-jupyterhub-ds](https://github.com/stellarshenson/stellars_jupyterhub_ds) via a `lab-utils` shell script, so JupyterHub users can scaffold new projects directly from the terminal with a single `new-project` command that pre-fills the template URL and prompts for the project name.
 
 What you get:
 
