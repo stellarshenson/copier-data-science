@@ -1,0 +1,172 @@
+<!--
+  07-make-install-pipeline.svg
+  Shows: Pipeline flow of what happens when you run `make install` - 6 stages with conditional branches
+  Intent: Demystify the single-command setup and show what automation the template provides
+  Theme: Stellars-Tech EU (teal/cyan primary, orange accent)
+
+  === GRID ===
+  viewBox: 0 0 800 200
+  margins: left=10, right=10, top=10, bottom=10
+
+  Pipeline row: y=42..92 (box 108x50, stride 130, first x=10)
+  Boxes: 6 stages left-to-right
+    preflight:    x=10   w=108
+    decrypt-env:  x=140  w=108
+    create-venv:  x=270  w=108
+    install-deps: x=400  w=108
+    install-pkg:  x=530  w=108
+    register-k:   x=660  w=108
+
+  Card shape: flat top, rounded bottom r=3
+  Arrow centres: y=67, tips touch shape edges
+  Arrows: stem from right edge of box to left edge of next box
+
+  Subtext row: y=108..150, optional condition cards below relevant stages
+  Condition cards: smaller (108x40), accent-2 stroke, y=108
+
+  Command label: x=400, y=185, centred
+
+  === LAYOUT TOPOLOGY ===
+  flow: preflight -> decrypt -> create-venv -> install-deps -> install-pkg -> register-kernel
+  v-stack(decrypt): stage, condition-card
+  v-stack(create-venv): stage, condition-card
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+    }
+  </style>
+
+  <rect width="800" height="200" fill="transparent"/>
+
+  <!-- Title -->
+  <text x="400" y="14" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">WHAT HAPPENS WHEN YOU RUN MAKE INSTALL</text>
+
+  <!-- Stage 1: Preflight -->
+  <g id="stage-preflight">
+    <path d="M10,32 H118 V79 Q118,82 115,82 H13 Q10,82 10,79 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M10,32 H118 V79 Q118,82 115,82 H13 Q10,82 10,79 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="10" y="32" width="108" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="64" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" class="fg-1">Preflight</text>
+    <text x="64" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">Check python, pip, uv</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <line x1="118" y1="57" x2="138" y2="57" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="138,54 142,57 138,60" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Stage 2: Decrypt .env -->
+  <g id="stage-decrypt">
+    <path d="M140,32 H248 V79 Q248,82 245,82 H143 Q140,82 140,79 Z" fill="#7a4a15" fill-opacity="0.04"/>
+    <path d="M140,32 H248 V79 Q248,82 245,82 H143 Q140,82 140,79 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="140" y="32" width="108" height="5" fill="#7a4a15" opacity="0.6"/>
+    <text x="194" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" class="fg-1">Decrypt .env</text>
+    <text x="194" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">AES-256 if .env.enc</text>
+  </g>
+  <!-- Condition card below -->
+  <g id="cond-decrypt">
+    <line x1="194" y1="82" x2="194" y2="94" stroke="#7a4a15" stroke-width="0.8" opacity="0.3"/>
+    <path d="M148,94 H240 V131 Q240,134 237,134 H151 Q148,134 148,131 Z" fill="#7a4a15" fill-opacity="0.02"/>
+    <path d="M148,94 H240 V131 Q240,134 237,134 H151 Q148,134 148,131 Z" fill="none" stroke="#7a4a15" stroke-width="0.8" opacity="0.25"/>
+    <rect x="148" y="94" width="92" height="4" fill="#7a4a15" opacity="0.15"/>
+    <text x="194" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">if env_encryption</text>
+    <text x="194" y="126" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">== Yes</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <line x1="248" y1="57" x2="268" y2="57" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="268,54 272,57 268,60" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Stage 3: Create Environment -->
+  <g id="stage-create-env">
+    <path d="M270,32 H378 V79 Q378,82 375,82 H273 Q270,82 270,79 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M270,32 H378 V79 Q378,82 375,82 H273 Q270,82 270,79 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="270" y="32" width="108" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="324" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" class="fg-1">Create Env</text>
+    <text x="324" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">Skip if exists</text>
+  </g>
+  <!-- Condition card below -->
+  <g id="cond-create-env">
+    <line x1="324" y1="82" x2="324" y2="94" stroke="#005f7a" stroke-width="0.8" opacity="0.3"/>
+    <path d="M278,94 H370 V131 Q370,134 367,134 H281 Q278,134 278,131 Z" fill="#005f7a" fill-opacity="0.02"/>
+    <path d="M278,94 H370 V131 Q370,134 367,134 H281 Q278,134 278,131 Z" fill="none" stroke="#005f7a" stroke-width="0.8" opacity="0.25"/>
+    <rect x="278" y="94" width="92" height="4" fill="#005f7a" opacity="0.15"/>
+    <text x="324" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">uv venv / conda</text>
+    <text x="324" y="126" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">/ python -m venv</text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <line x1="378" y1="57" x2="398" y2="57" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="398,54 402,57 398,60" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Stage 4: Install Deps -->
+  <g id="stage-install-deps">
+    <path d="M400,32 H508 V79 Q508,82 505,82 H403 Q400,82 400,79 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M400,32 H508 V79 Q508,82 505,82 H403 Q400,82 400,79 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="400" y="32" width="108" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="454" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" class="fg-1">Install Deps</text>
+    <text x="454" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">Dev + production</text>
+  </g>
+
+  <!-- Arrow 4 -->
+  <line x1="508" y1="57" x2="528" y2="57" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="528,54 532,57 528,60" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Stage 5: Install Package -->
+  <g id="stage-install-pkg">
+    <path d="M530,32 H638 V79 Q638,82 635,82 H533 Q530,82 530,79 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M530,32 H638 V79 Q638,82 635,82 H533 Q530,82 530,79 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="530" y="32" width="108" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="584" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" class="fg-1">Install Package</text>
+    <text x="584" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">pip install -e .</text>
+  </g>
+
+  <!-- Arrow 5 -->
+  <line x1="638" y1="57" x2="658" y2="57" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="658,54 662,57 658,60" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Stage 6: Register Kernel -->
+  <g id="stage-register-kernel">
+    <path d="M660,32 H768 V79 Q768,82 765,82 H663 Q660,82 660,79 Z" fill="#7a4a15" fill-opacity="0.04"/>
+    <path d="M660,32 H768 V79 Q768,82 765,82 H663 Q660,82 660,79 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="660" y="32" width="108" height="5" fill="#7a4a15" opacity="0.6"/>
+    <text x="714" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" class="fg-1">Register Kernel</text>
+    <text x="714" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">Jupyter auto-discover</text>
+  </g>
+  <!-- Condition card below -->
+  <g id="cond-register-kernel">
+    <line x1="714" y1="82" x2="714" y2="94" stroke="#7a4a15" stroke-width="0.8" opacity="0.3"/>
+    <path d="M668,94 H760 V131 Q760,134 757,134 H671 Q668,134 668,131 Z" fill="#7a4a15" fill-opacity="0.02"/>
+    <path d="M668,94 H760 V131 Q760,134 757,134 H671 Q668,134 668,131 Z" fill="none" stroke="#7a4a15" stroke-width="0.8" opacity="0.25"/>
+    <rect x="668" y="94" width="92" height="4" fill="#7a4a15" opacity="0.15"/>
+    <text x="714" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">if jupyter_kernel</text>
+    <text x="714" y="126" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-4">_support == Yes</text>
+  </g>
+
+  <!-- Command label -->
+  <g id="command-label">
+    <rect x="300" y="155" width="200" height="28" rx="4" fill="#005f7a" fill-opacity="0.06" stroke="#005f7a" stroke-width="1"/>
+    <text x="400" y="174" font-family="Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" class="accent-1">$ make install</text>
+  </g>
+
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="28" y="162" width="10" height="10" rx="1" fill="#005f7a" fill-opacity="0.04" stroke="#005f7a" stroke-width="1"/>
+    <text x="44" y="171" font-family="Segoe UI, Arial, sans-serif" font-size="9" class="accent-1">Always runs</text>
+    <rect x="118" y="162" width="10" height="10" rx="1" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="1"/>
+    <text x="134" y="171" font-family="Segoe UI, Arial, sans-serif" font-size="9" class="accent-2">Conditional</text>
+  </g>
+</svg>

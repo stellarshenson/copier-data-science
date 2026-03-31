@@ -1,0 +1,93 @@
+<!--
+  05-project-stats.svg
+  Shows: Horizontal stats banner with 6 key project metrics separated by vertical lines
+  Intent: At-a-glance project scale summary - convey maturity and scope
+  Theme: Stellars-Tech EU (teal/cyan primary, orange accent)
+
+  === GRID ===
+  viewBox: 0 0 800 110
+  margins: left=10, right=10, top=10, bottom=10
+
+  6 stat columns, each ~127px wide, centred at: 67, 200, 333, 467, 600, 733
+  Hero number: y=42, font-size 28, fg-1
+  Label: y=62, font-size 11, fg-3
+  Subtext: y=76, font-size 9, fg-4
+  Separators: x=133, 267, 400, 533, 667, y1=20 y2=82, accent-1 opacity 0.15
+
+  === LAYOUT TOPOLOGY ===
+  h-stack: stat-1, sep, stat-2, sep, stat-3, sep, stat-4, sep, stat-5, sep, stat-6
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 110">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+    }
+  </style>
+
+  <rect width="800" height="110" fill="transparent"/>
+
+  <!-- Title -->
+  <text x="400" y="14" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">PROJECT AT A GLANCE</text>
+
+  <!-- Stat 1: Env Managers -->
+  <g id="stat-env">
+    <text x="67" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle" class="fg-1">3</text>
+    <text x="67" y="64" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="fg-3">Env Managers</text>
+    <text x="67" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">uv, conda, virtualenv</text>
+  </g>
+  <line x1="133" y1="24" x2="133" y2="82" stroke="#005f7a" stroke-width="1" opacity="0.15"/>
+
+  <!-- Stat 2: Make Targets -->
+  <g id="stat-targets">
+    <text x="200" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle" class="fg-1">40+</text>
+    <text x="200" y="64" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="fg-3">Make Targets</text>
+    <text x="200" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Conditional on config</text>
+  </g>
+  <line x1="267" y1="24" x2="267" y2="82" stroke="#005f7a" stroke-width="1" opacity="0.15"/>
+
+  <!-- Stat 3: Test Configs -->
+  <g id="stat-tests">
+    <text x="333" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle" class="fg-1">70+</text>
+    <text x="333" y="64" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="fg-3">Test Configs</text>
+    <text x="333" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Parametrized matrix</text>
+  </g>
+  <line x1="400" y1="24" x2="400" y2="82" stroke="#005f7a" stroke-width="1" opacity="0.15"/>
+
+  <!-- Stat 4: Iterations -->
+  <g id="stat-iterations">
+    <text x="467" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle" class="accent-2">100+</text>
+    <text x="467" y="64" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="fg-3">Iterations</text>
+    <text x="467" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Battle-tested</text>
+  </g>
+  <line x1="533" y1="24" x2="533" y2="82" stroke="#005f7a" stroke-width="1" opacity="0.15"/>
+
+  <!-- Stat 5: Config Options -->
+  <g id="stat-options">
+    <text x="600" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle" class="fg-1">25</text>
+    <text x="600" y="64" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="fg-3">Config Options</text>
+    <text x="600" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Smart conditionals</text>
+  </g>
+  <line x1="667" y1="24" x2="667" y2="82" stroke="#005f7a" stroke-width="1" opacity="0.15"/>
+
+  <!-- Stat 6: Contributors -->
+  <g id="stat-contributors">
+    <text x="733" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle" class="accent-2">30+</text>
+    <text x="733" y="64" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="fg-3">Data Scientists</text>
+    <text x="733" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Shaped the opinions</text>
+  </g>
+
+  <!-- Bottom rule -->
+  <line x1="30" y1="96" x2="770" y2="96" stroke="#005f7a" stroke-width="0.5" opacity="0.1"/>
+</svg>

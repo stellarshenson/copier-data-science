@@ -33,6 +33,8 @@ A standardized template should eliminate repetitive setup, not create it. That r
 
 So I built [something different](https://github.com/stellarshenson/copier-data-science).
 
+![Project at a Glance](images/05-project-stats.svg)
+
 ## What cookiecutter-data-science got right
 
 Credit where due. The upstream project established conventions that the data science community needed:
@@ -152,6 +154,8 @@ dev = [
 
 **Optional Docker support.** A Dockerfile that installs from wheel (not source), an entrypoint with run/train/predict commands, and `make docker_build` / `make docker_run` / `make docker_push` targets. Toggled by a single option during scaffolding.
 
+![What Happens When You Run make install](images/07-make-install-pipeline.svg)
+
 ## Getting started
 
 ```bash
@@ -214,6 +218,8 @@ def resolve_conflict(match):
 ```
 
 Version bumps and custom licenses survive template updates. New dependency configurations and tool settings flow in from the template. This is the kind of detail that only matters when it breaks - and when it breaks, it really breaks.
+
+![Project Evolution](images/06-evolution-timeline.svg)
 
 ## Limitations
 
