@@ -33,7 +33,7 @@
   contain(prod): [prod-deps, clean-zone, size-bar]
   === END ===
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 430">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
   <style>
     .fg-1 { fill: #1a5a6e; }
     .fg-2 { fill: #24697e; }
@@ -53,7 +53,7 @@
     }
   </style>
 
-  <rect width="800" height="430" fill="transparent"/>
+  <rect width="800" height="450" fill="transparent"/>
 
   <text x="400" y="18" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">DEV/PROD DEPENDENCY SEPARATION</text>
 
@@ -89,18 +89,18 @@
     <polygon points="596,116 600,124 604,116" fill="#005f7a" opacity="0.7"/>
   </g>
 
-  <!-- Branch labels -->
-  <rect x="95" y="79" width="162" height="16" rx="4" fill="#005f7a" fill-opacity="0.08" stroke="#005f7a" stroke-width="0.5" opacity="0.3"/>
-  <text x="176" y="91" font-family="Consolas, monospace" font-size="9" text-anchor="middle" class="accent-1">pip install -e ".[dev]"</text>
-  <rect x="528" y="79" width="120" height="16" rx="4" fill="#005f7a" fill-opacity="0.08" stroke="#005f7a" stroke-width="0.5" opacity="0.3"/>
-  <text x="588" y="91" font-family="Consolas, monospace" font-size="9" text-anchor="middle" class="accent-1">pip install .</text>
+  <!-- Branch labels - above the horizontal arms, between source and fork -->
+  <rect x="60" y="56" width="162" height="16" rx="4" fill="#005f7a" fill-opacity="0.08" stroke="#005f7a" stroke-width="0.5" opacity="0.3"/>
+  <text x="141" y="68" font-family="Consolas, monospace" font-size="9" text-anchor="middle" class="accent-1">pip install -e ".[dev]"</text>
+  <rect x="578" y="56" width="120" height="16" rx="4" fill="#005f7a" fill-opacity="0.08" stroke="#005f7a" stroke-width="0.5" opacity="0.3"/>
+  <text x="638" y="68" font-family="Consolas, monospace" font-size="9" text-anchor="middle" class="accent-1">pip install .</text>
 
   <!-- ================================================ -->
   <!-- DEV CONTAINER                                    -->
   <!-- ================================================ -->
   <g id="dev-container">
-    <path d="M15,124 H385 V411 Q385,414 382,414 H18 Q15,414 15,411 Z" fill="#005f7a" fill-opacity="0.04"/>
-    <path d="M15,124 H385 V411 Q385,414 382,414 H18 Q15,414 15,411 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <path d="M15,124 H385 V427 Q385,430 382,430 H18 Q15,430 15,427 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M15,124 H385 V427 Q385,430 382,430 H18 Q15,430 15,427 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
     <rect x="15" y="124" width="370" height="5" fill="#005f7a" opacity="0.6"/>
 
     <!-- Icon: monitor (Lucide, ISC license) -->
@@ -111,8 +111,8 @@
 
     <!-- Shared deps sub-card -->
     <g id="dev-shared">
-      <path d="M28,164 H372 V251 Q372,254 369,254 H31 Q28,254 28,251 Z" fill="#005f7a" fill-opacity="0.08"/>
-      <path d="M28,164 H372 V251 Q372,254 369,254 H31 Q28,254 28,251 Z" fill="none" stroke="#005f7a" stroke-width="1" opacity="0.5"/>
+      <path d="M28,164 H372 V243 Q372,246 369,246 H31 Q28,246 28,243 Z" fill="#005f7a" fill-opacity="0.08"/>
+      <path d="M28,164 H372 V243 Q372,246 369,246 H31 Q28,246 28,243 Z" fill="none" stroke="#005f7a" stroke-width="1" opacity="0.5"/>
       <rect x="28" y="164" width="344" height="5" fill="#005f7a" opacity="0.4"/>
       <!-- Icon: package (Lucide, ISC license) -->
       <g transform="translate(332, 176) scale(0.5)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
@@ -121,40 +121,39 @@
       <text x="42" y="182" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-1">[project.dependencies]</text>
       <text x="42" y="200" font-family="Consolas, monospace" font-size="10" class="fg-2">python-dotenv    loguru</text>
       <text x="42" y="216" font-family="Consolas, monospace" font-size="10" class="fg-2">tqdm             typer</text>
-      <text x="42" y="234" font-family="Consolas, monospace" font-size="10" class="fg-3">botocore / azure-storage-blob / gcs</text>
-      <text x="42" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="8" class="fg-4">Runtime packages your app actually needs</text>
+      <text x="42" y="232" font-family="Consolas, monospace" font-size="10" class="fg-3">botocore / azure-storage-blob / gcs</text>
     </g>
 
     <!-- Dev-only deps sub-card -->
     <g id="dev-only">
-      <path d="M28,264 H372 V377 Q372,380 369,380 H31 Q28,380 28,377 Z" fill="#7a4a15" fill-opacity="0.08"/>
-      <path d="M28,264 H372 V377 Q372,380 369,380 H31 Q28,380 28,377 Z" fill="none" stroke="#7a4a15" stroke-width="1" opacity="0.5"/>
-      <rect x="28" y="264" width="344" height="5" fill="#7a4a15" opacity="0.4"/>
+      <path d="M28,258 H372 V387 Q372,390 369,390 H31 Q28,390 28,387 Z" fill="#7a4a15" fill-opacity="0.08"/>
+      <path d="M28,258 H372 V387 Q372,390 369,390 H31 Q28,390 28,387 Z" fill="none" stroke="#7a4a15" stroke-width="1" opacity="0.5"/>
+      <rect x="28" y="258" width="344" height="5" fill="#7a4a15" opacity="0.4"/>
       <!-- Icon: wrench (Lucide, ISC license) -->
-      <g transform="translate(332, 276) scale(0.5)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <g transform="translate(332, 270) scale(0.5)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
       </g>
-      <text x="42" y="282" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-1">[project.optional-dependencies.dev]</text>
-      <text x="42" y="300" font-family="Consolas, monospace" font-size="10" class="accent-2">pytest           pytest-cov</text>
-      <text x="42" y="316" font-family="Consolas, monospace" font-size="10" class="accent-2">ruff</text>
+      <text x="42" y="276" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-1">[project.optional-dependencies.dev]</text>
+      <text x="42" y="296" font-family="Consolas, monospace" font-size="10" class="accent-2">pytest           pytest-cov</text>
+      <text x="42" y="314" font-family="Consolas, monospace" font-size="10" class="accent-2">ruff</text>
       <text x="42" y="332" font-family="Consolas, monospace" font-size="10" class="accent-2">mkdocs           mkdocs-material</text>
-      <text x="42" y="348" font-family="Consolas, monospace" font-size="10" class="accent-2">ipython          ipykernel</text>
-      <text x="42" y="364" font-family="Consolas, monospace" font-size="10" class="accent-2">nbdime           twine</text>
-      <text x="42" y="376" font-family="Segoe UI, Arial, sans-serif" font-size="8" class="fg-4">Dev tooling - never ships to production</text>
+      <text x="42" y="350" font-family="Consolas, monospace" font-size="10" class="accent-2">ipython          ipykernel</text>
+      <text x="42" y="368" font-family="Consolas, monospace" font-size="10" class="accent-2">nbdime           twine</text>
+      <text x="42" y="384" font-family="Segoe UI, Arial, sans-serif" font-size="8" class="fg-4">Dev tooling - never ships to production</text>
     </g>
 
     <!-- Size bar -->
-    <rect x="28" y="392" width="344" height="10" rx="3" fill="#005f7a" fill-opacity="0.15"/>
-    <rect x="28" y="392" width="344" height="10" rx="3" fill="#7a4a15" fill-opacity="0.10"/>
-    <text x="200" y="413" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="600" text-anchor="middle" class="fg-3">Full dev environment</text>
+    <rect x="28" y="400" width="344" height="10" rx="3" fill="#005f7a" fill-opacity="0.15"/>
+    <rect x="28" y="400" width="344" height="10" rx="3" fill="#7a4a15" fill-opacity="0.10"/>
+    <text x="200" y="423" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="600" text-anchor="middle" class="fg-3">Full dev environment</text>
   </g>
 
   <!-- ================================================ -->
   <!-- PROD CONTAINER                                   -->
   <!-- ================================================ -->
   <g id="prod-container">
-    <path d="M415,124 H785 V411 Q785,414 782,414 H418 Q415,414 415,411 Z" fill="#005f7a" fill-opacity="0.04"/>
-    <path d="M415,124 H785 V411 Q785,414 782,414 H418 Q415,414 415,411 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <path d="M415,124 H785 V427 Q785,430 782,430 H418 Q415,430 415,427 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M415,124 H785 V427 Q785,430 782,430 H418 Q415,430 415,427 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
     <rect x="415" y="124" width="370" height="5" fill="#005f7a" opacity="0.6"/>
 
     <!-- Icon: container/Docker (Lucide, ISC license) -->
@@ -164,10 +163,10 @@
     </g>
     <text x="460" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" class="accent-1">Production / Docker Image</text>
 
-    <!-- Prod deps sub-card (identical to dev shared) -->
+    <!-- Prod deps sub-card (mirrors dev shared) -->
     <g id="prod-deps">
-      <path d="M428,164 H772 V251 Q772,254 769,254 H431 Q428,254 428,251 Z" fill="#005f7a" fill-opacity="0.08"/>
-      <path d="M428,164 H772 V251 Q772,254 769,254 H431 Q428,254 428,251 Z" fill="none" stroke="#005f7a" stroke-width="1" opacity="0.5"/>
+      <path d="M428,164 H772 V243 Q772,246 769,246 H431 Q428,246 428,243 Z" fill="#005f7a" fill-opacity="0.08"/>
+      <path d="M428,164 H772 V243 Q772,246 769,246 H431 Q428,246 428,243 Z" fill="none" stroke="#005f7a" stroke-width="1" opacity="0.5"/>
       <rect x="428" y="164" width="344" height="5" fill="#005f7a" opacity="0.4"/>
       <g transform="translate(732, 176) scale(0.5)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
         <path d="M16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
@@ -175,29 +174,28 @@
       <text x="442" y="182" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-1">[project.dependencies]</text>
       <text x="442" y="200" font-family="Consolas, monospace" font-size="10" class="fg-2">python-dotenv    loguru</text>
       <text x="442" y="216" font-family="Consolas, monospace" font-size="10" class="fg-2">tqdm             typer</text>
-      <text x="442" y="234" font-family="Consolas, monospace" font-size="10" class="fg-3">botocore / azure-storage-blob / gcs</text>
-      <text x="442" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="8" class="fg-4">Only what runs in production</text>
+      <text x="442" y="232" font-family="Consolas, monospace" font-size="10" class="fg-3">botocore / azure-storage-blob / gcs</text>
     </g>
 
     <!-- Clean zone -->
     <g id="clean-zone">
-      <path d="M428,264 H772 V377 Q772,380 769,380 H431 Q428,380 428,377 Z" fill="#1a6e3a" fill-opacity="0.06"/>
-      <path d="M428,264 H772 V377 Q772,380 769,380 H431 Q428,380 428,377 Z" fill="none" stroke="#1a6e3a" stroke-width="1" opacity="0.4" stroke-dasharray="5,3"/>
-      <rect x="428" y="264" width="344" height="5" fill="#1a6e3a" opacity="0.3"/>
+      <path d="M428,258 H772 V387 Q772,390 769,390 H431 Q428,390 428,387 Z" fill="#1a6e3a" fill-opacity="0.06"/>
+      <path d="M428,258 H772 V387 Q772,390 769,390 H431 Q428,390 428,387 Z" fill="none" stroke="#1a6e3a" stroke-width="1" opacity="0.4" stroke-dasharray="5,3"/>
+      <rect x="428" y="258" width="344" height="5" fill="#1a6e3a" opacity="0.3"/>
       <!-- Icon: shield-check (Lucide, ISC license) -->
-      <g transform="translate(442, 278) scale(0.583)" fill="none" stroke="#1a6e3a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <g transform="translate(442, 272) scale(0.583)" fill="none" stroke="#1a6e3a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
         <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
         <path d="m9 12 2 2 4-4"/>
       </g>
-      <text x="470" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" class="status-yes">Clean production image</text>
-      <text x="442" y="314" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No pytest, no ruff, no mkdocs</text>
-      <text x="442" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No ipython, no ipykernel, no nbdime</text>
-      <text x="442" y="350" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No twine, no dev tooling at all</text>
-      <text x="442" y="372" font-family="Consolas, monospace" font-size="9" class="status-yes">Installs from wheel (dist/*.whl)</text>
+      <text x="470" y="284" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" class="status-yes">Clean production image</text>
+      <text x="442" y="308" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No pytest, no ruff, no mkdocs</text>
+      <text x="442" y="326" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No ipython, no ipykernel, no nbdime</text>
+      <text x="442" y="344" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No twine, no dev tooling at all</text>
+      <text x="442" y="370" font-family="Consolas, monospace" font-size="9" class="status-yes">Installs from wheel (dist/*.whl)</text>
     </g>
 
-    <!-- Size bar (shorter = leaner image) -->
-    <rect x="428" y="392" width="160" height="10" rx="3" fill="#1a6e3a" fill-opacity="0.12"/>
-    <text x="600" y="413" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="600" text-anchor="middle" class="status-yes">Lean production image</text>
+    <!-- Size bar (same width, green tint = lean) -->
+    <rect x="428" y="400" width="344" height="10" rx="3" fill="#1a6e3a" fill-opacity="0.12"/>
+    <text x="600" y="423" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="600" text-anchor="middle" class="status-yes">Lean production image</text>
   </g>
 </svg>
