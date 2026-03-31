@@ -94,6 +94,8 @@ This only works if the template reflects current best practices. A template froz
 
 The single biggest limitation of cookiecutter is that it is copy-once. You scaffold a project, cookiecutter's job is done. The template improves, adds Docker support, fixes a dependency issue - none of that reaches your existing project.
 
+![How Copier Works](images/18-copier-concept.svg)
+
 **[Copier](https://copier.readthedocs.io/)** changes this relationship from one-time copy to living connection. Your template choices are stored in `.copier-answers.yml`:
 
 ```yaml
