@@ -1,0 +1,164 @@
+<!--
+  04-project-structure.svg
+  Shows: Three-column card grid of generated project structure (Foundation, Data/Models, Source Code)
+  Intent: Show what a generated project looks like and highlight the key components
+  Theme: Stellars-Tech EU (teal/cyan primary, orange accent)
+
+  === GRID ===
+  viewBox: 0 0 800 480
+  margins: left=15, right=15, top=10, bottom=10
+
+  Title: y=32, centred at x=400
+  Column cards: w=248, h=430, r=3, gap=16
+    col-1: x=15  y=50 (Foundation)     accent-1
+    col-2: x=279 y=50 (Data & Models)  accent-2
+    col-3: x=537 y=50 (Source Code)    accent-1
+
+  Within each column:
+    title: panel_x + 20, y=panel_y+28
+    items start: panel_y+52, step=48 (label+sublabel pairs)
+    item label: panel_x + 20
+    item sublabel: panel_x + 20, label_y + 14
+
+  Inset card (make targets): col-1 x+10, y=340, w=228, h=125
+
+  === LAYOUT TOPOLOGY ===
+  h-stack: col-foundation, col-data, col-source
+  contain: col-foundation -> [file-items, make-targets-card]
+  contain: col-data -> [dir-items]
+  contain: col-source -> [module-items]
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+    }
+  </style>
+
+  <rect width="800" height="480" fill="transparent"/>
+
+  <!-- Title -->
+  <g id="title">
+    <text x="400" y="32" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" class="fg-1">What You Get: Generated Project Structure</text>
+  </g>
+
+  <!-- Column 1: Project Foundation -->
+  <g id="col-foundation">
+    <path d="M15,50 H263 V477 Q263,480 260,480 H18 Q15,480 15,477 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M15,50 H263 V477 Q263,480 260,480 H18 Q15,480 15,477 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="15" y="50" width="248" height="5" fill="#005f7a" opacity="0.6"/>
+
+    <text x="139" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" class="accent-1">Project Foundation</text>
+
+    <text x="35" y="108" font-family="Consolas, monospace" font-size="11" class="fg-2">Makefile</text>
+    <text x="35" y="122" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">40+ targets, env-aware</text>
+
+    <text x="35" y="150" font-family="Consolas, monospace" font-size="11" class="fg-2">pyproject.toml</text>
+    <text x="35" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Single source of truth</text>
+
+    <text x="35" y="192" font-family="Consolas, monospace" font-size="11" class="fg-2">.copier-answers.yml</text>
+    <text x="35" y="206" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Template update tracking</text>
+
+    <text x="35" y="234" font-family="Consolas, monospace" font-size="11" class="fg-2">.env / .env.enc</text>
+    <text x="35" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">AES-256 encrypted secrets</text>
+
+    <text x="35" y="276" font-family="Consolas, monospace" font-size="11" class="fg-2">.gitignore</text>
+    <text x="35" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Pre-configured exclusions</text>
+
+    <!-- Make targets inset card -->
+    <g id="make-targets">
+      <path d="M25,320 H253 V472 Q253,475 250,475 H28 Q25,475 25,472 Z" fill="#005f7a" fill-opacity="0.02"/>
+      <path d="M25,320 H253 V472 Q253,475 250,475 H28 Q25,475 25,472 Z" fill="none" stroke="#005f7a" stroke-width="0.8" opacity="0.25"/>
+      <rect x="25" y="320" width="228" height="4" fill="#005f7a" opacity="0.15"/>
+      <text x="35" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" class="accent-2">Key Make Targets:</text>
+      <text x="35" y="358" font-family="Consolas, monospace" font-size="10" class="fg-3">make install</text>
+      <text x="35" y="374" font-family="Consolas, monospace" font-size="10" class="fg-3">make test</text>
+      <text x="35" y="390" font-family="Consolas, monospace" font-size="10" class="fg-3">make lint / make format</text>
+      <text x="35" y="406" font-family="Consolas, monospace" font-size="10" class="fg-3">make sync_data_up/down</text>
+      <text x="35" y="422" font-family="Consolas, monospace" font-size="10" class="fg-3">make docker_build/run</text>
+      <text x="35" y="438" font-family="Consolas, monospace" font-size="10" class="fg-3">make docs / make docs_serve</text>
+      <text x="35" y="454" font-family="Consolas, monospace" font-size="10" class="fg-3">make remove_environment</text>
+    </g>
+  </g>
+
+  <!-- Column 2: Data & Models -->
+  <g id="col-data">
+    <path d="M279,50 H521 V477 Q521,480 518,480 H282 Q279,480 279,477 Z" fill="#7a4a15" fill-opacity="0.04"/>
+    <path d="M279,50 H521 V477 Q521,480 518,480 H282 Q279,480 279,477 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="279" y="50" width="242" height="5" fill="#7a4a15" opacity="0.6"/>
+
+    <text x="400" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" class="accent-2">Data and Models</text>
+
+    <text x="299" y="108" font-family="Consolas, monospace" font-size="11" class="fg-2">data/raw/</text>
+    <text x="299" y="122" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Immutable original data</text>
+
+    <text x="299" y="150" font-family="Consolas, monospace" font-size="11" class="fg-2">data/interim/</text>
+    <text x="299" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Transformed intermediates</text>
+
+    <text x="299" y="192" font-family="Consolas, monospace" font-size="11" class="fg-2">data/processed/</text>
+    <text x="299" y="206" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Final canonical datasets</text>
+
+    <text x="299" y="234" font-family="Consolas, monospace" font-size="11" class="fg-2">data/external/</text>
+    <text x="299" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Third-party sources</text>
+
+    <text x="299" y="276" font-family="Consolas, monospace" font-size="11" class="fg-2">models/</text>
+    <text x="299" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Trained, serialized models</text>
+
+    <text x="299" y="318" font-family="Consolas, monospace" font-size="11" class="fg-2">notebooks/</text>
+    <text x="299" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Exploration and analysis</text>
+
+    <text x="299" y="360" font-family="Consolas, monospace" font-size="11" class="fg-2">reports/figures/</text>
+    <text x="299" y="374" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Generated outputs</text>
+
+    <text x="299" y="402" font-family="Consolas, monospace" font-size="11" class="fg-2">references/</text>
+    <text x="299" y="416" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Manuals and dictionaries</text>
+  </g>
+
+  <!-- Column 3: Source Code -->
+  <g id="col-source">
+    <path d="M537,50 H785 V477 Q785,480 782,480 H540 Q537,480 537,477 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M537,50 H785 V477 Q785,480 782,480 H540 Q537,480 537,477 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="537" y="50" width="248" height="5" fill="#005f7a" opacity="0.6"/>
+
+    <text x="661" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" class="accent-1">Source Code</text>
+
+    <text x="557" y="108" font-family="Consolas, monospace" font-size="11" class="fg-1">lib_my_project/</text>
+    <text x="557" y="122" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Installable package (pip -e .)</text>
+
+    <text x="570" y="150" font-family="Consolas, monospace" font-size="11" class="fg-2">config.py</text>
+    <text x="570" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Project paths and settings</text>
+
+    <text x="570" y="192" font-family="Consolas, monospace" font-size="11" class="fg-2">dataset.py</text>
+    <text x="570" y="206" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Data download/generation</text>
+
+    <text x="570" y="234" font-family="Consolas, monospace" font-size="11" class="fg-2">features.py</text>
+    <text x="570" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Feature engineering</text>
+
+    <text x="570" y="276" font-family="Consolas, monospace" font-size="11" class="fg-2">modeling/train.py</text>
+    <text x="570" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Training pipeline</text>
+
+    <text x="570" y="318" font-family="Consolas, monospace" font-size="11" class="fg-2">modeling/predict.py</text>
+    <text x="570" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Inference pipeline</text>
+
+    <text x="570" y="360" font-family="Consolas, monospace" font-size="11" class="fg-2">plots.py</text>
+    <text x="570" y="374" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Visualization code</text>
+
+    <text x="557" y="408" font-family="Consolas, monospace" font-size="11" class="fg-1">tests/</text>
+    <text x="557" y="422" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">pytest or unittest</text>
+
+    <text x="557" y="450" font-family="Consolas, monospace" font-size="11" class="fg-1">docs/</text>
+    <text x="557" y="464" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">mkdocs (optional)</text>
+  </g>
+</svg>

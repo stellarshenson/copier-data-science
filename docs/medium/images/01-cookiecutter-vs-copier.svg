@@ -1,0 +1,153 @@
+<!--
+  01-cookiecutter-vs-copier.svg
+  Shows: Side-by-side comparison of Cookiecutter Data Science vs Copier Data Science features
+  Intent: Highlight key differences between upstream and this fork across 11 features
+  Theme: Stellars-Tech EU (teal/cyan primary, orange accent)
+
+  === GRID ===
+  viewBox: 0 0 800 480
+  margins: left=20, right=20, top=10, bottom=10
+  rhythm: 26px vertical step
+
+  Left panel:  x=20  y=55  w=365  h=415  (Cookiecutter)
+  Right panel: x=415 y=55  w=365  h=415  (Copier DS)
+  Title: y=35, centred at x=400
+  Row labels start at: panel_x + 20, first row y=100, step=30
+
+  Arrow gap: x=385 to x=415, centred at y=265
+
+  === LAYOUT TOPOLOGY ===
+  h-stack: left-panel, arrow-gap, right-panel
+  contain: left-panel -> [row-labels, row-values]
+  contain: right-panel -> [row-labels, row-values]
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    .status-yes { fill: #1a6e3a; }
+    .status-no { fill: #6e1a1a; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+      .status-yes { fill: #44cc77; }
+      .status-no { fill: #e05555; }
+    }
+  </style>
+
+  <g id="guide-grid" display="none">
+    <rect x="20" y="55" width="365" height="415" fill="none" stroke="red" stroke-width="0.5"/>
+    <rect x="415" y="55" width="365" height="415" fill="none" stroke="blue" stroke-width="0.5"/>
+  </g>
+
+  <!-- Background: transparent -->
+  <rect width="800" height="480" fill="transparent"/>
+
+  <!-- Title -->
+  <g id="title">
+    <text x="400" y="35" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" class="fg-1">Template Engine Comparison</text>
+  </g>
+
+  <!-- Left Panel: Cookiecutter -->
+  <g id="panel-cookiecutter">
+    <path d="M20,55 H385 V467 Q385,470 382,470 H23 Q20,470 20,467 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M20,55 H385 V467 Q385,470 382,470 H23 Q20,470 20,467 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="20" y="55" width="365" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="202" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" text-anchor="middle" class="accent-2">Cookiecutter Data Science</text>
+
+    <text x="40" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Environment Managers</text>
+    <text x="365" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-4">6 options</text>
+
+    <text x="40" y="142" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Dependency Files</text>
+    <text x="365" y="142" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-4">5 formats</text>
+
+    <text x="40" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Default Python</text>
+    <text x="365" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-4">3.10</text>
+
+    <text x="40" y="202" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Template Updates</text>
+    <text x="365" y="202" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-no">None (copy-once)</text>
+
+    <text x="40" y="232" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Dev/Prod Separation</text>
+    <text x="365" y="232" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-no">No</text>
+
+    <text x="40" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Jupyter Kernel</text>
+    <text x="365" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-no">Manual setup</text>
+
+    <text x="40" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Conda Location</text>
+    <text x="365" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-4">Global only</text>
+
+    <text x="40" y="322" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Docker Support</text>
+    <text x="365" y="322" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-no">No</text>
+
+    <text x="40" y="352" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Secrets Management</text>
+    <text x="365" y="352" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-no">No</text>
+
+    <text x="40" y="382" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Default Env Manager</text>
+    <text x="365" y="382" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-4">virtualenv</text>
+
+    <text x="40" y="412" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Model Sync</text>
+    <text x="365" y="412" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-no">No</text>
+
+    <text x="40" y="442" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Build Versioning</text>
+    <text x="365" y="442" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-no">No</text>
+  </g>
+
+  <!-- Arrow between panels -->
+  <g id="arrow-gap" transform="translate(407, 265) rotate(0)">
+    <line x1="-12" y1="0" x2="0" y2="0" stroke="#005f7a" stroke-width="2" opacity="0.3"/>
+    <polygon points="0,0 -8,-4 -8,4" fill="#005f7a" opacity="0.8"/>
+  </g>
+
+  <!-- Right Panel: Copier Data Science -->
+  <g id="panel-copier">
+    <path d="M415,55 H780 V467 Q780,470 777,470 H418 Q415,470 415,467 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M415,55 H780 V467 Q780,470 777,470 H418 Q415,470 415,467 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="415" y="55" width="365" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="597" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" text-anchor="middle" class="accent-1">Copier Data Science</text>
+
+    <text x="435" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Environment Managers</text>
+    <text x="760" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-2">3 (focused)</text>
+
+    <text x="435" y="142" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Dependency Files</text>
+    <text x="760" y="142" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-2">3 formats</text>
+
+    <text x="435" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Default Python</text>
+    <text x="760" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-2">3.12</text>
+
+    <text x="435" y="202" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Template Updates</text>
+    <text x="760" y="202" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-yes">copier update</text>
+
+    <text x="435" y="232" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Dev/Prod Separation</text>
+    <text x="760" y="232" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-yes">Yes</text>
+
+    <text x="435" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Jupyter Kernel</text>
+    <text x="760" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-yes">Auto-registered</text>
+
+    <text x="435" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Conda Location</text>
+    <text x="760" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-2">Local default, global opt-in</text>
+
+    <text x="435" y="322" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Docker Support</text>
+    <text x="760" y="322" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-yes">Dockerfile + targets</text>
+
+    <text x="435" y="352" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Secrets Management</text>
+    <text x="760" y="352" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-yes">AES-256 encryption</text>
+
+    <text x="435" y="382" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Default Env Manager</text>
+    <text x="760" y="382" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="fg-2">uv</text>
+
+    <text x="435" y="412" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Model Sync</text>
+    <text x="760" y="412" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-yes">sync_models_up/down</text>
+
+    <text x="435" y="442" font-family="Segoe UI, Arial, sans-serif" font-size="12" class="fg-3">Build Versioning</text>
+    <text x="760" y="442" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end" class="status-yes">Auto-increment</text>
+  </g>
+</svg>
