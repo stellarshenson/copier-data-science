@@ -176,21 +176,19 @@ dev = [
 
 ![What The Template Builds For You](images/12-template-layers.svg)
 
-## Getting started
+## Quickstart
+
+Three commands. That is it.
 
 ```bash
-# Install copier
 pipx install copier
-
-# Scaffold a new project
-copier copy --trust gh:stellarshenson/copier-data-science my-project  # https://github.com/stellarshenson/copier-data-science
-
-# Set up everything
-cd my-project
-make install
+copier copy --trust gh:stellarshenson/copier-data-science my-project
+cd my-project && make install
 ```
 
-The interactive prompts ask about your environment manager, dependency file, cloud storage, Docker support, linting tool, and testing framework. Every choice is conditional - you only see questions relevant to your previous answers. S3 bucket names only appear if you picked S3. Docker package manager only if you enabled Docker.
+Copier walks you through interactive prompts - environment manager, dependency file, cloud storage, Docker, linting, testing framework. Every question is conditional: S3 bucket names only appear if you picked S3, Docker package manager only if you enabled Docker. Then `make install` creates the environment, installs dependencies, decrypts secrets, and registers the Jupyter kernel. Done.
+
+This template is also integrated into [stellars-jupyterhub-ds](https://github.com/stellarshenson/stellars_jupyterhub_ds) via a `lab-utils` shell script, so JupyterHub users can scaffold new projects directly from the terminal with a single `new-project` command that pre-fills the template URL and prompts for the project name.
 
 What you get:
 
