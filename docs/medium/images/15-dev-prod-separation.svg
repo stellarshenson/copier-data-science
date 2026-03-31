@@ -173,8 +173,10 @@
       <path d="M428,164 H772 V243 Q772,246 769,246 H431 Q428,246 428,243 Z" fill="#005f7a" fill-opacity="0.08"/>
       <path d="M428,164 H772 V243 Q772,246 769,246 H431 Q428,246 428,243 Z" fill="none" stroke="#005f7a" stroke-width="1" opacity="0.5"/>
       <rect x="428" y="164" width="344" height="5" fill="#005f7a" opacity="0.4"/>
-      <g transform="translate(732, 176) scale(0.5)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
-        <path d="M16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      <!-- Icon: package (Lucide, ISC license) -->
+      <g transform="translate(732, 176) scale(0.5)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+        <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/>
+        <path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/>
       </g>
       <text x="442" y="182" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-1">[project.dependencies]</text>
       <text x="442" y="200" font-family="Consolas, monospace" font-size="10" class="fg-2">python-dotenv    loguru</text>
