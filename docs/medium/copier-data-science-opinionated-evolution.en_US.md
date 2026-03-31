@@ -88,7 +88,7 @@ When every project in your organization follows the same structure, the benefits
 
 This only works if the template reflects current best practices. A template frozen at Python 3.10 and virtualenvwrapper is not standardization - it is a time capsule.
 
-![Why Standardization Compounds](images/03-standardization-benefits.svg)
+![Broad Capabilities, One Template](images/17-broad-capabilities.svg)
 
 ## The Copier difference
 
