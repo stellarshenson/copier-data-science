@@ -1,0 +1,121 @@
+<!--
+  15-dev-prod-separation.svg
+  Shows: Two containers side by side - Dev environment (full, rich) vs Production/Docker image (lean, clean)
+  with a shared core in the middle showing what both have, and exclusive items on each side.
+  A dividing line separates them with pyproject.toml as the source of truth at the top.
+  Intent: Visualize why dev/prod dependency separation matters - Docker images ship clean
+  Theme: Stellars-Tech EU
+
+  === GRID ===
+  viewBox: 0 0 800 340
+  margins: left=15, right=15, top=10, bottom=10
+
+  Title: y=22
+  Source card (pyproject.toml): x=250 y=32 w=300 h=40
+  Arrow down to split: y=72 -> y=90
+  Dev container: x=15  y=100 w=370 h=228
+  Prod container: x=415 y=100 w=370 h=228
+
+  Dev items: packages listed inside with check marks
+  Prod items: smaller set, clean
+
+  Size labels at bottom: "~850 MB" vs "~120 MB"
+
+  === LAYOUT TOPOLOGY ===
+  flow: pyproject -> [dev-container, prod-container]
+  h-stack: dev-container, prod-container
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    .status-yes { fill: #1a6e3a; }
+    .status-no { fill: #6e1a1a; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+      .status-yes { fill: #44cc77; }
+      .status-no { fill: #e05555; }
+    }
+  </style>
+
+  <rect width="800" height="340" fill="transparent"/>
+
+  <text x="400" y="18" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">DEV/PROD DEPENDENCY SEPARATION</text>
+
+  <!-- Source: pyproject.toml -->
+  <g id="source">
+    <path d="M250,28 H550 V64 Q550,67 547,67 H253 Q250,67 250,64 Z" fill="#005f7a" fill-opacity="0.06"/>
+    <path d="M250,28 H550 V64 Q550,67 547,67 H253 Q250,67 250,64 Z" fill="none" stroke="#005f7a" stroke-width="1.2"/>
+    <rect x="250" y="28" width="300" height="5" fill="#005f7a" opacity="0.7"/>
+    <text x="400" y="52" font-family="Consolas, monospace" font-size="12" font-weight="600" text-anchor="middle" class="fg-1">pyproject.toml</text>
+  </g>
+
+  <!-- Fork arrows -->
+  <line x1="350" y1="67" x2="350" y2="78" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+  <line x1="350" y1="78" x2="200" y2="92" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+  <polygon points="197,90 200,96 203,90" fill="#005f7a" opacity="0.5"/>
+  <line x1="450" y1="67" x2="450" y2="78" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+  <line x1="450" y1="78" x2="600" y2="92" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+  <polygon points="597,90 600,96 603,90" fill="#005f7a" opacity="0.5"/>
+
+  <!-- Branch labels -->
+  <text x="260" y="86" font-family="Consolas, monospace" font-size="9" class="fg-4">pip install -e ".[dev]"</text>
+  <text x="495" y="86" font-family="Consolas, monospace" font-size="9" class="fg-4">pip install .</text>
+
+  <!-- DEV container -->
+  <g id="dev-container">
+    <path d="M15,100 H385 V325 Q385,328 382,328 H18 Q15,328 15,325 Z" fill="#005f7a" fill-opacity="0.03"/>
+    <path d="M15,100 H385 V325 Q385,328 382,328 H18 Q15,328 15,325 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="15" y="100" width="370" height="5" fill="#005f7a" opacity="0.6"/>
+
+    <text x="200" y="126" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" class="accent-1">Development Environment</text>
+
+    <!-- Shared deps (production) -->
+    <text x="35" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-2">[project.dependencies]</text>
+    <text x="35" y="168" font-family="Consolas, monospace" font-size="10" class="fg-3">python-dotenv</text>
+    <text x="35" y="184" font-family="Consolas, monospace" font-size="10" class="fg-3">loguru</text>
+    <text x="35" y="200" font-family="Consolas, monospace" font-size="10" class="fg-3">tqdm</text>
+    <text x="35" y="216" font-family="Consolas, monospace" font-size="10" class="fg-3">typer</text>
+
+    <!-- Dev-only deps -->
+    <line x1="30" y1="230" x2="370" y2="230" stroke="#005f7a" stroke-width="0.5" opacity="0.15"/>
+    <text x="35" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="accent-2">[project.optional-dependencies.dev]</text>
+    <text x="35" y="266" font-family="Consolas, monospace" font-size="10" class="accent-2">pytest, pytest-cov</text>
+    <text x="35" y="282" font-family="Consolas, monospace" font-size="10" class="accent-2">ruff</text>
+    <text x="35" y="298" font-family="Consolas, monospace" font-size="10" class="accent-2">mkdocs, mkdocs-material</text>
+    <text x="35" y="314" font-family="Consolas, monospace" font-size="10" class="accent-2">ipython, ipykernel, nbdime</text>
+  </g>
+
+  <!-- PROD container -->
+  <g id="prod-container">
+    <path d="M415,100 H785 V325 Q785,328 782,328 H418 Q415,328 415,325 Z" fill="#005f7a" fill-opacity="0.03"/>
+    <path d="M415,100 H785 V325 Q785,328 782,328 H418 Q415,328 415,325 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="415" y="100" width="370" height="5" fill="#005f7a" opacity="0.6"/>
+
+    <text x="600" y="126" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" class="accent-1">Production / Docker Image</text>
+
+    <!-- Only production deps -->
+    <text x="435" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" class="fg-2">[project.dependencies]</text>
+    <text x="435" y="168" font-family="Consolas, monospace" font-size="10" class="fg-3">python-dotenv</text>
+    <text x="435" y="184" font-family="Consolas, monospace" font-size="10" class="fg-3">loguru</text>
+    <text x="435" y="200" font-family="Consolas, monospace" font-size="10" class="fg-3">tqdm</text>
+    <text x="435" y="216" font-family="Consolas, monospace" font-size="10" class="fg-3">typer</text>
+
+    <!-- Empty space where dev deps would be -->
+    <line x1="430" y1="230" x2="770" y2="230" stroke="#005f7a" stroke-width="0.5" opacity="0.15"/>
+    <text x="600" y="256" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="status-yes">No pytest</text>
+    <text x="600" y="274" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="status-yes">No ruff</text>
+    <text x="600" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="status-yes">No mkdocs</text>
+    <text x="600" y="310" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="status-yes">No ipython, no nbdime</text>
+  </g>
+</svg>

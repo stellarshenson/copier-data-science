@@ -142,6 +142,8 @@ create_environment: preflight
 
 **`lib_` prefix for modules.** Your project code lives in `lib_my_project/`, not `my_project/`. This avoids conflicts with common package names and makes imports immediately recognizable - you know at a glance whether you are importing your code or a pip-installed dependency.
 
+![Dev/Prod Dependency Separation](images/15-dev-prod-separation.svg)
+
 **Dev/prod dependency separation.** Development tools (pytest, ruff, mkdocs) are separate from production dependencies. Your Docker image does not ship with your linter:
 
 ```toml
