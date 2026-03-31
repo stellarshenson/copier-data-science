@@ -1,0 +1,104 @@
+<!--
+  12-template-layers.svg
+  Shows: Stacked horizontal layers building upward like geological strata, from foundation
+  to deployment - each layer slightly narrower than the one below, creating a pyramid effect
+  Intent: Visualize the template as a complete stack, not just scaffolding
+  Theme: Stellars-Tech EU
+
+  === GRID ===
+  viewBox: 0 0 800 300
+  margins: left=20, right=20, top=10, bottom=10
+
+  Title: y=22
+  Layers bottom-to-top (7 layers), each 32h, narrowing 30px per side:
+    L1 (foundation): x=50  y=248 w=700 - .gitignore, pyproject.toml, Makefile
+    L2 (environment): x=80  y=212 w=640 - uv/conda/venv, .venv/, preflight
+    L3 (deps):        x=110 y=176 w=580 - requirements, dev/prod split
+    L4 (secrets):     x=140 y=140 w=520 - .env, AES-256 encryption
+    L5 (code):        x=170 y=104 w=460 - lib_project/, modeling/, features
+    L6 (test+lint):   x=200 y=68  w=400 - pytest, ruff, mkdocs
+    L7 (deploy):      x=230 y=32  w=340 - Docker, cloud sync, build
+
+  Each layer: rounded rect, alternating accent-1 and accent-2 tints
+  Labels: centred in each layer
+
+  === LAYOUT TOPOLOGY ===
+  v-stack: L7(top) -> L6 -> L5 -> L4 -> L3 -> L2 -> L1(bottom)
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+    }
+  </style>
+
+  <rect width="800" height="300" fill="transparent"/>
+
+  <text x="400" y="22" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">WHAT THE TEMPLATE BUILDS FOR YOU</text>
+
+  <!-- Layer 1 (bottom): Foundation -->
+  <g id="layer-foundation">
+    <rect x="50" y="252" width="700" height="32" rx="3" fill="#005f7a" fill-opacity="0.08" stroke="#005f7a" stroke-width="1"/>
+    <text x="100" y="273" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" class="fg-1">Foundation</text>
+    <text x="400" y="273" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">pyproject.toml + Makefile + .gitignore + .copier-answers.yml</text>
+  </g>
+
+  <!-- Layer 2: Environment -->
+  <g id="layer-environment">
+    <rect x="80" y="216" width="640" height="32" rx="3" fill="#7a4a15" fill-opacity="0.06" stroke="#7a4a15" stroke-width="1"/>
+    <text x="130" y="237" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" class="fg-1">Environment</text>
+    <text x="420" y="237" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">uv / conda / virtualenv + .venv/ + preflight checks</text>
+  </g>
+
+  <!-- Layer 3: Dependencies -->
+  <g id="layer-deps">
+    <rect x="110" y="180" width="580" height="32" rx="3" fill="#005f7a" fill-opacity="0.06" stroke="#005f7a" stroke-width="1"/>
+    <text x="160" y="201" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" class="fg-1">Dependencies</text>
+    <text x="430" y="201" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Dev/prod separation + cloud storage SDKs</text>
+  </g>
+
+  <!-- Layer 4: Secrets -->
+  <g id="layer-secrets">
+    <rect x="140" y="144" width="520" height="32" rx="3" fill="#7a4a15" fill-opacity="0.06" stroke="#7a4a15" stroke-width="1"/>
+    <text x="190" y="165" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" class="fg-1">Secrets</text>
+    <text x="430" y="165" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">.env + AES-256 encryption + auto-decrypt</text>
+  </g>
+
+  <!-- Layer 5: Source Code -->
+  <g id="layer-code">
+    <rect x="170" y="108" width="460" height="32" rx="3" fill="#005f7a" fill-opacity="0.08" stroke="#005f7a" stroke-width="1.2"/>
+    <text x="220" y="129" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" class="fg-1">Source Code</text>
+    <text x="430" y="129" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">lib_project/ + modeling/ + Jupyter kernel</text>
+  </g>
+
+  <!-- Layer 6: Quality -->
+  <g id="layer-quality">
+    <rect x="200" y="72" width="400" height="32" rx="3" fill="#7a4a15" fill-opacity="0.06" stroke="#7a4a15" stroke-width="1"/>
+    <text x="250" y="93" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" class="fg-1">Quality</text>
+    <text x="430" y="93" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">pytest + ruff + mkdocs</text>
+  </g>
+
+  <!-- Layer 7 (top): Deploy -->
+  <g id="layer-deploy">
+    <rect x="230" y="36" width="340" height="32" rx="3" fill="#005f7a" fill-opacity="0.10" stroke="#005f7a" stroke-width="1.5"/>
+    <text x="280" y="57" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" class="fg-1">Deploy</text>
+    <text x="430" y="57" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Docker + cloud sync + build</text>
+  </g>
+
+  <!-- Side annotation arrow -->
+  <line x1="770" y1="268" x2="770" y2="52" stroke="#005f7a" stroke-width="1" opacity="0.2"/>
+  <polygon points="767,52 770,44 773,52" fill="#005f7a" opacity="0.4"/>
+  <text x="775" y="160" font-family="Segoe UI, Arial, sans-serif" font-size="9" class="fg-4" transform="rotate(-90 775 160)" text-anchor="middle">make install builds all layers</text>
+</svg>

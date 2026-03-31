@@ -1,0 +1,131 @@
+<!--
+  13-env-decision-guide.svg
+  Shows: Decision tree for choosing environment manager - 3 questions leading to uv/conda/virtualenv
+  Intent: Practical quick-reference for the "which env manager?" question
+  Theme: Stellars-Tech EU
+
+  === GRID ===
+  viewBox: 0 0 800 260
+  margins: left=20, right=20, top=10, bottom=10
+
+  Title: y=22
+  Question 1 (diamond): cx=400 cy=65
+  Branch left (yes -> Q2): cx=180 cy=140
+  Branch right (no -> Q3): cx=620 cy=140
+  Result cards: y=195, h=50, w=180
+    uv:         cx=400  (from Q1 no, Q3 no)
+    conda:      cx=180  (from Q2 yes)
+    virtualenv: cx=620  (from Q3 yes)
+
+  === LAYOUT TOPOLOGY ===
+  flow: Q1 -> [Q2(yes), Q3(no)]
+  flow: Q2 -> [conda(yes), uv(no)]
+  flow: Q3 -> [virtualenv(yes), uv(no)]
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+    }
+  </style>
+
+  <rect width="800" height="260" fill="transparent"/>
+
+  <text x="400" y="22" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">WHICH ENVIRONMENT MANAGER?</text>
+
+  <!-- Question 1: Need non-Python packages? -->
+  <g id="q1">
+    <polygon points="400,38 500,68 400,98 300,68" fill="#005f7a" fill-opacity="0.04" stroke="#005f7a" stroke-width="1.2"/>
+    <text x="400" y="64" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Need non-Python</text>
+    <text x="400" y="78" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">packages? (CUDA, etc)</text>
+  </g>
+
+  <!-- Q1 YES branch (left) -->
+  <text x="275" y="88" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700" class="accent-2">YES</text>
+  <line x1="300" y1="68" x2="240" y2="68" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <line x1="240" y1="68" x2="240" y2="118" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="237,118 240,124 243,118" fill="#7a4a15" opacity="0.6"/>
+
+  <!-- Q1 NO branch (right) -->
+  <text x="525" y="88" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700" class="accent-1">NO</text>
+  <line x1="500" y1="68" x2="560" y2="68" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <line x1="560" y1="68" x2="560" y2="118" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="557,118 560,124 563,118" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Question 2: Need shared envs? -->
+  <g id="q2">
+    <polygon points="240,126 320,150 240,174 160,150" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="1.2"/>
+    <text x="240" y="148" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Need global</text>
+    <text x="240" y="160" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">shared env?</text>
+  </g>
+
+  <!-- Question 3: Need legacy compatibility? -->
+  <g id="q3">
+    <polygon points="560,126 640,150 560,174 480,150" fill="#005f7a" fill-opacity="0.04" stroke="#005f7a" stroke-width="1.2"/>
+    <text x="560" y="148" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Need legacy</text>
+    <text x="560" y="160" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">compatibility?</text>
+  </g>
+
+  <!-- Q2 YES -> conda (left) -->
+  <text x="135" y="160" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="700" class="accent-2">YES</text>
+  <line x1="160" y1="150" x2="110" y2="150" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <line x1="110" y1="150" x2="110" y2="195" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="107,195 110,201 113,195" fill="#7a4a15" opacity="0.6"/>
+
+  <!-- Q2 NO -> uv (down-right to center) -->
+  <text x="345" y="160" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="700" class="accent-1">NO</text>
+  <line x1="320" y1="150" x2="370" y2="150" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <line x1="370" y1="150" x2="370" y2="195" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="367,195 370,201 373,195" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Q3 YES -> virtualenv (right) -->
+  <text x="665" y="160" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="700" class="accent-2">YES</text>
+  <line x1="640" y1="150" x2="690" y2="150" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <line x1="690" y1="150" x2="690" y2="195" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="687,195 690,201 693,195" fill="#7a4a15" opacity="0.6"/>
+
+  <!-- Q3 NO -> uv (down-left to center) -->
+  <text x="455" y="160" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="700" class="accent-1">NO</text>
+  <line x1="480" y1="150" x2="430" y2="150" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <line x1="430" y1="150" x2="430" y2="195" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="427,195 430,201 433,195" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Result: conda -->
+  <g id="result-conda">
+    <path d="M30,203 H190 V247 Q190,250 187,250 H33 Q30,250 30,247 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M30,203 H190 V247 Q190,250 187,250 H33 Q30,250 30,247 Z" fill="none" stroke="#7a4a15" stroke-width="1.5"/>
+    <rect x="30" y="203" width="160" height="5" fill="#7a4a15" opacity="0.6"/>
+    <text x="110" y="226" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" class="accent-2">conda</text>
+    <text x="110" y="242" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Non-Python deps, local or global</text>
+  </g>
+
+  <!-- Result: uv (center, larger - recommended) -->
+  <g id="result-uv">
+    <path d="M310,203 H490 V247 Q490,250 487,250 H313 Q310,250 310,247 Z" fill="#005f7a" fill-opacity="0.08"/>
+    <path d="M310,203 H490 V247 Q490,250 487,250 H313 Q310,250 310,247 Z" fill="none" stroke="#005f7a" stroke-width="2"/>
+    <rect x="310" y="203" width="180" height="5" fill="#005f7a" opacity="0.8"/>
+    <text x="400" y="226" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" class="accent-1">uv (recommended)</text>
+    <text x="400" y="242" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Fast, modern, pure Python</text>
+  </g>
+
+  <!-- Result: virtualenv -->
+  <g id="result-virtualenv">
+    <path d="M610,203 H770 V247 Q770,250 767,250 H613 Q610,250 610,247 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M610,203 H770 V247 Q770,250 767,250 H613 Q610,250 610,247 Z" fill="none" stroke="#7a4a15" stroke-width="1.5"/>
+    <rect x="610" y="203" width="160" height="5" fill="#7a4a15" opacity="0.6"/>
+    <text x="690" y="226" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" class="accent-2">virtualenv</text>
+    <text x="690" y="242" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Traditional, no extra tools</text>
+  </g>
+</svg>

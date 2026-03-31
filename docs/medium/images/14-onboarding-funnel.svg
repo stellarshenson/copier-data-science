@@ -1,0 +1,101 @@
+<!--
+  14-onboarding-funnel.svg
+  Shows: Two funnels side by side - wide (many steps, slow onboarding) vs narrow (one command, fast)
+  Intent: Visual metaphor for how standardization compresses onboarding friction
+  Theme: Stellars-Tech EU
+
+  === GRID ===
+  viewBox: 0 0 800 300
+  margins: left=20, right=20, top=10, bottom=10
+
+  Title: y=22
+  Left funnel (ad hoc): cx=200, top-width=300, bottom-width=60, 6 steps
+  Right funnel (template): cx=600, top-width=300, bottom-width=60, 2 steps
+  Funnel steps are trapezoids stacking vertically, each narrower
+
+  Time labels at bottom: "~2 days" vs "~20 minutes"
+
+  === LAYOUT TOPOLOGY ===
+  h-stack: funnel-adhoc, funnel-template
+  contain(each funnel): [step-1, step-2, ..., time-label]
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    .status-yes { fill: #1a6e3a; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+      .status-yes { fill: #44cc77; }
+    }
+  </style>
+
+  <rect width="800" height="300" fill="transparent"/>
+
+  <text x="400" y="22" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">NEW TEAM MEMBER ONBOARDING</text>
+
+  <!-- Left funnel: Ad Hoc (6 steps, slow) -->
+  <g id="funnel-adhoc">
+    <text x="200" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" class="accent-2">Without Template</text>
+
+    <!-- Step 1 (widest) -->
+    <polygon points="55,60 345,60 330,92 70,92" fill="#7a4a15" fill-opacity="0.08" stroke="#7a4a15" stroke-width="0.8"/>
+    <text x="200" y="81" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Read 3 different READMEs</text>
+
+    <!-- Step 2 -->
+    <polygon points="70,96 330,96 315,128 85,128" fill="#7a4a15" fill-opacity="0.07" stroke="#7a4a15" stroke-width="0.8"/>
+    <text x="200" y="117" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Figure out which env manager</text>
+
+    <!-- Step 3 -->
+    <polygon points="85,132 315,132 300,164 100,164" fill="#7a4a15" fill-opacity="0.06" stroke="#7a4a15" stroke-width="0.8"/>
+    <text x="200" y="153" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Install deps manually</text>
+
+    <!-- Step 4 -->
+    <polygon points="100,168 300,168 285,200 115,200" fill="#7a4a15" fill-opacity="0.05" stroke="#7a4a15" stroke-width="0.8"/>
+    <text x="200" y="189" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Ask for .env secrets</text>
+
+    <!-- Step 5 -->
+    <polygon points="115,204 285,204 270,236 130,236" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8"/>
+    <text x="200" y="225" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Register Jupyter kernel</text>
+
+    <!-- Step 6 (narrowest) -->
+    <polygon points="130,240 270,240 258,262 142,262" fill="#7a4a15" fill-opacity="0.03" stroke="#7a4a15" stroke-width="0.8"/>
+    <text x="200" y="256" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-4">Debug what went wrong</text>
+
+    <!-- Time label -->
+    <text x="200" y="286" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" class="accent-2">~2 days</text>
+  </g>
+
+  <!-- Right funnel: Standardized (2 steps, fast) -->
+  <g id="funnel-template">
+    <text x="600" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" class="accent-1">With Template</text>
+
+    <!-- Step 1 (wide) -->
+    <polygon points="455,60 745,60 710,160 490,160" fill="#005f7a" fill-opacity="0.06" stroke="#005f7a" stroke-width="1"/>
+    <text x="600" y="100" font-family="Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" class="accent-1">make install</text>
+    <text x="600" y="120" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">env + deps + secrets + kernel</text>
+    <text x="600" y="136" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-4">all automated</text>
+
+    <!-- Step 2 (narrow) -->
+    <polygon points="490,164 710,164 680,262 520,262" fill="#005f7a" fill-opacity="0.08" stroke="#005f7a" stroke-width="1.2"/>
+    <text x="600" y="200" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" text-anchor="middle" class="fg-1">Start contributing</text>
+    <text x="600" y="220" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Same structure as every</text>
+    <text x="600" y="236" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">other project in the org</text>
+
+    <!-- Time label -->
+    <text x="600" y="286" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" class="status-yes">~20 minutes</text>
+  </g>
+
+  <!-- VS divider -->
+  <text x="400" y="170" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" class="fg-4">vs</text>
+</svg>

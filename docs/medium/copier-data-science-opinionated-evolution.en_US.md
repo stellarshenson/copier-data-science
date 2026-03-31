@@ -80,6 +80,8 @@ This template is the result of collaboration with over 30 data scientists from a
 
 When every project in your organization follows the same structure, the benefits compound. A data scientist moving between projects does not have to relearn environment setup. The CI pipeline works the same way. Code review is faster because reviewers know where to look. The intern can contribute on day one because `make install` does what it says.
 
+![Onboarding: Without vs With Template](images/14-onboarding-funnel.svg)
+
 **Portability** is the overlooked advantage. When you hand off a project to another team, move it to a different machine, or revisit it a year later, a standardized template means you already know how it works. `make test` runs tests. `make lint` checks formatting. `make sync_data_down` pulls the dataset. No archaeology required.
 
 This only works if the template reflects current best practices. A template frozen at Python 3.10 and virtualenvwrapper is not standardization - it is a time capsule.
@@ -122,6 +124,8 @@ We stripped the options down to what works well and dropped everything else.
 
 **3 environment managers, not 6.** uv (default), conda, and virtualenv. We intentionally removed pipenv, poetry, and pixi. These tools add complexity without proportional benefit for data science workflows. If you need them, use upstream.
 
+![Which Environment Manager?](images/13-env-decision-guide.svg)
+
 **uv as the default.** It is fast, it handles dependency resolution correctly, and it is where the Python packaging ecosystem is heading. Creating a project environment takes seconds:
 
 ```makefile
@@ -161,6 +165,8 @@ dev = [
 **Optional Docker support.** A Dockerfile that installs from wheel (not source), an entrypoint with run/train/predict commands, and `make docker_build` / `make docker_run` / `make docker_push` targets. Toggled by a single option during scaffolding.
 
 ![What Happens When You Run make install](images/07-make-install-pipeline.svg)
+
+![What The Template Builds For You](images/12-template-layers.svg)
 
 ## Getting started
 
