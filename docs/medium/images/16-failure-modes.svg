@@ -1,0 +1,179 @@
+<!--
+  16-failure-modes.svg
+  Shows: 6 "failure cards" arranged as a cracked/broken grid - each card shows a pain point
+  with a warning icon, the problem, and the real-world consequence in italic.
+  Cards are slightly rotated/offset to convey disorder and frustration.
+  Intent: Make the pain points visceral - these aren't abstract, they waste real time
+  Theme: Stellars-Tech EU - accent-2 (orange/warning) dominant
+
+  === GRID ===
+  viewBox: 0 0 800 440
+  margins: left=15, right=15, top=10, bottom=10
+
+  Title: y=24
+  Cards: 240w x 120h, arranged in 2x3 grid with slight rotation offsets
+    row 1 y=42:
+      card-1: x=18  rotate(-0.8)   No dev/prod separation
+      card-2: x=278 rotate(0.5)    Global conda envs
+      card-3: x=538 rotate(-0.4)   Manual kernel setup
+    row 2 y=178:
+      card-4: x=18  rotate(0.6)    No template updates
+      card-5: x=278 rotate(-0.7)   No env existence check
+      card-6: x=538 rotate(0.3)    virtualenvwrapper
+
+  Crack lines between cards: diagonal hairlines suggesting fracture
+
+  Bottom banner: "Sound familiar?" centred
+
+  === LAYOUT TOPOLOGY ===
+  h-stack(row-1): card-1, card-2, card-3
+  h-stack(row-2): card-4, card-5, card-6
+  decorative: crack-lines between rows
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    .status-no { fill: #6e1a1a; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+      .status-no { fill: #e05555; }
+    }
+  </style>
+
+  <rect width="800" height="440" fill="transparent"/>
+
+  <text x="400" y="24" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">WHAT GOES WRONG WITHOUT AN OPINIONATED TEMPLATE</text>
+
+  <!-- Decorative crack lines (behind cards) -->
+  <g id="cracks" opacity="0.08">
+    <line x1="265" y1="50" x2="275" y2="170" stroke="#7a4a15" stroke-width="1.5"/>
+    <line x1="525" y1="55" x2="535" y2="165" stroke="#7a4a15" stroke-width="1.5"/>
+    <line x1="140" y1="168" x2="160" y2="182" stroke="#7a4a15" stroke-width="1"/>
+    <line x1="400" y1="165" x2="395" y2="185" stroke="#7a4a15" stroke-width="1"/>
+    <line x1="660" y1="170" x2="670" y2="180" stroke="#7a4a15" stroke-width="1"/>
+    <line x1="270" y1="310" x2="280" y2="340" stroke="#7a4a15" stroke-width="1"/>
+    <line x1="530" y1="305" x2="540" y2="335" stroke="#7a4a15" stroke-width="1"/>
+  </g>
+
+  <!-- Card 1: No dev/prod separation -->
+  <g id="card-devprod" transform="rotate(-0.8 138 102)">
+    <path d="M18,42 H258 V159 Q258,162 255,162 H21 Q18,162 18,159 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M18,42 H258 V159 Q258,162 255,162 H21 Q18,162 18,159 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="18" y="42" width="240" height="5" fill="#7a4a15" opacity="0.5"/>
+    <!-- Icon: alert-triangle (Lucide, ISC license) -->
+    <g transform="translate(28, 56) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </g>
+    <text x="50" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" class="accent-2">No dev/prod separation</text>
+    <text x="32" y="90" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-2">All deps in one file</text>
+    <text x="32" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Docker image ships with pytest,</text>
+    <text x="32" y="122" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">black, and your linter</text>
+    <text x="32" y="148" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-style="italic" class="status-no">Bloated containers in production</text>
+  </g>
+
+  <!-- Card 2: Global conda environments -->
+  <g id="card-conda" transform="rotate(0.5 398 102)">
+    <path d="M278,42 H518 V159 Q518,162 515,162 H281 Q278,162 278,159 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M278,42 H518 V159 Q518,162 515,162 H281 Q278,162 278,159 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="278" y="42" width="240" height="5" fill="#7a4a15" opacity="0.5"/>
+    <!-- Icon: alert-triangle (Lucide, ISC license) -->
+    <g transform="translate(288, 56) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </g>
+    <text x="310" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" class="accent-2">Global conda environments</text>
+    <text x="292" y="90" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-2">Shared across all projects</text>
+    <text x="292" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Pollute base installation,</text>
+    <text x="292" y="122" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">version conflicts between projects</text>
+    <text x="292" y="148" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-style="italic" class="status-no">"It works on my machine" incidents</text>
+  </g>
+
+  <!-- Card 3: Manual Jupyter kernel -->
+  <g id="card-kernel" transform="rotate(-0.4 658 102)">
+    <path d="M538,42 H778 V159 Q778,162 775,162 H541 Q538,162 538,159 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M538,42 H778 V159 Q778,162 775,162 H541 Q538,162 538,159 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="538" y="42" width="240" height="5" fill="#7a4a15" opacity="0.5"/>
+    <!-- Icon: alert-triangle (Lucide, ISC license) -->
+    <g transform="translate(548, 56) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </g>
+    <text x="570" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" class="accent-2">Manual kernel setup</text>
+    <text x="552" y="90" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-2">No auto-registration or cleanup</text>
+    <text x="552" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Stale kernels pile up,</text>
+    <text x="552" y="122" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">new teammate can't find the right one</text>
+    <text x="552" y="148" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-style="italic" class="status-no">"Which kernel do I pick?"</text>
+  </g>
+
+  <!-- Card 4: No template updates -->
+  <g id="card-frozen" transform="rotate(0.6 138 242)">
+    <path d="M18,182 H258 V299 Q258,302 255,302 H21 Q18,302 18,299 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M18,182 H258 V299 Q258,302 255,302 H21 Q18,302 18,299 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="18" y="182" width="240" height="5" fill="#7a4a15" opacity="0.5"/>
+    <!-- Icon: snowflake (Lucide, ISC license) -->
+    <g transform="translate(28, 196) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+      <line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>
+      <path d="m20 16-4-4 4-4"/><path d="m4 8 4 4-4 4"/>
+      <path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/>
+    </g>
+    <text x="50" y="208" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" class="accent-2">No template updates</text>
+    <text x="32" y="230" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-2">Cookiecutter is copy-once</text>
+    <text x="32" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Template improves, project frozen.</text>
+    <text x="32" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No path to adopt new practices</text>
+    <text x="32" y="288" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-style="italic" class="status-no">Projects age faster than they should</text>
+  </g>
+
+  <!-- Card 5: No env existence check -->
+  <g id="card-nocheck" transform="rotate(-0.7 398 242)">
+    <path d="M278,182 H518 V299 Q518,302 515,302 H281 Q278,302 278,299 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M278,182 H518 V299 Q518,302 515,302 H281 Q278,302 278,299 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="278" y="182" width="240" height="5" fill="#7a4a15" opacity="0.5"/>
+    <!-- Icon: alert-triangle (Lucide, ISC license) -->
+    <g transform="translate(288, 196) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </g>
+    <text x="310" y="208" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" class="accent-2">No existence checks</text>
+    <text x="292" y="230" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-2">make create_environment blindly runs</text>
+    <text x="292" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Tries to recreate what already exists,</text>
+    <text x="292" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">fails or overwrites your setup</text>
+    <text x="292" y="288" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-style="italic" class="status-no">"I just ran this, why is it broken?"</text>
+  </g>
+
+  <!-- Card 6: virtualenvwrapper -->
+  <g id="card-venvwrap" transform="rotate(0.3 658 242)">
+    <path d="M538,182 H778 V299 Q778,302 775,302 H541 Q538,302 538,299 Z" fill="#7a4a15" fill-opacity="0.06"/>
+    <path d="M538,182 H778 V299 Q778,302 775,302 H541 Q538,302 538,299 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="538" y="182" width="240" height="5" fill="#7a4a15" opacity="0.5"/>
+    <!-- Icon: alert-triangle (Lucide, ISC license) -->
+    <g transform="translate(548, 196) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </g>
+    <text x="570" y="208" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="700" class="accent-2">virtualenvwrapper</text>
+    <text x="552" y="230" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-2">Extra dependency for no reason</text>
+    <text x="552" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Python's venv module does the job.</text>
+    <text x="552" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">One more thing to install and debug</text>
+    <text x="552" y="288" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-style="italic" class="status-no">"pip install virtualenvwrapper failed"</text>
+  </g>
+
+  <!-- Bottom banner -->
+  <g id="banner">
+    <line x1="100" y1="340" x2="700" y2="340" stroke="#7a4a15" stroke-width="0.5" opacity="0.15"/>
+    <text x="400" y="370" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="middle" class="fg-1">Sound familiar?</text>
+    <text x="400" y="392" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="fg-3">These are not bugs. They are design decisions from a different era.</text>
+    <text x="400" y="410" font-family="Segoe UI, Arial, sans-serif" font-size="11" text-anchor="middle" class="fg-4">The Python ecosystem has moved on.</text>
+  </g>
+</svg>

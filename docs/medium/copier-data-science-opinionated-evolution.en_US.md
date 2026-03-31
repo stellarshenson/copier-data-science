@@ -55,6 +55,8 @@ This breadth comes at a cost. More choices means more configurations to maintain
 
 Here is what I kept running into:
 
+![What Goes Wrong Without an Opinionated Template](images/16-failure-modes.svg)
+
 - **No dev/prod separation** - all dependencies in one file, so your Docker image ships with pytest and black
 - **Global conda environments by default** - which pollute the base env and conflict across projects
 - **Manual Jupyter kernel setup** - no auto-registration, no cleanup when the environment is removed
