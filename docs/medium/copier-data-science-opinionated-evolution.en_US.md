@@ -11,7 +11,7 @@ read_time: "8 min read"
 
 # Your Data Science Project Template Is Holding You Back
 
-![Cover](images/article-cover.png)
+![Cover](images/article-cover-titled.png)
 
 *An opinionated fork of [cookiecutter-data-science](https://cookiecutter-data-science.drivendata.org/) that grows with your project - and looking for collaborators to build it further*
 
@@ -70,9 +70,13 @@ None of these are bugs. They are design decisions from a different era. The Pyth
 
 A standardized project template is not just about saving 20 minutes of setup. It is about **promoting best practices**, **interoperability**, and **portability**.
 
+![Ad Hoc vs Standardized](images/10-adhoc-vs-standardized.svg)
+
 A template is an opinionated statement about how projects should be structured. It encodes decisions about tooling, dependency management, testing, and deployment that would otherwise be made ad hoc by each team member. When those decisions are good, every new project starts with a solid foundation. When they are outdated, every new project inherits technical debt from day one.
 
 This template is the result of collaboration with over 30 data scientists from around the world - people working in manufacturing, scientific research, and academia. The conversations were consistent: everyone wanted uv instead of pip, local environments instead of global ones, dev dependencies separated from production, and a template that could actually be updated after the initial scaffold. The result is an opinionated template with broad capabilities - environment management across three major tools, cloud storage integration for S3, Azure, and GCS, optional Docker packaging, encrypted secrets, automatic Jupyter kernel registration, and a Makefile with 40+ targets that adapts to your configuration choices.
+
+![Shaped by 30+ Data Scientists](images/11-collaboration-origins.svg)
 
 When every project in your organization follows the same structure, the benefits compound. A data scientist moving between projects does not have to relearn environment setup. The CI pipeline works the same way. Code review is faster because reviewers know where to look. The intern can contribute on day one because `make install` does what it says.
 
@@ -113,6 +117,8 @@ This is what makes a template truly portable. You can hand a project to someone 
 ## Opinionated choices, explained
 
 We stripped the options down to what works well and dropped everything else.
+
+![Opinionated Features](images/09-opinionated-features.svg)
 
 **3 environment managers, not 6.** uv (default), conda, and virtualenv. We intentionally removed pipenv, poetry, and pixi. These tools add complexity without proportional benefit for data science workflows. If you need them, use upstream.
 

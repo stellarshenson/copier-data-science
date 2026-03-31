@@ -1,0 +1,112 @@
+<!--
+  11-collaboration-origins.svg
+  Shows: Three domain cards (Manufacturing, Science, Academia) feeding into a central result card
+  Intent: Visualize that the template's opinions come from 30+ data scientists across domains
+  Theme: Stellars-Tech EU (teal/cyan primary, orange accent)
+
+  === GRID ===
+  viewBox: 0 0 800 220
+  margins: left=20, right=20, top=10, bottom=10
+
+  Title: y=22
+  Source cards (3): y=36, h=80, w=200
+    card-mfg:   x=20
+    card-sci:   x=240
+    card-acad:  x=460
+  Arrows: from each card bottom to result card top
+  Result card: x=160 y=148 w=480 h=60
+
+  === LAYOUT TOPOLOGY ===
+  h-stack: card-mfg, card-sci, card-acad
+  flow: [card-mfg, card-sci, card-acad] -> result-card
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+    }
+  </style>
+
+  <rect width="800" height="220" fill="transparent"/>
+
+  <text x="400" y="22" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">SHAPED BY 30+ DATA SCIENTISTS ACROSS DOMAINS</text>
+
+  <!-- Card 1: Manufacturing -->
+  <g id="card-manufacturing">
+    <path d="M60,36 H260 V113 Q260,116 257,116 H63 Q60,116 60,113 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M60,36 H260 V113 Q260,116 257,116 H63 Q60,116 60,113 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="60" y="36" width="200" height="5" fill="#005f7a" opacity="0.6"/>
+    <!-- Icon: factory (Lucide, ISC license) -->
+    <g transform="translate(222, 48) scale(0.583)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+      <path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/>
+    </g>
+    <text x="160" y="62" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" class="fg-1">Manufacturing</text>
+    <text x="160" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Predictive maintenance</text>
+    <text x="160" y="96" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Anomaly detection</text>
+    <text x="160" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-4">IoT sensor pipelines</text>
+  </g>
+
+  <!-- Card 2: Scientific Research -->
+  <g id="card-science">
+    <path d="M300,36 H500 V113 Q500,116 497,116 H303 Q300,116 300,113 Z" fill="#7a4a15" fill-opacity="0.04"/>
+    <path d="M300,36 H500 V113 Q500,116 497,116 H303 Q300,116 300,113 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="300" y="36" width="200" height="5" fill="#7a4a15" opacity="0.6"/>
+    <!-- Icon: microscope (Lucide, ISC license) -->
+    <g transform="translate(462, 48) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/>
+      <path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>
+    </g>
+    <text x="400" y="62" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" class="fg-1">Scientific Research</text>
+    <text x="400" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Reproducible experiments</text>
+    <text x="400" y="96" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Complex data pipelines</text>
+    <text x="400" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-4">Multi-team collaboration</text>
+  </g>
+
+  <!-- Card 3: Academia -->
+  <g id="card-academia">
+    <path d="M540,36 H740 V113 Q740,116 737,116 H543 Q540,116 540,113 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M540,36 H740 V113 Q740,116 737,116 H543 Q540,116 540,113 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="540" y="36" width="200" height="5" fill="#005f7a" opacity="0.6"/>
+    <!-- Icon: graduation-cap (Lucide, ISC license) -->
+    <g transform="translate(702, 48) scale(0.583)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+      <path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+    </g>
+    <text x="640" y="62" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" class="fg-1">Academia</text>
+    <text x="640" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Teaching best practices</text>
+    <text x="640" y="96" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">Student onboarding</text>
+    <text x="640" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-4">Thesis reproducibility</text>
+  </g>
+
+  <!-- Converging arrows -->
+  <g id="arrows">
+    <line x1="160" y1="116" x2="160" y2="126" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+    <line x1="160" y1="126" x2="340" y2="142" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+    <line x1="400" y1="116" x2="400" y2="148" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+    <polygon points="397,148 400,154 403,148" fill="#005f7a" opacity="0.6"/>
+    <line x1="640" y1="116" x2="640" y2="126" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+    <line x1="640" y1="126" x2="460" y2="142" stroke="#005f7a" stroke-width="1" opacity="0.3"/>
+  </g>
+
+  <!-- Result card -->
+  <g id="result">
+    <path d="M160,154 H640 V207 Q640,210 637,210 H163 Q160,210 160,207 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M160,154 H640 V207 Q640,210 637,210 H163 Q160,210 160,207 Z" fill="none" stroke="#005f7a" stroke-width="1.5"/>
+    <rect x="160" y="154" width="480" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="400" y="178" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" class="fg-1">Opinionated template with broad capabilities</text>
+    <text x="400" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="10" text-anchor="middle" class="fg-3">uv default, local envs, dev/prod separation, Docker, encryption, 40+ Make targets</text>
+  </g>
+</svg>

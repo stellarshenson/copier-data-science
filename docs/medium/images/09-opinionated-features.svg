@@ -1,0 +1,159 @@
+<!--
+  09-opinionated-features.svg
+  Shows: 2x3 card grid of the 6 opinionated template choices with icons
+  Intent: Visual summary of key features before the detailed explanations
+  Theme: Stellars-Tech EU (teal/cyan primary, orange accent)
+
+  === GRID ===
+  viewBox: 0 0 800 340
+  margins: left=15, right=15, top=10, bottom=10
+
+  Title: y=28, centred at x=400
+  Cards: 245w x 130h, r=3, gap=16
+    row 1: y=42
+      card-1: x=15  (Local Envs)       accent-1
+      card-2: x=276 (lib_ Prefix)      accent-2
+      card-3: x=537 (Dev/Prod Deps)    accent-1
+    row 2: y=188
+      card-4: x=15  (Jupyter Kernel)   accent-1
+      card-5: x=276 (.env Encryption)  accent-2
+      card-6: x=537 (Docker Support)   accent-1
+
+  Within each card:
+    accent bar: top, h=5
+    icon area: top-right corner
+    title: card_x+20, card_y+32
+    line 1: card_y+54
+    line 2: card_y+70
+    line 3: card_y+86
+    command: card_y+110, monospace
+
+  === LAYOUT TOPOLOGY ===
+  h-stack(row-1): card-1, card-2, card-3
+  h-stack(row-2): card-4, card-5, card-6
+  v-stack: row-1, row-2
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+    }
+  </style>
+
+  <rect width="800" height="340" fill="transparent"/>
+
+  <!-- Title -->
+  <text x="400" y="28" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">OPINIONATED CHOICES</text>
+
+  <!-- Card 1: Local Environments -->
+  <g id="card-local-env">
+    <path d="M15,42 H260 V169 Q260,172 257,172 H18 Q15,172 15,169 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M15,42 H260 V169 Q260,172 257,172 H18 Q15,172 15,169 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="15" y="42" width="245" height="5" fill="#005f7a" opacity="0.6"/>
+    <!-- Icon: folder (Lucide, ISC license) -->
+    <g transform="translate(222, 56) scale(0.667)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
+    </g>
+    <text x="35" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" class="fg-1">Local Environments</text>
+    <text x="35" y="94" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">.venv/ in project root by default</text>
+    <text x="35" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No global conda pollution</text>
+    <text x="35" y="126" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Easier for CI, Docker, editors</text>
+    <text x="35" y="155" font-family="Consolas, monospace" font-size="9" class="accent-1">conda: local default, global opt-in</text>
+  </g>
+
+  <!-- Card 2: lib_ Prefix -->
+  <g id="card-lib-prefix">
+    <path d="M276,42 H521 V169 Q521,172 518,172 H279 Q276,172 276,169 Z" fill="#7a4a15" fill-opacity="0.04"/>
+    <path d="M276,42 H521 V169 Q521,172 518,172 H279 Q276,172 276,169 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="276" y="42" width="245" height="5" fill="#7a4a15" opacity="0.6"/>
+    <!-- Icon: package (Lucide, ISC license) -->
+    <g transform="translate(483, 56) scale(0.667)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+    </g>
+    <text x="296" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" class="fg-1">lib_ Module Prefix</text>
+    <text x="296" y="94" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">lib_my_project/ not my_project/</text>
+    <text x="296" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">No conflicts with package names</text>
+    <text x="296" y="126" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Imports instantly recognizable</text>
+    <text x="296" y="155" font-family="Consolas, monospace" font-size="9" class="accent-2">from lib_project.dataset import ...</text>
+  </g>
+
+  <!-- Card 3: Dev/Prod Separation -->
+  <g id="card-devprod">
+    <path d="M537,42 H782 V169 Q782,172 779,172 H540 Q537,172 537,169 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M537,42 H782 V169 Q782,172 779,172 H540 Q537,172 537,169 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="537" y="42" width="245" height="5" fill="#005f7a" opacity="0.6"/>
+    <!-- Icon: split (Lucide, ISC license) -->
+    <g transform="translate(744, 56) scale(0.667)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <path d="M16 3h5v5"/><path d="M8 3H3v5"/>
+      <path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/>
+    </g>
+    <text x="557" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" class="fg-1">Dev/Prod Separation</text>
+    <text x="557" y="94" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">pytest, ruff, mkdocs in [dev]</text>
+    <text x="557" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Docker image ships clean</text>
+    <text x="557" y="126" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">No linter in production</text>
+    <text x="557" y="155" font-family="Consolas, monospace" font-size="9" class="accent-1">pip install -e ".[dev]"</text>
+  </g>
+
+  <!-- Card 4: Jupyter Kernel -->
+  <g id="card-jupyter">
+    <path d="M15,188 H260 V315 Q260,318 257,318 H18 Q15,318 15,315 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M15,188 H260 V315 Q260,318 257,318 H18 Q15,318 15,315 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="15" y="188" width="245" height="5" fill="#005f7a" opacity="0.6"/>
+    <!-- Icon: cpu (Lucide, ISC license) -->
+    <g transform="translate(222, 202) scale(0.667)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/>
+      <path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>
+    </g>
+    <text x="35" y="218" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" class="fg-1">Jupyter Kernel</text>
+    <text x="35" y="240" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Auto-registered on create</text>
+    <text x="35" y="256" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Auto-removed on destroy</text>
+    <text x="35" y="272" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">nb_venv_kernels / nb_conda_kernels</text>
+    <text x="35" y="301" font-family="Consolas, monospace" font-size="9" class="accent-1">make create_environment</text>
+  </g>
+
+  <!-- Card 5: .env Encryption -->
+  <g id="card-encryption">
+    <path d="M276,188 H521 V315 Q521,318 518,318 H279 Q276,318 276,315 Z" fill="#7a4a15" fill-opacity="0.04"/>
+    <path d="M276,188 H521 V315 Q521,318 518,318 H279 Q276,318 276,315 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="276" y="188" width="245" height="5" fill="#7a4a15" opacity="0.6"/>
+    <!-- Icon: lock (Lucide, ISC license) -->
+    <g transform="translate(483, 202) scale(0.667)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </g>
+    <text x="296" y="218" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" class="fg-1">.env Encryption</text>
+    <text x="296" y="240" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">OpenSSL AES-256 encryption</text>
+    <text x="296" y="256" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Commit .env.enc, share password</text>
+    <text x="296" y="272" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Auto-decrypts on make install</text>
+    <text x="296" y="301" font-family="Consolas, monospace" font-size="9" class="accent-2">make .env.enc / make .env</text>
+  </g>
+
+  <!-- Card 6: Docker Support -->
+  <g id="card-docker">
+    <path d="M537,188 H782 V315 Q782,318 779,318 H540 Q537,318 537,315 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M537,188 H782 V315 Q782,318 779,318 H540 Q537,318 537,169 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="537" y="188" width="245" height="5" fill="#005f7a" opacity="0.6"/>
+    <!-- Icon: container (Lucide, ISC license) -->
+    <g transform="translate(744, 202) scale(0.667)" fill="none" stroke="#005f7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+      <rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/>
+      <path d="M17 6V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2"/><path d="M2 12h20"/>
+    </g>
+    <text x="557" y="218" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" class="fg-1">Docker Support</text>
+    <text x="557" y="240" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">Installs from wheel, not source</text>
+    <text x="557" y="256" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-3">run / train / predict entrypoint</text>
+    <text x="557" y="272" font-family="Segoe UI, Arial, sans-serif" font-size="10" class="fg-4">Toggled by single option</text>
+    <text x="557" y="301" font-family="Consolas, monospace" font-size="9" class="accent-1">make docker_build / docker_run</text>
+  </g>
+</svg>

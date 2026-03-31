@@ -1,0 +1,77 @@
+<!--
+  10-adhoc-vs-standardized.svg
+  Shows: Side-by-side comparison of ad-hoc project setup (chaos) vs standardized template (order)
+  Intent: Break up the standardization text and make the case visually
+  Theme: Stellars-Tech EU (teal/cyan primary, orange accent)
+
+  === GRID ===
+  viewBox: 0 0 800 280
+  margins: left=20, right=20, top=10, bottom=10
+
+  Title: y=28
+  Left panel (ad hoc):  x=20  y=42  w=365  h=228  accent-2 (warning)
+  Right panel (standard): x=415 y=42  w=365  h=228  accent-1 (good)
+  Items: start y=88, step=28
+
+  === LAYOUT TOPOLOGY ===
+  h-stack: panel-adhoc, panel-standardized
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    .status-yes { fill: #1a6e3a; }
+    .status-no { fill: #6e1a1a; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+      .status-yes { fill: #44cc77; }
+      .status-no { fill: #e05555; }
+    }
+  </style>
+
+  <rect width="800" height="280" fill="transparent"/>
+
+  <text x="400" y="28" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">AD HOC SETUP VS STANDARDIZED TEMPLATE</text>
+
+  <!-- Left Panel: Ad Hoc -->
+  <g id="panel-adhoc">
+    <path d="M20,42 H385 V267 Q385,270 382,270 H23 Q20,270 20,267 Z" fill="#7a4a15" fill-opacity="0.04"/>
+    <path d="M20,42 H385 V267 Q385,270 382,270 H23 Q20,270 20,267 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="20" y="42" width="365" height="5" fill="#7a4a15" opacity="0.6"/>
+    <text x="202" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" class="accent-2">Ad Hoc Project Setup</text>
+
+    <text x="40" y="98" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-no">Each person picks different env manager</text>
+    <text x="40" y="122" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-no">Dev deps mixed with production</text>
+    <text x="40" y="146" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-no">New hire: "which README do I follow?"</text>
+    <text x="40" y="170" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-no">CI pipeline differs per project</text>
+    <text x="40" y="194" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-no">"Ask Sarah for the .env file"</text>
+    <text x="40" y="218" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-no">Manual kernel registration</text>
+    <text x="40" y="242" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-no">Template improves, projects stay frozen</text>
+  </g>
+
+  <!-- Right Panel: Standardized -->
+  <g id="panel-standardized">
+    <path d="M415,42 H780 V267 Q780,270 777,270 H418 Q415,270 415,267 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M415,42 H780 V267 Q780,270 777,270 H418 Q415,270 415,267 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="415" y="42" width="365" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="597" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" class="accent-1">Standardized Template</text>
+
+    <text x="435" y="98" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-yes">One command: make install</text>
+    <text x="435" y="122" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-yes">Dev in [optional-dependencies], prod clean</text>
+    <text x="435" y="146" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-yes">New hire contributes on day 1</text>
+    <text x="435" y="170" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-yes">Same Makefile targets across all projects</text>
+    <text x="435" y="194" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-yes">make install auto-decrypts .env</text>
+    <text x="435" y="218" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-yes">Kernel auto-registered and cleaned up</text>
+    <text x="435" y="242" font-family="Segoe UI, Arial, sans-serif" font-size="11" class="status-yes">copier update adopts improvements</text>
+  </g>
+</svg>
