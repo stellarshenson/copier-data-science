@@ -92,6 +92,8 @@ This only works if the template reflects current best practices. A template froz
 
 ## The Copier difference
 
+If you have not heard of [Copier](https://copier.readthedocs.io/) - it is a project scaffolding tool, similar to Cookiecutter, but with one fundamental difference: it maintains a connection between the template and the projects it generates. Copier stores your answers in `.copier-answers.yml` alongside the template version that generated the project. When the template evolves, `copier update` computes the diff between the old and new template versions, applies changes to your project, and preserves your customizations. It is open source, written in Python, and works with any Git-hosted template.
+
 The single biggest limitation of cookiecutter is that it is copy-once. You scaffold a project, cookiecutter's job is done. The template improves, adds Docker support, fixes a dependency issue - none of that reaches your existing project.
 
 ![How Copier Works](images/18-copier-concept.svg)
