@@ -1,0 +1,113 @@
+<!--
+  08-conflict-resolution.svg
+  Shows: Decision flow for how copier update conflict resolution works - user's file vs template's file,
+  with branching logic: version/license -> keep user's, everything else -> take template's
+  Intent: Visualize the intelligent merge strategy that makes template updates safe
+  Theme: Stellars-Tech EU (teal/cyan primary, orange accent)
+
+  === GRID ===
+  viewBox: 0 0 800 320
+  margins: left=20, right=20, top=10, bottom=10
+
+  Top box (trigger): x=280 y=30 w=240 h=50
+  Diamond (decision): cx=400 cy=140, 60x40 rotated 45deg
+  Left branch card (keep user): x=60 y=200 w=240 h=100
+  Right branch card (take template): x=500 y=200 w=240 h=100
+  Arrow from trigger to diamond: vertical
+  Arrow from diamond to left: diagonal/L-shaped
+  Arrow from diamond to right: diagonal/L-shaped
+  Labels on branches: "version / license" left, "other fields" right
+
+  === LAYOUT TOPOLOGY ===
+  flow: trigger -> decision-diamond -> [keep-user, take-template]
+  v-stack: trigger, decision
+  h-stack: keep-user, decision, take-template
+  === END ===
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320">
+  <style>
+    .fg-1 { fill: #1a5a6e; }
+    .fg-2 { fill: #24697e; }
+    .fg-3 { fill: #236a74; }
+    .fg-4 { fill: #2b7680; }
+    .accent-1 { fill: #005f7a; }
+    .accent-2 { fill: #7a4a15; }
+    .status-yes { fill: #1a6e3a; }
+    @media (prefers-color-scheme: dark) {
+      .fg-1 { fill: #b8e4f0; }
+      .fg-2 { fill: #8fd4e6; }
+      .fg-3 { fill: #5aafc5; }
+      .fg-4 { fill: #4099b3; }
+      .accent-1 { fill: #5cc8e0; }
+      .accent-2 { fill: #d4a04a; }
+      .status-yes { fill: #44cc77; }
+    }
+  </style>
+
+  <rect width="800" height="320" fill="transparent"/>
+
+  <!-- Title -->
+  <text x="400" y="18" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">CONFLICT RESOLUTION DURING COPIER UPDATE</text>
+
+  <!-- Trigger box: copier detects conflict -->
+  <g id="trigger">
+    <path d="M260,32 H540 V79 Q540,82 537,82 H263 Q260,82 260,79 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M260,32 H540 V79 Q540,82 537,82 H263 Q260,82 260,79 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="260" y="32" width="280" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="400" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" class="fg-1">pyproject.toml has conflict markers</text>
+    <text x="400" y="72" font-family="Consolas, monospace" font-size="9" text-anchor="middle" class="fg-4">&lt;&lt;&lt;&lt;&lt;&lt;&lt; before updating ... &gt;&gt;&gt;&gt;&gt;&gt;&gt; after updating</text>
+  </g>
+
+  <!-- Arrow: trigger -> diamond -->
+  <line x1="400" y1="82" x2="400" y2="110" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="397,110 400,116 403,110" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Decision diamond -->
+  <g id="decision">
+    <polygon points="400,118 460,152 400,186 340,152" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="1.2"/>
+    <text x="400" y="148" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">version or</text>
+    <text x="400" y="162" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">license?</text>
+  </g>
+
+  <!-- Left branch label: YES -->
+  <text x="310" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle" class="accent-2">YES</text>
+
+  <!-- Left L-connector: diamond -> keep-user card -->
+  <!-- Horizontal from diamond left edge (340,152) then down -->
+  <line x1="340" y1="152" x2="290" y2="152" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <line x1="290" y1="152" x2="290" y2="152" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <!-- Chamfer: 286,152 -> 290,156 -->
+  <line x1="290" y1="152" x2="190" y2="152" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <line x1="190" y1="152" x2="190" y2="200" stroke="#7a4a15" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="187,200 190,206 193,200" fill="#7a4a15" opacity="0.6"/>
+
+  <!-- Right branch label: NO -->
+  <text x="490" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle" class="accent-1">NO</text>
+
+  <!-- Right L-connector: diamond -> take-template card -->
+  <line x1="460" y1="152" x2="610" y2="152" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <line x1="610" y1="152" x2="610" y2="200" stroke="#005f7a" stroke-width="1.2" opacity="0.4"/>
+  <polygon points="607,200 610,206 613,200" fill="#005f7a" opacity="0.6"/>
+
+  <!-- Left outcome: Keep User's Version -->
+  <g id="keep-user">
+    <path d="M60,208 H320 V302 Q320,305 317,305 H63 Q60,305 60,302 Z" fill="#7a4a15" fill-opacity="0.04"/>
+    <path d="M60,208 H320 V302 Q320,305 317,305 H63 Q60,305 60,302 Z" fill="none" stroke="#7a4a15" stroke-width="1"/>
+    <rect x="60" y="208" width="260" height="5" fill="#7a4a15" opacity="0.6"/>
+    <text x="190" y="232" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" class="accent-2">Keep User's Value</text>
+    <text x="190" y="254" font-family="Consolas, monospace" font-size="10" text-anchor="middle" class="fg-3">version = "1.2.6"</text>
+    <text x="190" y="272" font-family="Consolas, monospace" font-size="10" text-anchor="middle" class="fg-3">license = "Proprietary"</text>
+    <text x="190" y="294" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">User's bumps and customizations are sacred</text>
+  </g>
+
+  <!-- Right outcome: Take Template's Version -->
+  <g id="take-template">
+    <path d="M480,208 H740 V302 Q740,305 737,305 H483 Q480,305 480,302 Z" fill="#005f7a" fill-opacity="0.04"/>
+    <path d="M480,208 H740 V302 Q740,305 737,305 H483 Q480,305 480,302 Z" fill="none" stroke="#005f7a" stroke-width="1"/>
+    <rect x="480" y="208" width="260" height="5" fill="#005f7a" opacity="0.6"/>
+    <text x="610" y="232" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" class="accent-1">Take Template's Value</text>
+    <text x="610" y="254" font-family="Consolas, monospace" font-size="10" text-anchor="middle" class="fg-3">description = "Updated desc"</text>
+    <text x="610" y="272" font-family="Consolas, monospace" font-size="10" text-anchor="middle" class="fg-3">[tool.ruff] new-config = true</text>
+    <text x="610" y="294" font-family="Segoe UI, Arial, sans-serif" font-size="9" text-anchor="middle" class="fg-4">Template improvements flow to your project</text>
+  </g>
+</svg>

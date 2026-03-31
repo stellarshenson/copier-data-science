@@ -219,6 +219,8 @@ def resolve_conflict(match):
 
 Version bumps and custom licenses survive template updates. New dependency configurations and tool settings flow in from the template. This is the kind of detail that only matters when it breaks - and when it breaks, it really breaks.
 
+![Conflict Resolution During copier update](images/08-conflict-resolution.svg)
+
 ![Project Evolution](images/06-evolution-timeline.svg)
 
 ## Limitations
