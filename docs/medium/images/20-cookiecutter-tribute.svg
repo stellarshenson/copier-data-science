@@ -1,26 +1,37 @@
 <!--
   20-cookiecutter-tribute.svg
-  Shows: 5 pillars representing foundational ideas from cookiecutter-data-science,
-  standing on shared base, with copier-data-science extension layer on top.
-  Intent: Respectful tribute - we preserve and extend, not replace
+  Shows: 5 pillars on shared foundation with extension layer
   Theme: Stellars-Tech EU
 
-  === GRID ===
-  viewBox: 0 0 800 330
-  margins: left=30, right=30, top=10, bottom=10
+  === GRID (Python-calculated) ===
+  viewBox: 0 0 800 335
+  Horizontal: margin=40, pillar_w=120, gap=30
+    x: 40, 190, 340, 490, 640  cx: 100, 250, 400, 550, 700
 
-  Title: y=22
-  5 pillars: w=120, h=168, gap=15, first x=40
-    positions: x=40, 175, 310, 445, 580  y=48
-  Foundation base: x=30 y=220 w=740 h=32
-  Extension layer: x=30 y=252 w=740 h=38
+  Vertical (clearances: 8px, 6px, 12px):
+    capital:     y=40  h=6   bottom=46
+    body:        y=46  h=170 bottom=216
+    base:        y=216 h=8   bottom=224
+    [8px clearance]
+    foundation:  y=232 h=30  bottom=262
+    [6px clearance]
+    extension:   y=268 h=38  bottom=306
+    [12px clearance]
+    tagline:     y=327
+
+  Inside pillar (body y=46..216):
+    icon:     y=60
+    title L1: y=86
+    title L2: y=98
+    content:  y=116, step=14 -> 116,130,144,158,172
+    footer:   y=200 (16px from body bottom)
 
   === LAYOUT TOPOLOGY ===
-  h-stack: pillar-1..pillar-5 (equal width, equal gap)
-  v-stack: pillars, foundation, extension
+  h-stack: pillar-1..5 (w=120, gap=30)
+  v-stack: pillars -> 8px -> foundation -> 6px -> extension -> 12px -> tagline
   === END ===
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 330">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 345">
   <style>
     .fg-1 { fill: #1a5a6e; }
     .fg-2 { fill: #24697e; }
@@ -38,119 +49,113 @@
     }
   </style>
 
-  <rect width="800" height="330" fill="transparent"/>
+  <rect width="800" height="345" fill="transparent"/>
+  <text x="400" y="22" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">STANDING ON THE SHOULDERS OF COOKIECUTTER-DATA-SCIENCE</text>
 
-  <text x="400" y="20" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" letter-spacing="1" class="fg-2">STANDING ON THE SHOULDERS OF COOKIECUTTER-DATA-SCIENCE</text>
-
-  <!-- Pillar 1: Directory Structure -->
+  <!-- Pillar 1: Directory Structure  x=40 cx=100 -->
   <g id="pillar-1">
-    <rect x="40" y="48" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <rect x="40" y="54" width="120" height="160" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
-    <rect x="40" y="208" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <!-- Icon: folder (Lucide, ISC license) -->
-    <g transform="translate(84, 66) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+    <rect x="40" y="40" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <rect x="40" y="46" width="120" height="170" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
+    <rect x="40" y="216" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <g transform="translate(84, 60) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
       <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
     </g>
-    <text x="100" y="96" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Directory</text>
-    <text x="100" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Structure</text>
-    <text x="100" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">data/raw/</text>
-    <text x="100" y="140" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">data/processed/</text>
-    <text x="100" y="152" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">notebooks/</text>
-    <text x="100" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">models/</text>
-    <text x="100" y="176" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">reports/</text>
-    <text x="100" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">Logical and standard</text>
+    <text x="100" y="86" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Directory</text>
+    <text x="100" y="98" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Structure</text>
+    <text x="100" y="116" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">data/raw/</text>
+    <text x="100" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">data/processed/</text>
+    <text x="100" y="144" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">notebooks/</text>
+    <text x="100" y="158" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">models/</text>
+    <text x="100" y="172" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">reports/</text>
+    <text x="100" y="200" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">Logical and standard</text>
   </g>
 
-  <!-- Pillar 2: Immutable Data -->
+  <!-- Pillar 2: Immutable Data  x=190 cx=250 -->
   <g id="pillar-2">
-    <rect x="175" y="48" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <rect x="175" y="54" width="120" height="160" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
-    <rect x="175" y="208" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <!-- Icon: shield (Lucide, ISC license) -->
-    <g transform="translate(219, 66) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+    <rect x="190" y="40" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <rect x="190" y="46" width="120" height="170" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
+    <rect x="190" y="216" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <g transform="translate(234, 60) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
       <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
     </g>
-    <text x="235" y="96" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Immutable</text>
-    <text x="235" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Data</text>
-    <text x="235" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">raw/ is read-only</text>
-    <text x="235" y="140" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Never edit in place</text>
-    <text x="235" y="152" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Pipeline transforms</text>
-    <text x="235" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">to processed/</text>
-    <text x="235" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">Correctness first</text>
+    <text x="250" y="86" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Immutable</text>
+    <text x="250" y="98" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Data</text>
+    <text x="250" y="116" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">raw/ is read-only</text>
+    <text x="250" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Never edit in place</text>
+    <text x="250" y="144" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Pipeline transforms</text>
+    <text x="250" y="158" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">to processed/</text>
+    <text x="250" y="200" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">Correctness first</text>
   </g>
 
-  <!-- Pillar 3: DAG Philosophy -->
+  <!-- Pillar 3: DAG Philosophy  x=340 cx=400 -->
   <g id="pillar-3">
-    <rect x="310" y="48" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <rect x="310" y="54" width="120" height="160" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
-    <rect x="310" y="208" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <!-- Icon: workflow (Lucide, ISC license) -->
-    <g transform="translate(354, 66) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+    <rect x="340" y="40" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <rect x="340" y="46" width="120" height="170" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
+    <rect x="340" y="216" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <g transform="translate(384, 60) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
       <rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/>
       <rect width="8" height="8" x="13" y="13" rx="2"/>
     </g>
-    <text x="370" y="96" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Analysis</text>
-    <text x="370" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">as DAG</text>
-    <text x="370" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Reproducible steps</text>
-    <text x="370" y="140" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">No circular deps</text>
-    <text x="370" y="152" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Trace any output</text>
-    <text x="370" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">back to raw data</text>
-    <text x="370" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">Reproducibility built in</text>
+    <text x="400" y="86" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Analysis</text>
+    <text x="400" y="98" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">as DAG</text>
+    <text x="400" y="116" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Reproducible steps</text>
+    <text x="400" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">No circular deps</text>
+    <text x="400" y="144" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Trace any output</text>
+    <text x="400" y="158" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">back to raw data</text>
+    <text x="400" y="200" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">Reproducibility built in</text>
   </g>
 
-  <!-- Pillar 4: Make as Task Runner -->
+  <!-- Pillar 4: Make as Task Runner  x=490 cx=550 -->
   <g id="pillar-4">
-    <rect x="445" y="48" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <rect x="445" y="54" width="120" height="160" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
-    <rect x="445" y="208" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <!-- Icon: terminal (Lucide, ISC license) -->
-    <g transform="translate(489, 66) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+    <rect x="490" y="40" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <rect x="490" y="46" width="120" height="170" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
+    <rect x="490" y="216" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <g transform="translate(534, 60) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
       <polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/>
     </g>
-    <text x="505" y="96" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Make as</text>
-    <text x="505" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Task Runner</text>
-    <text x="505" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Discoverable targets</text>
-    <text x="505" y="140" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Dependency chains</text>
-    <text x="505" y="152" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Cross-platform</text>
-    <text x="505" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Self-documenting</text>
-    <text x="505" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">One interface for everything</text>
+    <text x="550" y="86" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Make as</text>
+    <text x="550" y="98" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Task Runner</text>
+    <text x="550" y="116" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Discoverable targets</text>
+    <text x="550" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Dependency chains</text>
+    <text x="550" y="144" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Cross-platform</text>
+    <text x="550" y="158" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Self-documenting</text>
+    <text x="550" y="200" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">One interface for all</text>
   </g>
 
-  <!-- Pillar 5: Source as Package -->
+  <!-- Pillar 5: Source as Package  x=640 cx=700 -->
   <g id="pillar-5">
-    <rect x="580" y="48" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <rect x="580" y="54" width="120" height="160" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
-    <rect x="580" y="208" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
-    <!-- Icon: package (Lucide, ISC license) -->
-    <g transform="translate(624, 66) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+    <rect x="640" y="40" width="120" height="6" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <rect x="640" y="46" width="120" height="170" fill="#7a4a15" fill-opacity="0.04" stroke="#7a4a15" stroke-width="0.8" opacity="0.5"/>
+    <rect x="640" y="216" width="120" height="8" rx="1" fill="#7a4a15" fill-opacity="0.12"/>
+    <g transform="translate(684, 60) scale(0.583)" fill="none" stroke="#7a4a15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
       <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/>
       <path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/>
     </g>
-    <text x="640" y="96" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Source as</text>
-    <text x="640" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Package</text>
-    <text x="640" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">pip install -e .</text>
-    <text x="640" y="140" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Import in notebooks</text>
-    <text x="640" y="152" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Refactor from</text>
-    <text x="640" y="164" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">notebook to module</text>
-    <text x="640" y="198" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">Code reuse built in</text>
+    <text x="700" y="86" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Source as</text>
+    <text x="700" y="98" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600" text-anchor="middle" class="fg-1">Package</text>
+    <text x="700" y="116" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">pip install -e .</text>
+    <text x="700" y="130" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Import in notebooks</text>
+    <text x="700" y="144" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">Refactor from</text>
+    <text x="700" y="158" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">notebook to module</text>
+    <text x="700" y="200" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">Code reuse built in</text>
   </g>
 
-  <!-- Foundation base (flush with pillar bases) -->
+  <!-- Foundation: y=232 (8px clearance from base bottom 224) -->
   <g id="foundation">
-    <rect x="30" y="218" width="740" height="30" rx="2" fill="#7a4a15" fill-opacity="0.08" stroke="#7a4a15" stroke-width="1"/>
-    <text x="400" y="237" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" text-anchor="middle" class="accent-2">cookiecutter-data-science by DrivenData</text>
-    <text x="400" y="246" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">The conventions we all follow. We kept every one of them.</text>
+    <rect x="30" y="232" width="740" height="34" rx="2" fill="#7a4a15" fill-opacity="0.08" stroke="#7a4a15" stroke-width="1"/>
+    <text x="400" y="250" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" text-anchor="middle" class="accent-2">cookiecutter-data-science by DrivenData</text>
+    <text x="400" y="261" font-family="Segoe UI, Arial, sans-serif" font-size="7" text-anchor="middle" class="fg-4">The conventions we all follow. We kept every one of them.</text>
   </g>
 
-  <!-- Extension layer (flush with foundation) -->
+  <!-- Extension: y=268 (6px clearance from foundation bottom 262) -->
   <g id="extension">
-    <path d="M30,248 H770 V283 Q770,286 767,286 H33 Q30,286 30,283 Z" fill="#005f7a" fill-opacity="0.06"/>
-    <path d="M30,248 H770 V283 Q770,286 767,286 H33 Q30,286 30,283 Z" fill="none" stroke="#005f7a" stroke-width="1.2"/>
-    <rect x="30" y="248" width="740" height="5" fill="#005f7a" opacity="0.5"/>
-    <text x="400" y="268" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" text-anchor="middle" class="accent-1">copier-data-science builds on top</text>
-    <text x="400" y="281" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">+ Copier updates  + uv default  + local envs  + dev/prod split  + Docker  + encryption  + auto kernels</text>
+    <path d="M30,272 H770 V307 Q770,310 767,310 H33 Q30,310 30,307 Z" fill="#005f7a" fill-opacity="0.06"/>
+    <path d="M30,272 H770 V307 Q770,310 767,310 H33 Q30,310 30,307 Z" fill="none" stroke="#005f7a" stroke-width="1.2"/>
+    <rect x="30" y="272" width="740" height="5" fill="#005f7a" opacity="0.5"/>
+    <text x="400" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" text-anchor="middle" class="accent-1">copier-data-science builds on top</text>
+    <text x="400" y="305" font-family="Segoe UI, Arial, sans-serif" font-size="8" text-anchor="middle" class="fg-3">+ Copier updates  + uv default  + local envs  + dev/prod split  + Docker  + encryption  + auto kernels</text>
   </g>
 
-  <!-- Bottom tagline -->
-  <text x="400" y="310" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-style="italic" text-anchor="middle" class="fg-4">All credit for the original architecture goes to the upstream team.</text>
+  <!-- Tagline: y=327 (12px clearance from extension bottom 306) -->
+  <text x="400" y="332" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-style="italic" text-anchor="middle" class="fg-4">All credit for the original architecture goes to the upstream team.</text>
 </svg>
