@@ -61,6 +61,8 @@ Credit where due. The upstream project established conventions that the data sci
 
 These are foundational. We kept all of them.
 
+![Standing on the Shoulders of cookiecutter-data-science](images/20-cookiecutter-tribute.svg)
+
 ## Where the cracks show
 
 The upstream template offers 6 environment managers: virtualenv, conda, pipenv, uv, pixi, and poetry. Five dependency file formats. It defaults to Python 3.10 and virtualenvwrapper.
