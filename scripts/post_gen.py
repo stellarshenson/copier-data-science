@@ -78,7 +78,11 @@ def migrate_flat_to_src(module_name):
     print(f"    - IDE run configurations and debugger paths")
     print(f"")
     print(f"  Python imports (from {module_name}.xxx import yyy) are NOT affected -")
-    print(f"  the package name is unchanged, only its location on disk moved.{RESET}")
+    print(f"  the package name is unchanged, only its location on disk moved.")
+    print(f"")
+    print(f"  If {module_name}/ still exists at root after update, it may contain")
+    print(f"  user-added files preserved by copier. Move them to src/{module_name}/")
+    print(f"  and delete the old directory.{RESET}")
     print(f"{BOLD}{YELLOW}{'=' * 72}{RESET}\n")
 
 
