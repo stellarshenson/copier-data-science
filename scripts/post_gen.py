@@ -20,7 +20,6 @@ from zipfile import ZipFile
 
 from jinja2 import Template
 
-
 # ANSI color codes for migration warnings
 YELLOW = "\033[33m"
 RED = "\033[31m"
@@ -66,21 +65,21 @@ def migrate_flat_to_src(module_name):
     # Print migration warning with ANSI colors
     print(f"\n{BOLD}{CYAN}>>> Migration: {RESET}{module_name}/ -> src/{module_name}/ (src layout)")
     print(f"\n{BOLD}{YELLOW}{'=' * 72}")
-    print(f"  WARNING: Flat -> src layout migration (v1.2.x -> v1.3.x)")
+    print("  WARNING: Flat -> src layout migration (v1.2.x -> v1.3.x)")
     print(f"{'=' * 72}{RESET}")
     print(f"{YELLOW}  Your module has been moved from:")
     print(f"    {module_name}/  ->  src/{module_name}/")
-    print(f"")
-    print(f"  Please update any hardcoded references to the old path:")
-    print(f"    - Notebook imports using sys.path.append()")
+    print("")
+    print("  Please update any hardcoded references to the old path:")
+    print("    - Notebook imports using sys.path.append()")
     print(f"    - CI/CD scripts referencing {module_name}/ directly")
-    print(f"    - Custom Makefile targets or shell scripts")
-    print(f"    - Docker COPY instructions for source files")
-    print(f"    - IDE run configurations and debugger paths")
-    print(f"")
+    print("    - Custom Makefile targets or shell scripts")
+    print("    - Docker COPY instructions for source files")
+    print("    - IDE run configurations and debugger paths")
+    print("")
     print(f"  Python imports (from {module_name}.xxx import yyy) are NOT affected -")
-    print(f"  the package name is unchanged, only its location on disk moved.")
-    print(f"")
+    print("  the package name is unchanged, only its location on disk moved.")
+    print("")
     print(f"  If {module_name}/ still exists at root after update, it may contain")
     print(f"  user-added files preserved by copier. Move them to src/{module_name}/")
     print(f"  and delete the old directory.{RESET}")
