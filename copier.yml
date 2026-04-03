@@ -147,9 +147,9 @@ open_source_license:
 docs:
   type: str
   choices:
-    - mkdocs
     - none
-  default: mkdocs
+    - mkdocs
+  default: none
   help: "Documentation framework"
 
 include_code_scaffold:
