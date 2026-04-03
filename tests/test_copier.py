@@ -99,12 +99,13 @@ def verify_folders(root, config):
         "references",
         "reports",
         "reports/figures",
-        config["module_name"],
+        "src",
+        f"src/{config['module_name']}",
     ]
 
     if config["include_code_scaffold"] == "Yes":
         expected_dirs += [
-            f"{config['module_name']}/modeling",
+            f"src/{config['module_name']}/modeling",
         ]
 
     if config["docs"] == "mkdocs":

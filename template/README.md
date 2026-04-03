@@ -37,7 +37,7 @@ make install
 
 - **Notebooks**: Name with number prefix, initials, description - `01-jqp-data-exploration.ipynb`
 - **Data**: Keep `raw/` immutable, use `interim/` for transforms, `processed/` for final datasets
-- **Source code**: Refactor reusable notebook code into `{{ module_name }}/` modules
+- **Source code**: Refactor reusable notebook code into `src/{{ module_name }}/` modules
 - **Models**: Store trained models in `models/` with clear naming
 
 ## Project Organization
@@ -70,13 +70,14 @@ make install
 ├── environment.yml    <- Conda environment with all dependencies
 {%- endif %}
 ├── tests              <- Test files
-└── {{ module_name }}   <- Source code for this project
-    ├── __init__.py
-    ├── config.py      <- Configuration variables
-    ├── dataset.py     <- Data download/generation scripts
-    ├── features.py    <- Feature engineering code
-    ├── modeling
-    │   ├── predict.py <- Model inference
-    │   └── train.py   <- Model training
-    └── plots.py       <- Visualization code
+└── src
+    └── {{ module_name }}   <- Source code for this project
+        ├── __init__.py
+        ├── config.py      <- Configuration variables
+        ├── dataset.py     <- Data download/generation scripts
+        ├── features.py    <- Feature engineering code
+        ├── modeling
+        │   ├── predict.py <- Model inference
+        │   └── train.py   <- Model training
+        └── plots.py       <- Visualization code
 ```

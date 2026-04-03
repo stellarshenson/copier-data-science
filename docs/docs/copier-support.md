@@ -59,7 +59,7 @@ copier-data-science/
 |----------|-------------|---------|
 | `project_name` | Project name (auto-derived from directory) | Directory name |
 | `repo_name` | Repository name | Derived from project_name |
-| `module_name` | Python module name | `lib_<repo_name>` |
+| `module_name` | Python module name (in `src/`) | `<repo_name>` |
 | `environment_manager` | uv, conda, virtualenv, or none | uv |
 | `dependency_file` | pyproject.toml, requirements.txt, or environment.yml | pyproject.toml |
 | `dataset_storage` | Cloud storage: none, s3, azure, gcs | none |

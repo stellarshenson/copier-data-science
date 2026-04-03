@@ -20,6 +20,68 @@ from zipfile import ZipFile
 from jinja2 import Template
 
 
+# ANSI color codes for migration warnings
+YELLOW = "\033[33m"
+RED = "\033[31m"
+CYAN = "\033[36m"
+BOLD = "\033[1m"
+RESET = "\033[0m"
+
+
+def migrate_flat_to_src(module_name):
+    """Migrate from flat layout (v1.2.x) to src layout (v1.3.x).
+
+    During copier update, if old flat layout module directory exists at project root,
+    move user's code to src/ directory, preserving user modifications over template scaffold.
+    """
+    old_path = Path(module_name)
+    new_path = Path("src") / module_name
+
+    if not old_path.exists() or not old_path.is_dir():
+        return  # No old layout to migrate
+
+    if new_path.exists():
+        # src/ layout already created by copier template rendering
+        # Copy user's files from old location - user's versions take precedence
+        for item in old_path.rglob("*"):
+            if item.is_file():
+                rel = item.relative_to(old_path)
+                dest = new_path / rel
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(str(item), str(dest))
+        shutil.rmtree(str(old_path))
+    else:
+        # src/ doesn't exist yet - just move the directory
+        new_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(old_path), str(new_path))
+
+    # Fix config.py parents depth: parents[1] -> parents[2] for src layout
+    config_py = new_path / "config.py"
+    if config_py.exists():
+        content = config_py.read_text()
+        if "parents[1]" in content:
+            config_py.write_text(content.replace("parents[1]", "parents[2]"))
+
+    # Print migration warning with ANSI colors
+    print(f"\n{BOLD}{CYAN}>>> Migration: {RESET}{module_name}/ -> src/{module_name}/ (src layout)")
+    print(f"\n{BOLD}{YELLOW}{'=' * 72}")
+    print(f"  WARNING: Flat -> src layout migration (v1.2.x -> v1.3.x)")
+    print(f"{'=' * 72}{RESET}")
+    print(f"{YELLOW}  Your module has been moved from:")
+    print(f"    {module_name}/  ->  src/{module_name}/")
+    print(f"")
+    print(f"  Please update any hardcoded references to the old path:")
+    print(f"    - Notebook imports using sys.path.append()")
+    print(f"    - CI/CD scripts referencing {module_name}/ directly")
+    print(f"    - Custom Makefile targets or shell scripts")
+    print(f"    - Docker COPY instructions for source files")
+    print(f"    - IDE run configurations and debugger paths")
+    print(f"")
+    print(f"  Python imports (from {module_name}.xxx import yyy) are NOT affected -")
+    print(f"  the package name is unchanged, only its location on disk moved.{RESET}")
+    print(f"{BOLD}{YELLOW}{'=' * 72}{RESET}\n")
+
+
 def resolve_pyproject_conflicts():
     """Resolve conflict markers in pyproject.toml, preserving user changes.
 
@@ -251,6 +313,10 @@ def _do_post_gen():
 
     is_update = is_copier_update()
 
+    # Migrate flat layout to src layout during copier update (v1.2.x -> v1.3.x)
+    if is_update:
+        migrate_flat_to_src(args.module_name)
+
     # Linting setup
     if args.linting_and_formatting == "ruff":
         # ruff is in dev dependencies, not project dependencies
@@ -360,7 +426,7 @@ def _do_post_gen():
 
     if args.include_code_scaffold == "No":
         # remove everything except __init__.py so result is an empty package
-        module_path = Path(args.module_name)
+        module_path = Path("src") / args.module_name
         if module_path.exists():
             for generated_path in module_path.iterdir():
                 if generated_path.is_dir():

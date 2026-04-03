@@ -28,7 +28,7 @@ def get_copier_cmd():
 default_args = {
     "project_name": "my_test_project",
     "repo_name": "my-test-repo",
-    "module_name": "lib_project_module",
+    "module_name": "project_module",
     "author_name": "DrivenData",
     "description": "A test project",
     # env_name is set per test config to avoid conflicts

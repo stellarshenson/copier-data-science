@@ -106,7 +106,7 @@ Now that you have your notebook going, start your analysis!
 
 ## Refactoring code into shared modules
 
-As your project goes on, you'll want to refactor your code in a way that makes it easy to share between notebooks and scripts. We recommend creating a module in the `lib_<project_name>` folder that contains the code you use in your project. This is a good way to make sure that you can use the same code in multiple places without having to copy and paste it.
+As your project goes on, you'll want to refactor your code in a way that makes it easy to share between notebooks and scripts. We recommend creating a module in the `src/<project_name>` folder that contains the code you use in your project. This is a good way to make sure that you can use the same code in multiple places without having to copy and paste it.
 
 Because the default structure is a Python package and is installed by default, you can do the following to make that code available to you within a Jupyter notebook.
 
@@ -117,10 +117,10 @@ First, we recommend turning on the `autoreload` extension. This will make Jupyte
 %autoreload 2
 ```
 
-Now all your code should be importable. At the start of the project, you picked a module name. It's the same name as the folder that is in the root project directory (with `lib_` prefix). For example, if the module name were `lib_my_project` you could use code by importing it like:
+Now all your code should be importable. At the start of the project, you picked a module name. It's the same name as the folder under `src/`. For example, if the module name were `my_project` you could use code by importing it like:
 
 ```python
-from lib_my_project.dataset import make_dataset
+from my_project.dataset import make_dataset
 
 data = make_dataset()
 ```

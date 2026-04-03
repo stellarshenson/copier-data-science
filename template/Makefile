@@ -254,15 +254,15 @@ format:
 ## Lint using flake8, black, and isort (use `make format` to do formatting)
 lint:
 	@echo "$(MSG_PREFIX) linting the sourcecode"
-	flake8 {{ module_name }}
-	isort --check --diff {{ module_name }}
-	black --check {{ module_name }}
+	flake8 src/{{ module_name }}
+	isort --check --diff src/{{ module_name }}
+	black --check src/{{ module_name }}
 
 ## Format source code with black and isort
 format:
 	@echo "$(MSG_PREFIX) formatting the sourcecode"
-	isort {{ module_name }}
-	black {{ module_name }}
+	isort src/{{ module_name }}
+	black src/{{ module_name }}
 
 {%- endif %}
 
@@ -822,9 +822,9 @@ increment_version_number:
 data: requirements
 	@echo "$(MSG_PREFIX) generating dataset"
 {%- if environment_manager == 'conda' %}
-	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) $(PYTHON_INTERPRETER) {{ module_name }}/dataset.py
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) $(PYTHON_INTERPRETER) src/{{ module_name }}/dataset.py
 {%- else %}
-	$(PYTHON_INTERPRETER) {{ module_name }}/dataset.py
+	$(PYTHON_INTERPRETER) src/{{ module_name }}/dataset.py
 {%- endif %}
 {%- endif %}
 

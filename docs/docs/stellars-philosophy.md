@@ -34,16 +34,16 @@ Project templates shape how thousands of developers work. A project template isn
 > [!TIP]
 > This enables lightweight Docker images for production (`pip install .`) while providing full development environment (`pip install -e ".[dev]"`).
 
-### 2. Installable Module with `lib_` Prefix
+### 2. Src Layout with Installable Module
 
-**Upstream**: Module named `<project_name>` (e.g., `my_project`).
+**Upstream**: Flat layout - module at project root (e.g., `my_project/`).
 
-**This fork**: Module named `lib_<project_name>` (e.g., `lib_my_project`).
+**This fork**: Src layout - module under `src/` (e.g., `src/my_project/`). The src layout prevents accidental imports of uninstalled code and aligns with modern Python packaging consensus (Hatch defaults to it, PyPA acknowledges its advantages).
 
-This avoids conflicts with common package names and makes project code immediately recognizable. A `lib_` prefixed module is far easier to spot in imports than an arbitrary project name - you instantly know it's your local code, not some pip-installed dependency.
+The default module name is `<project_name>` (no prefix). You can optionally add a `lib_` prefix for namespace clarity if you prefer distinguishing your project code from pip-installed dependencies.
 
 > [!NOTE]
-> You can rename the module folder to anything you prefer. The `lib_` prefix is just a sensible default that makes your project code easy to spot at a glance.
+> The `lib_` prefix was the default in v1.2.x. From v1.3.0 onwards, the default is the plain project name. Existing projects keep their module name during `copier update`.
 
 ### 3. Local Environment by Default
 
@@ -103,7 +103,7 @@ Modern practice is the opposite: one explicit .venv in the project root, tracked
 
 | Feature | Upstream ccds | Stellars' Fork |
 |---------|--------------|----------------|
-| Module naming | `<project_name>` | `lib_<project_name>` |
+| Package layout | Flat layout | Src layout (`src/<project_name>/`) |
 | Environment managers | 6 (virtualenv, conda, pipenv, uv, pixi, poetry) | 3 (uv, conda, virtualenv) |
 | Default env manager | virtualenv | uv |
 | Dependency files | 5 (requirements.txt, pyproject.toml, environment.yml, Pipfile, pixi.toml) | 3 (pyproject.toml, requirements.txt, environment.yml) |

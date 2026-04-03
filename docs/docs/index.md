@@ -59,7 +59,7 @@ The directory structure of your new project will look something like this (depen
 │                         `1.0-jqp-initial-data-exploration`.
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for
-│                         lib_<project_name> and configuration for tools like ruff
+│                         <project_name> and configuration for tools like ruff
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
 │
@@ -70,22 +70,23 @@ The directory structure of your new project will look something like this (depen
 │
 ├── setup.cfg          <- Configuration file for flake8 (if using flake8+black+isort)
 │
-└── lib_<project_name>   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes lib_<project_name> a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling
-    │   ├── __init__.py
-    │   ├── predict.py          <- Code to run model inference with trained models
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+└── src
+    └── <project_name>   <- Source code for use in this project.
+        │
+        ├── __init__.py             <- Makes <project_name> a Python module
+        │
+        ├── config.py               <- Store useful variables and configuration
+        │
+        ├── dataset.py              <- Scripts to download or generate data
+        │
+        ├── features.py             <- Code to create features for modeling
+        │
+        ├── modeling
+        │   ├── __init__.py
+        │   ├── predict.py          <- Code to run model inference with trained models
+        │   └── train.py            <- Code to train models
+        │
+        └── plots.py                <- Code to create visualizations
 ```
 
 ## Updating Projects

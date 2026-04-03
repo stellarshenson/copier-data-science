@@ -27,8 +27,8 @@ env_name:
 
 module_name:
   type: str
-  default: "{{ 'lib_' + repo_name.replace('-', '_') }}"
-  help: "Python module name (lib_ prefix for installable packages)"
+  default: "{{ repo_name.replace('-', '_') }}"
+  help: "Python module name (optionally add lib_ prefix for namespace clarity)"
 
 author_name:
   type: str

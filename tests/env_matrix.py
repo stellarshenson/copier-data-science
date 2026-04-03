@@ -194,8 +194,8 @@ def get_expected_files(config: dict) -> list:
     expected = list(ALWAYS_PRESENT)
     expected.extend(spec["files_present"])
 
-    # Add module __init__.py
-    expected.append(f"{config['module_name']}/__init__.py")
+    # Add module __init__.py (src layout)
+    expected.append(f"src/{config['module_name']}/__init__.py")
 
     # Conditional files based on other config options
     if not config.get("open_source_license", "MIT").startswith("No license"):
@@ -207,13 +207,13 @@ def get_expected_files(config: dict) -> list:
     if config.get("include_code_scaffold") == "Yes":
         expected.extend(
             [
-                f"{config['module_name']}/config.py",
-                f"{config['module_name']}/dataset.py",
-                f"{config['module_name']}/features.py",
-                f"{config['module_name']}/modeling/__init__.py",
-                f"{config['module_name']}/modeling/train.py",
-                f"{config['module_name']}/modeling/predict.py",
-                f"{config['module_name']}/plots.py",
+                f"src/{config['module_name']}/config.py",
+                f"src/{config['module_name']}/dataset.py",
+                f"src/{config['module_name']}/features.py",
+                f"src/{config['module_name']}/modeling/__init__.py",
+                f"src/{config['module_name']}/modeling/train.py",
+                f"src/{config['module_name']}/modeling/predict.py",
+                f"src/{config['module_name']}/plots.py",
             ]
         )
 

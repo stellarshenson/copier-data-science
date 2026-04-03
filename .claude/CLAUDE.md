@@ -12,7 +12,8 @@ This file extends workspace-level configuration with project-specific rules.
 **Key differentiators from upstream cookiecutter-data-science**:
 - Uses Copier (not Cookiecutter) for template updates support
 - Local vs global conda environment choice (`env_location`)
-- `lib_` module prefix for installable packages
+- Src layout (`src/<module_name>/`) for installable packages
+- Optional `lib_` module prefix (no longer default)
 - Rich colored terminal output in Makefile
 - environment.yml with pre-configured dev dependencies
 - Build and version management targets
