@@ -11,6 +11,7 @@ import argparse
 import os
 import re
 import shutil
+import subprocess
 from pathlib import Path
 from shutil import copytree
 from tempfile import TemporaryDirectory
@@ -283,6 +284,7 @@ def parse_args():
     parser.add_argument("--package-repository", default="No")
     parser.add_argument("--package-repository-url", default="")
     parser.add_argument("--custom-config", default="")
+    parser.add_argument("--git-init", default="No")
     return parser.parse_args()
 
 
@@ -475,6 +477,10 @@ def _do_post_gen():
 
     # .copier-answers.yml is now managed entirely by copier itself
     # We don't touch it in post_gen to avoid conflicts
+
+    # Initialize git repository if requested and not already initialized
+    if args.git_init == "Yes" and not Path(".git").exists():
+        subprocess.run(["git", "init", "-b", "main"], check=True)
 
     print("Post-generation cleanup complete!")
 
