@@ -1,10 +1,12 @@
 """Tests for git initialization option.
 
 These tests verify that the git_init option correctly initializes a git repository
-when enabled and skips initialization when disabled.
+when enabled, skips initialization when disabled, and does not re-init during updates.
 """
 
 import subprocess
+import tempfile
+from pathlib import Path
 
 from conftest import COPIER_DIR, get_copier_cmd
 
@@ -101,3 +103,82 @@ class TestGitInit:
         assert git_dir.exists(), (
             ".git directory should exist by default (git_init defaults to Yes)"
         )
+
+    def test_git_not_reinitialized_during_update(self):
+        """Test that copier update does not re-init git when .git already exists.
+
+        Uses git+file:// URL so copier properly checks out git refs.
+        """
+        copier_cmd = get_copier_cmd()
+        git_url = f"git+file://{COPIER_DIR}"
+
+        with tempfile.TemporaryDirectory() as tmp:
+            project_path = Path(tmp) / "test-repo"
+
+            # Create project with git_init=Yes
+            result = subprocess.run(
+                [
+                    copier_cmd,
+                    "copy",
+                    "--trust",
+                    "--defaults",
+                    "--vcs-ref",
+                    "HEAD",
+                    "-d",
+                    "git_init=Yes",
+                    git_url,
+                    str(project_path),
+                ],
+                capture_output=True,
+                text=True,
+            )
+            assert result.returncode == 0, f"copier copy failed: {result.stderr}"
+
+            # Stage and commit (required for copier update)
+            subprocess.run(["git", "add", "-A"], cwd=project_path, check=True)
+            subprocess.run(
+                ["git", "commit", "-m", "Initial"],
+                cwd=project_path,
+                check=True,
+            )
+
+            # Record the original .git state (HEAD commit)
+            orig_head = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=project_path,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            # Run copier update
+            result = subprocess.run(
+                [
+                    copier_cmd,
+                    "update",
+                    "--trust",
+                    "--defaults",
+                    "--vcs-ref",
+                    "HEAD",
+                ],
+                cwd=project_path,
+                capture_output=True,
+                text=True,
+            )
+            assert result.returncode == 0, f"copier update failed: {result.stderr}"
+
+            # Verify git repo still intact - original commit still exists
+            head_after = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=project_path,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            assert head_after == orig_head, (
+                "HEAD should be unchanged - git init should not have run during update"
+            )
+
+            # Verify "Reinitialized" does NOT appear in output
+            combined = result.stdout + result.stderr
+            assert "Reinitialized" not in combined, (
+                "git should not be re-initialized during update"
+            )
