@@ -137,6 +137,8 @@ def test_flat_to_src_migration():
 
         # Step 4: Git init + commit (required for copier update)
         subprocess.run(["git", "init", "-b", "main"], cwd=project_path, check=True)
+        subprocess.run(["git", "config", "user.name", "Test User"], cwd=project_path, check=True)
+        subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=project_path, check=True)
         subprocess.run(["git", "add", "-A"], cwd=project_path, check=True)
         subprocess.run(
             ["git", "commit", "-m", "Initial project from v1.2.16"],

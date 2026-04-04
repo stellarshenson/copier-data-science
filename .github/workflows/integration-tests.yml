@@ -81,15 +81,15 @@ jobs:
       - name: Verify module import
         run: |
           cd /tmp/test_conda_local
-          conda run -p .venv/test_conda_local python -c "import lib_test_conda_local; print('Module imported successfully')"
+          conda run -p .venv/test_conda_local python -c "import test_conda_local; print('Module imported successfully')"
 
       - name: Test clean
         run: |
           cd /tmp/test_conda_local
           mkdir -p __pycache__
           touch __pycache__/test.pyc
-          mkdir -p lib_test_conda_local/__pycache__
-          touch lib_test_conda_local/__pycache__/test.pyc
+          mkdir -p src/test_conda_local/__pycache__
+          touch src/test_conda_local/__pycache__/test.pyc
           make clean
           echo "=== Verify cleaned ==="
           test ! -d __pycache__ && echo "OK: __pycache__ removed"
@@ -164,7 +164,7 @@ jobs:
           cd /tmp/test_virtualenv
           source .venv/bin/activate
           pip install -e .
-          python -c "import lib_test_virtualenv; print('Module imported successfully')"
+          python -c "import test_virtualenv; print('Module imported successfully')"
 
       - name: Test clean
         run: |
@@ -240,7 +240,7 @@ jobs:
           cd /tmp/test_uv
           source .venv/bin/activate
           uv pip install -e .
-          python -c "import lib_test_uv; print('Module imported successfully')"
+          python -c "import test_uv; print('Module imported successfully')"
 
       - name: Test clean
         run: |
@@ -297,8 +297,8 @@ jobs:
           echo "=== Project structure ==="
           ls -la
           echo "=== Module should be empty ==="
-          ls -la lib_test_no_scaffold/
-          cat lib_test_no_scaffold/__init__.py
+          ls -la src/test_no_scaffold/
+          cat src/test_no_scaffold/__init__.py
 
       - name: Test create_environment
         run: |

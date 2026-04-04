@@ -135,6 +135,8 @@ class TestGitInit:
             assert result.returncode == 0, f"copier copy failed: {result.stderr}"
 
             # Stage and commit (required for copier update)
+            subprocess.run(["git", "config", "user.name", "Test User"], cwd=project_path, check=True)
+            subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=project_path, check=True)
             subprocess.run(["git", "add", "-A"], cwd=project_path, check=True)
             subprocess.run(
                 ["git", "commit", "-m", "Initial"],
