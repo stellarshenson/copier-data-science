@@ -7,7 +7,7 @@
 ## Commands
 
 The Makefile contains the central entry points for common tasks related to this project.
-{% if dataset_storage != 'none' %}
+{% if dataset_storage in ['s3', 'azure', 'gcs'] %}
 ### Syncing data to cloud storage
 
 {% if dataset_storage.s3 -%}

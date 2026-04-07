@@ -9,7 +9,7 @@ PROJECT_NAME = {{ repo_name }}
 MODULE_NAME = {{ module_name }}
 PYTHON_VERSION = {{ python_version_number }}
 PYTHON_INTERPRETER = python
-{%- if dataset_storage != 'none' %}
+{%- if dataset_storage in ['s3', 'azure', 'gcs'] %}
 {%- if dataset_storage == 's3' %}
 
 # AWS S3 configuration
@@ -317,7 +317,7 @@ docs_serve:
 {%- endif %}
 {%- endif %}
 
-{%- if dataset_storage != 'none' %}
+{%- if dataset_storage in ['s3', 'azure', 'gcs'] %}
 ## Download data from storage system
 sync_data_down:
 	@echo "$(MSG_PREFIX) downloading data from storage"

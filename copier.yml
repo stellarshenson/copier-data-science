@@ -52,11 +52,12 @@ dataset_storage:
   type: str
   choices:
     - none
+    - local
     - s3
     - azure
     - gcs
   default: none
-  help: "Cloud storage provider for datasets"
+  help: "Dataset storage (local or cloud provider)"
 
 s3_bucket:
   type: str

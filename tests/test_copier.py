@@ -234,6 +234,23 @@ def verify_makefile_commands(root, config):
     assert result.returncode == 0
 
 
+def test_dataset_storage_local_accepted(fast):
+    """Test that dataset_storage=local is accepted as a valid choice (alias for none)."""
+    config = next(config_generator(fast=1))
+    config["dataset_storage"] = "local"
+
+    with bake_project(config) as project_dir:
+        # Project should generate successfully
+        assert (project_dir / "Makefile").exists()
+        # No cloud storage variables should be in Makefile
+        makefile = (project_dir / "Makefile").read_text()
+        assert "S3_BUCKET" not in makefile
+        assert "AZURE_CONTAINER" not in makefile
+        assert "GCS_BUCKET" not in makefile
+        # No sync target definitions should exist (sync_data_up: with colon = target definition)
+        assert "sync_data_up:" not in makefile
+
+
 def test_copier_answers_file_created(fast):
     """Test that .copier-answers.yml is created with correct content."""
     config = next(config_generator(fast=1))

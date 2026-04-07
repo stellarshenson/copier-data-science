@@ -21,7 +21,7 @@ make install
 {%- if docs == 'mkdocs' %}
 - `make docs` / `make docs_serve` - Build / serve documentation
 {%- endif %}
-{%- if dataset_storage != 'none' %}
+{%- if dataset_storage in ['s3', 'azure', 'gcs'] %}
 - `make sync_data_down` / `make sync_data_up` - Sync data with cloud storage
 - `make sync_models_down` / `make sync_models_up` - Sync models with cloud storage
 {%- endif %}
