@@ -9,6 +9,9 @@ PROJECT_NAME = {{ repo_name }}
 MODULE_NAME = {{ module_name }}
 PYTHON_VERSION = {{ python_version_number }}
 PYTHON_INTERPRETER = python
+
+# Set SKIP_VERSION_INCREMENT=1 to skip auto-bumping the patch version in install/build
+SKIP_VERSION_INCREMENT ?= 0
 {%- if dataset_storage in ['s3', 'azure', 'gcs'] %}
 {%- if dataset_storage == 's3' %}
 
@@ -674,10 +677,14 @@ publish: build
 	@echo "$(OK_STYLE)>>> $(MODULE_NAME) published successfully$(NO_STYLE)"
 {%- endif %}
 
-## Increment build number
+## Increment build number (skip with SKIP_VERSION_INCREMENT=1)
 increment_version_number:
-	@echo "$(MSG_PREFIX) incrementing build number"
-	@$(PROJECT_DIR)/.venv/bin/python -c "import re; c=open('pyproject.toml').read(); m=re.search(r'version = \"(\\d+)\\.(\\d+)\\.(\\d+)\"',c); v=f'{m[1]}.{m[2]}.{int(m[3])+1}'; c=re.sub(r'version = \"\\d+\\.\\d+\\.\\d+\"',f'version = \"{v}\"',c,count=1); open('pyproject.toml','w').write(c); print('New version:',v)"
+	@if [ "$(SKIP_VERSION_INCREMENT)" = "1" ]; then \
+		echo "$(MSG_PREFIX) skipping version increment (SKIP_VERSION_INCREMENT=1)"; \
+	else \
+		echo "$(MSG_PREFIX) incrementing build number"; \
+		$(PROJECT_DIR)/.venv/bin/python -c "import re; c=open('pyproject.toml').read(); m=re.search(r'version = \"(\\d+)\\.(\\d+)\\.(\\d+)\"',c); v=f'{m[1]}.{m[2]}.{int(m[3])+1}'; c=re.sub(r'version = \"\\d+\\.\\d+\\.\\d+\"',f'version = \"{v}\"',c,count=1); open('pyproject.toml','w').write(c); print('New version:',v)"; \
+	fi
 
 {%- elif environment_manager == 'uv' %}
 #################################################################################
@@ -777,14 +784,14 @@ register_environment:
 {%- endif %}
 
 ## Install src modules (editable)
-install: create_environment requirements clean{% if env_encryption == 'Yes' %} .env{% endif %}
+install: create_environment requirements clean increment_version_number{% if env_encryption == 'Yes' %} .env{% endif %}
 
 	@echo "$(MSG_PREFIX) installing $(MODULE_NAME) in editable mode"
 	@uv $(UV_OPTS) pip install -q --python $(PROJECT_DIR)/.venv -e .
 	@echo "$(OK_STYLE)>>> $(MODULE_NAME) installed$(NO_STYLE)"
 
 ## Build package
-build: clean install test increment_version_number
+build: clean install test
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	$(PROJECT_DIR)/.venv/bin/python -m build --wheel
 {%- if package_repository == 'Yes' %}
@@ -806,10 +813,14 @@ publish: build
 	@echo "$(OK_STYLE)>>> $(MODULE_NAME) published successfully$(NO_STYLE)"
 {%- endif %}
 
-## Increment build number
+## Increment build number (skip with SKIP_VERSION_INCREMENT=1)
 increment_version_number:
-	@echo "$(MSG_PREFIX) incrementing build number"
-	@$(PROJECT_DIR)/.venv/bin/python -c "import re; c=open('pyproject.toml').read(); m=re.search(r'version = \"(\\d+)\\.(\\d+)\\.(\\d+)\"',c); v=f'{m[1]}.{m[2]}.{int(m[3])+1}'; c=re.sub(r'version = \"\\d+\\.\\d+\\.\\d+\"',f'version = \"{v}\"',c,count=1); open('pyproject.toml','w').write(c); print('New version:',v)"
+	@if [ "$(SKIP_VERSION_INCREMENT)" = "1" ]; then \
+		echo "$(MSG_PREFIX) skipping version increment (SKIP_VERSION_INCREMENT=1)"; \
+	else \
+		echo "$(MSG_PREFIX) incrementing build number"; \
+		$(PROJECT_DIR)/.venv/bin/python -c "import re; c=open('pyproject.toml').read(); m=re.search(r'version = \"(\\d+)\\.(\\d+)\\.(\\d+)\"',c); v=f'{m[1]}.{m[2]}.{int(m[3])+1}'; c=re.sub(r'version = \"\\d+\\.\\d+\\.\\d+\"',f'version = \"{v}\"',c,count=1); open('pyproject.toml','w').write(c); print('New version:',v)"; \
+	fi
 
 {%- endif %}
 
@@ -830,14 +841,14 @@ data: requirements
 
 {%- if environment_manager == 'conda' %}
 ## Install src modules without dependencies (editable)
-install: preflight clean create_environment{% if env_encryption == 'Yes' %} .env{% endif %}
+install: preflight clean create_environment increment_version_number{% if env_encryption == 'Yes' %} .env{% endif %}
 
 	@echo "$(MSG_PREFIX) installing $(MODULE_NAME) in the $(ENV_NAME) environment $(OK_STYLE)EDITABLE$(NO_STYLE)"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) pip install --editable .
 	@echo "$(MSG_PREFIX) you can now import $(HIGHLIGHT_STYLE)$(MODULE_NAME)$(NO_STYLE) module in your notebooks and scripts\n"
 
 ## Build package and install
-build: preflight clean install test increment_version_number
+build: preflight clean install test
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m build --wheel
 {%- if package_repository == 'Yes' %}
@@ -859,10 +870,14 @@ publish: build
 	@echo "$(OK_STYLE)>>> $(MODULE_NAME) published successfully$(NO_STYLE)"
 {%- endif %}
 
-## Increment build number
+## Increment build number (skip with SKIP_VERSION_INCREMENT=1)
 increment_version_number: preflight
-	@echo "$(MSG_PREFIX) incrementing build number"
-	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -c "import re; c=open('pyproject.toml').read(); m=re.search(r'version = \"(\\d+)\\.(\\d+)\\.(\\d+)\"',c); v=f'{m[1]}.{m[2]}.{int(m[3])+1}'; c=re.sub(r'version = \"\\d+\\.\\d+\\.\\d+\"',f'version = \"{v}\"',c,count=1); open('pyproject.toml','w').write(c); print('New version:',v)"
+	@if [ "$(SKIP_VERSION_INCREMENT)" = "1" ]; then \
+		echo "$(MSG_PREFIX) skipping version increment (SKIP_VERSION_INCREMENT=1)"; \
+	else \
+		echo "$(MSG_PREFIX) incrementing build number"; \
+		conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -c "import re; c=open('pyproject.toml').read(); m=re.search(r'version = \"(\\d+)\\.(\\d+)\\.(\\d+)\"',c); v=f'{m[1]}.{m[2]}.{int(m[3])+1}'; c=re.sub(r'version = \"\\d+\\.\\d+\\.\\d+\"',f'version = \"{v}\"',c,count=1); open('pyproject.toml','w').write(c); print('New version:',v)"; \
+	fi
 {%- endif %}
 
 {% if docker_support == 'Yes' -%}

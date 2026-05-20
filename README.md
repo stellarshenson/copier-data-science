@@ -16,7 +16,8 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 | Feature | Original ccds | This Template |
 |---------|--------------|----------------|
 | Template engine | Cookiecutter | Copier (with update support) |
-| Module naming | `<project_name>` | `lib_<project_name>` |
+| Project layout | Flat | `src/` layout (PyPA/Hatch consensus) |
+| Module naming | `<project_name>` | `<project_name>` (optional `lib_` prefix) |
 | Environment managers | 6 (virtualenv, conda, pipenv, uv, pixi, poetry) | 3 (uv, conda, virtualenv) |
 | Default env manager | virtualenv | uv |
 | Dependency files | 5 (requirements.txt, pyproject.toml, environment.yml, Pipfile, pixi.toml) | 3 (pyproject.toml, requirements.txt, environment.yml) |
@@ -25,25 +26,31 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 | Dev dependencies | Mixed with production | Separated |
 | Jupyter kernel | Manual setup | Auto-registered with cleanup |
 | Environment exists check | No | Yes |
-| Cloud storage config | Inline in commands | Makefile variables |
+| Cloud storage config | Inline in commands | Makefile variables (S3/Azure/GCS/local) |
+| Sync exclusions | None | `.ipynb_checkpoints`, `.gitkeep`, `.gitattributes`, `.gitignore` |
 | Model sync targets | No | Yes (`sync_models_up/down`) |
 | virtualenv implementation | virtualenvwrapper | Standard venv |
 | .env encryption | No | Optional (OpenSSL AES-256) |
-| Build versioning | No | Auto-increment on `make build` |
+| .env tiers ignored | `.env` only | `.env`, `.env.dev`, `.env.prod`, `.env.stg`, `.env.test` |
+| Build versioning | No | Auto-increment on `make install` (opt-out via `SKIP_VERSION_INCREMENT=1`) |
 | Docker support | No | Optional (Dockerfile + Makefile targets) |
+| Git initialization | No | Optional (`git init -b main` post-generation) |
 
 **Key enhancements:**
 - **Copier template** - Template updates with `copier update`, answers stored in `.copier-answers.yml`
+- **src layout** - Generated projects use `src/<module_name>/` for installable packages
 - **uv default** - Modern, fast Python package manager
 - **Local environments** - `.venv/` directory for project isolation
-- **`lib_` prefix** - Clear module naming (`lib_myproject/`)
 - **Dev/prod separation** - Development tools separate from production dependencies
 - **Zero boilerplate** - Jupyter kernel, linting, testing pre-configured
 - **Environment checks** - Skip creation if environment exists
 - **Model sync** - `sync_models_up/down` targets for cloud storage
+- **Clean sync** - Sync targets exclude `.ipynb_checkpoints` and git metadata so buckets stay clean
 - **.env encryption** - Optional AES-256 encryption for secrets (`make .env.enc`)
-- **Build versioning** - Auto-increment build number in pyproject.toml on `make build`
+- **Per-tier .env ignores** - `.env.dev`, `.env.prod`, `.env.stg`, `.env.test` gitignored by default
+- **Build versioning** - Auto-increment patch on `make install`; set `SKIP_VERSION_INCREMENT=1` to keep current version during dev iteration
 - **Docker support** - Optional Dockerfile and Makefile targets (`docker_build`, `docker_run`, `docker_push`)
+- **Optional git init** - `git_init=Yes` initializes a `main`-branch repository on project creation
 
 This template uses [nb_venv_kernels](https://github.com/stellarshenson/nb_venv_kernels) for automatic Jupyter kernel management - your project environments appear as kernels in JupyterLab without manual registration. For conda environments, [nb_conda_kernels](https://github.com/Anaconda-Platform/nb_conda_kernels) is used instead. Both provide automatic kernel discovery and cleanup when environments are removed.
 

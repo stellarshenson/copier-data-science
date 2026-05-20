@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.8 (2026-05-20) - Auto-bump on install + README feature refresh
+
+- Standardized version-increment behavior across env managers - `make install` now increments the patch version for virtualenv, uv, and conda (previously only virtualenv)
+- Removed duplicate increment from uv and conda `build` targets (would have double-bumped since `build` depends on `install`)
+- Added `SKIP_VERSION_INCREMENT` Makefile variable - set to `1` to skip the auto-bump during repeated dev installs
+- Refreshed root `README.md` Key Features table and bullet list to reflect current state (src layout, sync exclusions, .env tier ignores, install-time versioning, optional git init); removed stale `lib_` default messaging
+
 ## v1.3.7 (2026-05-20) - Restore changelog maintenance
 
 - Restored CHANGELOG.md maintenance after long gap (last entry was v1.0.61, December 2025)
