@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.3.7 (2026-05-20) - Restore changelog maintenance
+
+- Restored CHANGELOG.md maintenance after long gap (last entry was v1.0.61, December 2025)
+- Backfilled entries for v1.3.5 and v1.3.6
+- Going forward, every release bump includes a CHANGELOG entry
+
+## v1.3.6 (2026-05-20) - .gitignore env tiers and nodeenv
+
+- Added `.env.dev`, `.env.prod`, `.env.stg`, `.env.test` to template `.gitignore` to prevent leaking per-tier secrets
+- Added `.nodeenv` to template `.gitignore` for Python/Node mixed projects
+
+## v1.3.5 (2026-05-20) - Sync exclusion fixes
+
+- Excluded `.gitkeep`, `.gitattributes`, `.gitignore` from `sync_data_*` and `sync_models_*` targets across AWS S3, Azure, GCS
+- Fixed `.ipynb_checkpoints` exclusion pattern - `*/.ipynb_checkpoints/*` missed root-level checkpoint dirs (e.g. `models/.ipynb_checkpoints/`); changed to `*.ipynb_checkpoints/*` for S3 and Azure (GCS regex already correct)
+
 ## v1.0.61 (2025-12-07) - Copier-Only Migration
 
 Major migration from dual cookiecutter/copier template to copier-only project.
