@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.9 (2026-05-25) - Python version choices
+
+- Changed default Python to 3.13
+- `python_version` is now a choice prompt - `3.12`, `3.13`, `3.14`, or `other`
+- Selecting `other` opens a follow-up prompt to type any version (e.g. `3.10`)
+- Downstream templates unchanged - the computed `python_version_number` still drives Makefile, pyproject.toml, environment.yml, and Dockerfile
+
 ## v1.3.8 (2026-05-20) - Auto-bump on install + README feature refresh
 
 - Standardized version-increment behavior across env managers - `make install` now increments the patch version for virtualenv, uv, and conda (previously only virtualenv)

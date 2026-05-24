@@ -107,7 +107,7 @@ Modern practice is the opposite: one explicit .venv in the project root, tracked
 | Environment managers | 6 (virtualenv, conda, pipenv, uv, pixi, poetry) | 3 (uv, conda, virtualenv) |
 | Default env manager | virtualenv | uv |
 | Dependency files | 5 (requirements.txt, pyproject.toml, environment.yml, Pipfile, pixi.toml) | 3 (pyproject.toml, requirements.txt, environment.yml) |
-| Default Python | 3.10 | 3.12 |
+| Default Python | 3.10 | 3.13 (3.12/3.14 or other) |
 | Conda env location | Global only | Local by default, global optional |
 | Dev dependencies | Mixed with production | Separated |
 | Jupyter kernel | Manual setup | Auto-registered with cleanup |

@@ -42,10 +42,27 @@ description:
   help: "Brief project description (e.g., ML pipeline for customer churn prediction)"
   placeholder: "A short description of the project"
 
+python_version_choice:
+  type: str
+  choices:
+    - "3.12"
+    - "3.13"
+    - "3.14"
+    - other
+  default: "3.13"
+  help: "Python version"
+
+python_version_custom:
+  type: str
+  default: "3.13"
+  when: "{{ python_version_choice == 'other' }}"
+  help: "Other Python version (e.g. 3.10)"
+  placeholder: "3.10"
+
 python_version_number:
   type: str
-  default: "3.12"
-  help: "Python version"
+  default: "{{ python_version_custom if python_version_choice == 'other' else python_version_choice }}"
+  when: false
 
 # Dataset storage - simplified from nested dict
 dataset_storage:
