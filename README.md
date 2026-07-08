@@ -35,6 +35,10 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 | Build versioning | No | Auto-increment on `make install` (opt-out via `SKIP_VERSION_INCREMENT=1`) |
 | Docker support | No | Optional (Dockerfile + Makefile targets) |
 | Git initialization | No | Optional (`git init -b main` post-generation) |
+| CLAUDE.md scaffold | No | Optional (`claude_md=Yes` - AI assistant guidance with make reference) |
+| Agentic resources folder | No | Optional (`scaffold_ai=Yes` - `ai/` for framework and harness resources) |
+| GitHub Actions CI | No | Optional (`github_actions=Yes` - lint + test workflow) |
+| Default make target | First rule | `make` prints help |
 
 **Key enhancements:**
 - **Copier template** - Template updates with `copier update`, answers stored in `.copier-answers.yml`
@@ -51,6 +55,9 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 - **Build versioning** - Auto-increment patch on `make install`; set `SKIP_VERSION_INCREMENT=1` to keep current version during dev iteration
 - **Docker support** - Optional Dockerfile and Makefile targets (`docker_build`, `docker_run`, `docker_push`)
 - **Optional git init** - `git_init=Yes` initializes a `main`-branch repository on project creation
+- **CLAUDE.md scaffold** - `claude_md=Yes` seeds AI assistant guidance: project context, engineering principles, make command reference
+- **Agentic resources** - `scaffold_ai=Yes` creates an `ai/` folder for agentic framework and harness resources
+- **GitHub Actions CI** - `github_actions=Yes` adds a lint + test workflow matched to the chosen environment manager
 
 This template uses [nb_venv_kernels](https://github.com/stellarshenson/nb_venv_kernels) for automatic Jupyter kernel management - your project environments appear as kernels in JupyterLab without manual registration. For conda environments, [nb_conda_kernels](https://github.com/Anaconda-Platform/nb_conda_kernels) is used instead. Both provide automatic kernel discovery and cleanup when environments are removed.
 

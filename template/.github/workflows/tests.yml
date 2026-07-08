@@ -1,0 +1,41 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+{%- if environment_manager == 'conda' %}
+    defaults:
+      run:
+        shell: bash -el {0}
+{%- endif %}
+    steps:
+      - uses: actions/checkout@v4
+{%- if environment_manager == 'uv' %}
+      - uses: astral-sh/setup-uv@v5
+{%- elif environment_manager == 'conda' %}
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+{%- else %}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "{{ python_version_number }}"
+{%- endif %}
+{%- if env_encryption == 'Yes' %}
+      # satisfy the .env prerequisite without prompting for a decryption password
+      - name: Create empty .env
+        run: touch .env
+{%- endif %}
+      - name: Install
+        run: make install SKIP_VERSION_INCREMENT=1
+      - name: Lint
+        run: make lint
+{%- if testing_framework != 'none' %}
+      - name: Test
+        run: make test
+{%- endif %}

@@ -1,8 +1,11 @@
-.PHONY: clean data lint format requirements upgrade build{% if package_repository == 'Yes' %} publish{% endif %} sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve register_environment preflight
+.PHONY: clean data lint format requirements upgrade build install help{% if package_repository == 'Yes' %} publish{% endif %} sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve create_environment remove_environment register_environment increment_version_number preflight{% if docker_support == 'Yes' %} docker_build docker_run docker_push{% endif %}
 
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
+
+# running bare `make` prints the help screen
+.DEFAULT_GOAL := help
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PROJECT_NAME = {{ repo_name }}
@@ -136,17 +139,18 @@ requirements: test_environment
 {%- elif environment_manager == 'virtualenv' %}
 requirements:
 	@echo "$(MSG_PREFIX) installing requirements"
-	$(PYTHON_INTERPRETER) -m pip install -U pip
+	$(PROJECT_DIR)/.venv/bin/pip install -U pip
 {%- if dependency_file == 'requirements.txt' %}
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	$(PROJECT_DIR)/.venv/bin/pip install -r requirements.txt
+	$(PROJECT_DIR)/.venv/bin/pip install -r requirements-dev.txt
 {%- elif dependency_file == 'pyproject.toml' %}
-	pip install -e .
+	$(PROJECT_DIR)/.venv/bin/pip install -e ".[dev]"
 {%- endif %}
 {%- elif environment_manager == 'uv' %}
 requirements:
 	@echo "$(MSG_PREFIX) installing requirements with uv"
 {%- if dependency_file == 'requirements.txt' %}
-	uv $(UV_OPTS) pip install --python $(PROJECT_DIR)/.venv -r requirements.txt
+	uv $(UV_OPTS) pip install --python $(PROJECT_DIR)/.venv -r requirements.txt -r requirements-dev.txt
 {%- elif dependency_file == 'pyproject.toml' %}
 	uv $(UV_OPTS) sync --python $(PROJECT_DIR)/.venv --extra dev
 {%- endif %}
@@ -200,6 +204,8 @@ clean:
 	@find . -type d -name '.pytest_cache' -exec rm -r {} +
 	@echo "$(MSG_PREFIX) removing dist and build directory"
 	@rm -rf build dist
+	@echo "$(MSG_PREFIX) removing logs and tmp directories"
+	@rm -rf logs tmp
 
 {% if env_encryption == 'Yes' -%}
 ## Restore .env from encrypted .env.enc (or create empty)
@@ -257,15 +263,33 @@ format:
 ## Lint using flake8, black, and isort (use `make format` to do formatting)
 lint:
 	@echo "$(MSG_PREFIX) linting the sourcecode"
+{%- if environment_manager == 'conda' %}
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) flake8 src/{{ module_name }}
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) isort --check --diff src/{{ module_name }}
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) black --check src/{{ module_name }}
+{%- elif environment_manager in ['uv', 'virtualenv'] %}
+	$(PROJECT_DIR)/.venv/bin/flake8 src/{{ module_name }}
+	$(PROJECT_DIR)/.venv/bin/isort --check --diff src/{{ module_name }}
+	$(PROJECT_DIR)/.venv/bin/black --check src/{{ module_name }}
+{%- else %}
 	flake8 src/{{ module_name }}
 	isort --check --diff src/{{ module_name }}
 	black --check src/{{ module_name }}
+{%- endif %}
 
 ## Format source code with black and isort
 format:
 	@echo "$(MSG_PREFIX) formatting the sourcecode"
+{%- if environment_manager == 'conda' %}
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) isort src/{{ module_name }}
+	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) black src/{{ module_name }}
+{%- elif environment_manager in ['uv', 'virtualenv'] %}
+	$(PROJECT_DIR)/.venv/bin/isort src/{{ module_name }}
+	$(PROJECT_DIR)/.venv/bin/black src/{{ module_name }}
+{%- else %}
 	isort src/{{ module_name }}
 	black src/{{ module_name }}
+{%- endif %}
 
 {%- endif %}
 
@@ -834,6 +858,8 @@ data: requirements
 	@echo "$(MSG_PREFIX) generating dataset"
 {%- if environment_manager == 'conda' %}
 	conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) $(PYTHON_INTERPRETER) src/{{ module_name }}/dataset.py
+{%- elif environment_manager in ['uv', 'virtualenv'] %}
+	$(PROJECT_DIR)/.venv/bin/python src/{{ module_name }}/dataset.py
 {%- else %}
 	$(PYTHON_INTERPRETER) src/{{ module_name }}/dataset.py
 {%- endif %}

@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.3.11 (2026-07-08) - Makefile env-context fixes and GitHub Actions CI
+
+- Fixed `make data` running bare `python` for uv/virtualenv - now uses the project `.venv/bin/python`
+- Fixed the virtualenv `requirements` target escaping the venv with bare `pip` - now uses `.venv/bin/pip` and installs dev dependencies (matching conda)
+- Fixed flake8+black+isort `lint`/`format` running outside the environment context - now branched per environment manager like ruff
+- Bare `make` now prints help (`.DEFAULT_GOAL := help`)
+- `make clean` now removes `logs/` and `tmp/`
+- New `github_actions` option (default No) - scaffolds `.github/workflows/tests.yml` matched to the environment manager (setup-uv / miniconda / setup-python), running `make install`, `lint`, and `test`
+- Added `[tool.pytest.ini_options] testpaths` to the generated `pyproject.toml`; completed `.PHONY`; refreshed README target lists and feature table
+
 ## v1.3.10 (2026-07-08) - Agentic scaffolding and logs/tmp ignores
 
 - Added `logs/` and `tmp/` to the generated project `.gitignore` - `logs/` for runtime and background-job output, `tmp/` for temporary artefacts

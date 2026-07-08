@@ -16,8 +16,10 @@ make install
 - `make install` - Create environment and install package
 - `make test` - Run tests
 - `make lint` / `make format` - Check / fix code style
+- `make data` - Run the dataset pipeline (`src/{{ module_name }}/dataset.py`)
+- `make upgrade` - Upgrade dependencies to latest versions
 - `make build` - Build distributable wheel
-- `make clean` - Remove compiled files and caches
+- `make clean` - Remove compiled files, caches, logs and tmp
 {%- if docs == 'mkdocs' %}
 - `make docs` / `make docs_serve` - Build / serve documentation
 {%- endif %}

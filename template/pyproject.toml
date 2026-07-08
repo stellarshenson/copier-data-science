@@ -84,6 +84,11 @@ include-package-data = true
 where = ["src"]
 include = ["{{ module_name }}*"]
 exclude = ["tests*"]
+{%- if testing_framework == 'pytest' %}
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+{%- endif %}
 {%- if linting_and_formatting == 'flake8+black+isort' %}
 
 [tool.black]

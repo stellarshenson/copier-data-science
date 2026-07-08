@@ -239,6 +239,14 @@ scaffold_ai:
   default: "No"
   help: "Scaffold an ai/ folder for agentic framework and harness resources"
 
+github_actions:
+  type: str
+  choices:
+    - "No"
+    - "Yes"
+  default: "No"
+  help: "Include GitHub Actions workflow running lint and tests on push"
+
 git_init:
   type: str
   choices:
@@ -276,6 +284,7 @@ _skip_if_exists:
   - docker/
   - CLAUDE.md
   - ai/
+  - .github/
 
 # Post-generation tasks
 # Pass all variables as command-line arguments since extra_env isn't supported
@@ -313,6 +322,7 @@ _tasks:
     --git-init "{{ git_init }}"
     --claude-md "{{ claude_md }}"
     --scaffold-ai "{{ scaffold_ai }}"
+    --github-actions "{{ github_actions }}"
 
 # Answers file for template updates
 _answers_file: .copier-answers.yml
