@@ -284,6 +284,8 @@ def parse_args():
     parser.add_argument("--package-repository-url", default="")
     parser.add_argument("--custom-config", default="")
     parser.add_argument("--git-init", default="No")
+    parser.add_argument("--claude-md", default="No")
+    parser.add_argument("--scaffold-ai", default="No")
     return parser.parse_args()
 
 
@@ -468,6 +470,50 @@ def _do_post_gen():
                     content = template_file.read_text()
                     rendered = Template(content).render(**context)
                     (docker_path / template_file.name).write_text(rendered)
+
+    # Handle CLAUDE.md based on claude_md setting
+    claude_md_path = Path("CLAUDE.md")
+    if args.claude_md == "No":
+        # Remove CLAUDE.md when scaffolding is not selected
+        if claude_md_path.exists():
+            claude_md_path.unlink()
+    elif args.claude_md == "Yes":
+        # Render CLAUDE.md if missing (fresh copy already has it; this covers
+        # enabling during update where copier removes files not in the original).
+        # Render-if-missing preserves user edits on subsequent updates.
+        if not claude_md_path.exists():
+            template_claude = Path(__file__).parent.parent / "template" / "CLAUDE.md"
+            if template_claude.exists():
+                context = {
+                    "module_name": args.module_name,
+                    "python_version_number": args.python_version,
+                    "environment_manager": args.environment_manager,
+                    "env_location": args.env_location,
+                    "env_name": args.env_name,
+                    "include_code_scaffold": args.include_code_scaffold,
+                    "dataset_storage": args.dataset_storage,
+                    "docs": args.docs,
+                    "package_repository": args.package_repository,
+                    "docker_support": args.docker_support,
+                    "jupyter_kernel_support": args.jupyter_kernel_support,
+                    "scaffold_ai": args.scaffold_ai,
+                }
+                rendered = Template(template_claude.read_text()).render(**context)
+                claude_md_path.write_text(rendered)
+
+    # Handle ai/ folder based on scaffold_ai setting
+    # Holds agentic framework and harness resources; only a .gitkeep is scaffolded
+    # since the internal structure depends on the framework the user adopts.
+    ai_path = Path("ai")
+    if args.scaffold_ai == "No":
+        if ai_path.exists():
+            shutil.rmtree(ai_path)
+    elif args.scaffold_ai == "Yes":
+        # Ensure ai/.gitkeep exists (covers enabling during update where copier
+        # removes files not present in the original project)
+        if not ai_path.exists():
+            ai_path.mkdir(parents=True, exist_ok=True)
+            (ai_path / ".gitkeep").write_text("")
 
     # Remove .ipynb_checkpoints if present
     checkpoints_path = Path(".ipynb_checkpoints")

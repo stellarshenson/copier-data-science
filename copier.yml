@@ -223,6 +223,22 @@ package_repository_url:
   help: "Package repository URL (e.g., https://upload.pypi.org/legacy/)"
   placeholder: "https://upload.pypi.org/legacy/"
 
+claude_md:
+  type: str
+  choices:
+    - "No"
+    - "Yes"
+  default: "No"
+  help: "Scaffold a CLAUDE.md with project context and make command reference"
+
+scaffold_ai:
+  type: str
+  choices:
+    - "No"
+    - "Yes"
+  default: "No"
+  help: "Scaffold an ai/ folder for agentic framework and harness resources"
+
 git_init:
   type: str
   choices:
@@ -258,6 +274,8 @@ _skip_if_exists:
   - tests/test_data.py
   - tests/
   - docker/
+  - CLAUDE.md
+  - ai/
 
 # Post-generation tasks
 # Pass all variables as command-line arguments since extra_env isn't supported
@@ -293,6 +311,8 @@ _tasks:
     --package-repository-url "{{ package_repository_url | default('') }}"
     --custom-config "{{ custom_config }}"
     --git-init "{{ git_init }}"
+    --claude-md "{{ claude_md }}"
+    --scaffold-ai "{{ scaffold_ai }}"
 
 # Answers file for template updates
 _answers_file: .copier-answers.yml

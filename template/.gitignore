@@ -1,3 +1,7 @@
+# Logs and temporary working directories
+/logs/
+/tmp/
+
 # Data - ignore contents but keep directory structure via .gitkeep
 /data/*
 !/data/external/

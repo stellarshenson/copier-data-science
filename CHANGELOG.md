@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.10 (2026-07-08) - Agentic scaffolding and logs/tmp ignores
+
+- Added `logs/` and `tmp/` to the generated project `.gitignore` - `logs/` for runtime and background-job output, `tmp/` for temporary artefacts
+- New `claude_md` option (default No) - scaffolds a `CLAUDE.md` with project context, engineering principles, and a make-command reference (`make help`)
+- New `scaffold_ai` option (default No) - scaffolds an `ai/` folder (single `.gitkeep`) for agentic framework and harness resources; internal layout left to the framework
+- Documented `logs/`, `tmp/`, and `ai/` in the generated README and CLAUDE.md
+
 ## v1.3.9 (2026-05-25) - Python version choices
 
 - Changed default Python to 3.13

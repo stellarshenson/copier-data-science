@@ -39,12 +39,17 @@ make install
 - **Data**: Keep `raw/` immutable, use `interim/` for transforms, `processed/` for final datasets
 - **Source code**: Refactor reusable notebook code into `src/{{ module_name }}/` modules
 - **Models**: Store trained models in `models/` with clear naming
+- **Logs**: Write runtime and background-job logs to `logs/` (gitignored); keep a short `logs/README.md` describing each log
+- **Temporary files**: Use `tmp/` for scratch and temporary artefacts (gitignored); nothing here is tracked or permanent
 
 ## Project Organization
 
 ```
 ├── Makefile           <- Makefile with convenience commands
 ├── README.md          <- The top-level README for developers
+{%- if scaffold_ai == 'Yes' %}
+├── ai                 <- Agentic framework and harness resources
+{%- endif %}
 ├── data
 │   ├── external       <- Data from third party sources
 │   ├── interim        <- Intermediate data that has been transformed
@@ -57,8 +62,10 @@ make install
 {%- if docker_support == 'Yes' %}
 ├── docker             <- Docker configuration
 {%- endif %}
+├── logs               <- Runtime and background-job logs (gitignored)
 ├── models             <- Trained and serialized models
 ├── notebooks          <- Jupyter notebooks
+├── tmp                <- Scratch space for temporary artefacts (gitignored)
 ├── pyproject.toml     <- Project configuration and dependencies
 ├── references         <- Data dictionaries, manuals, explanatory materials
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
