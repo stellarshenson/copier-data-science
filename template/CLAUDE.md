@@ -65,8 +65,8 @@ Set `SKIP_VERSION_INCREMENT=1` (e.g. `make install SKIP_VERSION_INCREMENT=1`) to
 
 - **Notebooks** live in `notebooks/`; prefix names with an order number (`1.0-initial-exploration.ipynb`)
 - **Refactor** stable notebook code into `src/{{ module_name }}/` so it can be imported and tested
-- **Data** goes in `data/` (raw, interim, processed, external); the directory layout is tracked via `.gitkeep` while contents stay gitignored
-- **Models** go in `models/`
+- **Data** - do not commit data by default (layout tracked via `.gitkeep`, contents gitignored); only small (about 50 MB), processed, non-reproducible data may be committed. Keep external and large data in cloud storage and record its provenance and location in a `data/` README or `.md` sidecar. See `data/README.md`
+- **Models** - commit only lightweight models we developed or fine-tuned (about 100 MB, case by case), in purpose-named folders (`embedders/`, `classifiers/`, ...), each with a brief `.md` sidecar. Never commit standard third-party models (e.g. Hugging Face) - handle them through model sync (S3). See `models/README.md`
 - **Logs** - `logs/` holds runtime and background-job logs (gitignored); pipe long-running jobs there (`... 2>&1 | tee logs/<name>.log`) and keep a short `logs/README.md` noting what each log tracks
 - **Temporary files** - `tmp/` is scratch space for temporary artefacts (gitignored); nothing there is tracked or permanent, so never write anything you need to keep
 {%- if scaffold_ai == 'Yes' %}

@@ -38,9 +38,9 @@ make install
 ## Best Practices
 
 - **Notebooks**: Name with number prefix, initials, description - `01-jqp-data-exploration.ipynb`
-- **Data**: Keep `raw/` immutable, use `interim/` for transforms, `processed/` for final datasets
+- **Data**: Keep `raw/` immutable, `interim/` for transforms, `processed/` for final datasets. Do not commit data by default - only small (about 50 MB), processed, non-reproducible data belongs in git. Keep external and large data in cloud storage and record every dataset's provenance and location in a `data/` README or `.md` sidecar so it can be re-downloaded. See [data/README.md](data/README.md)
 - **Source code**: Refactor reusable notebook code into `src/{{ module_name }}/` modules
-- **Models**: Store trained models in `models/` with clear naming
+- **Models**: Commit only lightweight models you developed or fine-tuned (about 100 MB, case by case), grouped in purpose-named folders (`embedders/`, `classifiers/`, ...) each with a brief `.md` sidecar. Never commit standard third-party models (e.g. Hugging Face) - move them through model sync (S3). See [models/README.md](models/README.md)
 - **Logs**: Write runtime and background-job logs to `logs/` (gitignored); keep a short `logs/README.md` describing each log
 - **Temporary files**: Use `tmp/` for scratch and temporary artefacts (gitignored); nothing here is tracked or permanent
 

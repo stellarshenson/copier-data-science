@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.12 (2026-07-11) - Data and model repository-inclusion rules
+
+- Documented the policy for what data and models belong in a generated project's git repo
+- Data: not committed by default; only small (~50 MB) processed, non-reproducible data may be committed - external and large data stays in cloud storage with a `README` or `.md` sidecar recording provenance and location for re-download
+- Models: commit only lightweight self-developed or fine-tuned models (~100 MB, case by case) in purpose-named folders (`embedders/`, `classifiers/`, ...) each with a brief `.md` sidecar; standard third-party models (e.g. Hugging Face) are never committed and move through model sync (S3)
+- New `data/README.md` and `models/README.md` in the generated project; rules also summarized in the project `README.md` and (when enabled) `CLAUDE.md`
+- Added `!/data/README.md` to the generated `.gitignore` so the data README is trackable; both READMEs added to `_skip_if_exists` so user-authored provenance survives `copier update`
+
 ## v1.3.11 (2026-07-08) - Makefile env-context fixes and GitHub Actions CI
 
 - Fixed `make data` running bare `python` for uv/virtualenv - now uses the project `.venv/bin/python`

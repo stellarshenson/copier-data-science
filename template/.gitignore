@@ -4,6 +4,7 @@
 
 # Data - ignore contents but keep directory structure via .gitkeep
 /data/*
+!/data/README.md
 !/data/external/
 /data/external/*
 !/data/external/.gitkeep
