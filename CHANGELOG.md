@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.3.13 (2026-07-13) - Experiment and data-layout conventions
+
+- Documented how experiments and data are organized in a generated project
+- `src/experiments/` is a Python module for experiment code and scripts - source-only, not shipped in the wheel, and safe to delete; keeps scripts in one place instead of scattered across the project
+- Experiment notebooks go in `notebooks/experiments/` and can import shared code from `src/experiments/`; results in `reports/experiments/`, experiment data in `data/experiments/`, kept papers and digests in `references/papers/` (all created as needed)
+- Data: rewrote the `.gitignore` data block to a single `/data/**` pattern that keeps the folder tree and all Markdown (README indexes + file sidecars) while ignoring data files; each data folder now carries a `README.md` index and every large file (dump, parquet) takes a `<file>.md` sidecar
+- DB dumps go under `data/external/dumps/` (raw) or `data/interim/dumps/` (processed), created as needed
+- `_skip_if_exists` uses `data/**/README.md` so user-maintained data indexes survive `copier update`
+
 ## v1.3.12 (2026-07-11) - Data and model repository-inclusion rules
 
 - Documented the policy for what data and models belong in a generated project's git repo
