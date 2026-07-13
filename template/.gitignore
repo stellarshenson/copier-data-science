@@ -2,21 +2,12 @@
 /logs/
 /tmp/
 
-# Data - ignore contents but keep directory structure via .gitkeep
-/data/*
-!/data/README.md
-!/data/external/
-/data/external/*
-!/data/external/.gitkeep
-!/data/interim/
-/data/interim/*
-!/data/interim/.gitkeep
-!/data/processed/
-/data/processed/*
-!/data/processed/.gitkeep
-!/data/raw/
-/data/raw/*
-!/data/raw/.gitkeep
+# Data - keep the folder tree and Markdown (README indexes + file sidecars);
+# data files themselves stay out of git
+/data/**
+!/data/**/
+!/data/**/*.md
+!/data/**/.gitkeep
 
 # Mac OS-specific storage files
 .DS_Store

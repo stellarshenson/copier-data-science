@@ -63,12 +63,14 @@ Set `SKIP_VERSION_INCREMENT=1` (e.g. `make install SKIP_VERSION_INCREMENT=1`) to
 
 ## Data Science Conventions
 
-- **Notebooks** live in `notebooks/`; prefix names with an order number (`1.0-initial-exploration.ipynb`)
-- **Refactor** stable notebook code into `src/{{ module_name }}/` so it can be imported and tested
-- **Data** - do not commit data by default (layout tracked via `.gitkeep`, contents gitignored); only small (about 50 MB), processed, non-reproducible data may be committed. Keep external and large data in cloud storage and record its provenance and location in a `data/` README or `.md` sidecar. See `data/README.md`
-- **Models** - commit only lightweight models we developed or fine-tuned (about 100 MB, case by case), in purpose-named folders (`embedders/`, `classifiers/`, ...), each with a brief `.md` sidecar. Never commit standard third-party models (e.g. Hugging Face) - handle them through model sync (S3). See `models/README.md`
-- **Logs** - `logs/` holds runtime and background-job logs (gitignored); pipe long-running jobs there (`... 2>&1 | tee logs/<name>.log`) and keep a short `logs/README.md` noting what each log tracks
-- **Temporary files** - `tmp/` is scratch space for temporary artefacts (gitignored); nothing there is tracked or permanent, so never write anything you need to keep
+- **Notebooks** - in `notebooks/`, numbered (`1.0-initial-exploration.ipynb`); import from `src/{{ module_name }}/` instead of redefining code in cells; keep only exploratory or one-off code here
+- **Refactor** stable notebook and experiment code into `src/{{ module_name }}/`
+- **Experiments** - code and harnesses in `src/experiments/` (create as needed; source-only, not shipped); results in `reports/experiments/`; papers and digests in `references/papers/`; graduate stable code into the module
+- **Scripts** - no root `scripts/`; use `src/experiments/`
+- **Data** - not committed by default (tree and Markdown tracked, data files ignored); only small (~50 MB), processed, non-reproducible data may be committed. Every data folder keeps a `README.md` index; every large file (dump, parquet) gets a `<file>.md` sidecar. DB dumps go under `data/external/dumps/` (raw) or `data/interim/dumps/` (processed), created as needed. See `data/README.md`
+- **Models** - only lightweight self-developed or fine-tuned models (~100 MB, case by case), in purpose-named folders (`embedders/`, `classifiers/`), each with a `.md` sidecar; never commit third-party models (Hugging Face) - use model sync (S3). See `models/README.md`
+- **Logs** - `logs/` holds runtime and job logs (gitignored); `... 2>&1 | tee logs/<name>.log`, with a short `logs/README.md`
+- **Temporary files** - `tmp/` is gitignored throwaway scratch (subfolders like `tmp/scripts/`, `tmp/data/` are fine); never keep anything here
 {%- if scaffold_ai == 'Yes' %}
 - **Agentic resources** - `ai/` holds agentic framework and harness resources (skills, hooks, workflow files); its internal layout follows whatever framework the project adopts
 {%- endif %}

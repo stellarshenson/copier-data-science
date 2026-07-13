@@ -278,7 +278,7 @@ _exclude:
 # tests/ and docker/ can be created by post_gen during updates (from none to enabled)
 _skip_if_exists:
   - README.md
-  - data/README.md
+  - data/**/README.md
   - models/README.md
   - .env
   - tests/test_data.py

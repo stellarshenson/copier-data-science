@@ -37,12 +37,13 @@ make install
 
 ## Best Practices
 
-- **Notebooks**: Name with number prefix, initials, description - `01-jqp-data-exploration.ipynb`
-- **Data**: Keep `raw/` immutable, `interim/` for transforms, `processed/` for final datasets. Do not commit data by default - only small (about 50 MB), processed, non-reproducible data belongs in git. Keep external and large data in cloud storage and record every dataset's provenance and location in a `data/` README or `.md` sidecar so it can be re-downloaded. See [data/README.md](data/README.md)
-- **Source code**: Refactor reusable notebook code into `src/{{ module_name }}/` modules
-- **Models**: Commit only lightweight models you developed or fine-tuned (about 100 MB, case by case), grouped in purpose-named folders (`embedders/`, `classifiers/`, ...) each with a brief `.md` sidecar. Never commit standard third-party models (e.g. Hugging Face) - move them through model sync (S3). See [models/README.md](models/README.md)
-- **Logs**: Write runtime and background-job logs to `logs/` (gitignored); keep a short `logs/README.md` describing each log
-- **Temporary files**: Use `tmp/` for scratch and temporary artefacts (gitignored); nothing here is tracked or permanent
+- **Notebooks**: numbered (`01-jqp-data-exploration.ipynb`); import from `src/{{ module_name }}/` instead of redefining code in cells; keep only exploratory or one-off code here
+- **Source code**: graduate stable notebook and experiment code into `src/{{ module_name }}/`
+- **Experiments**: code and harnesses in `src/experiments/` (create as needed; source-only, not shipped); results in `reports/experiments/`; papers and digests in `references/papers/`; no root `scripts/` - use `src/experiments/`
+- **Data**: not committed by default; only small (~50 MB), processed, non-reproducible data belongs in git. Every data folder keeps a `README.md` index; every large file (dump, parquet) gets a `<file>.md` sidecar. DB dumps go under `data/external/dumps/` (raw) or `data/interim/dumps/` (processed), created as needed. See [data/README.md](data/README.md)
+- **Models**: only lightweight self-developed or fine-tuned models (~100 MB, case by case) in purpose-named folders (`embedders/`, `classifiers/`), each with a `.md` sidecar; never commit third-party models (Hugging Face) - use model sync (S3). See [models/README.md](models/README.md)
+- **Logs**: runtime and job logs in `logs/` (gitignored), with a short `logs/README.md`
+- **Temporary files**: `tmp/` for throwaway work (gitignored); never keep anything here
 
 ## Project Organization
 
@@ -52,7 +53,7 @@ make install
 {%- if scaffold_ai == 'Yes' %}
 ├── ai                 <- Agentic framework and harness resources
 {%- endif %}
-├── data
+├── data               <- Each folder keeps a README.md index; large files get a .md sidecar
 │   ├── external       <- Data from third party sources
 │   ├── interim        <- Intermediate data that has been transformed
 │   ├── processed      <- The final, canonical data sets for modeling
@@ -67,7 +68,7 @@ make install
 ├── logs               <- Runtime and background-job logs (gitignored)
 ├── models             <- Trained and serialized models
 ├── notebooks          <- Jupyter notebooks
-├── tmp                <- Scratch space for temporary artefacts (gitignored)
+├── tmp                <- Throwaway scratch: temp scripts, notebooks, data (gitignored)
 ├── pyproject.toml     <- Project configuration and dependencies
 ├── references         <- Data dictionaries, manuals, explanatory materials
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.

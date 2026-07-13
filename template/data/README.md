@@ -1,23 +1,18 @@
 # Data
 
-Guidance for what belongs in `data/` and what stays out of the repository.
+What belongs in `data/` and what stays out of git.
 
-## What to commit
+## Rules
 
-- **Do not commit data by default** - the directory layout is tracked via `.gitkeep`, contents stay gitignored
-- **Small, processed, non-reproducible data may be committed** - up to about 50 MB, and only when it cannot be regenerated cheaply from source
-- **Everything else stays external** - raw dumps, large datasets, and anything reproducible from a pipeline or a download
-
-## External data
-
-Most data lives outside the repository - in cloud storage (S3, Azure, GCS) or at a public source. For every external dataset, commit a short Markdown description so the data can be located and re-downloaded later:
-
-- A `README.md` in the relevant `data/` subfolder, or a `<dataset>.md` sidecar placed where the data would live
-- Record what the data is, its provenance (origin, license, date), and its exact location (S3 URI, bucket, URL) together with the command needed to fetch it (for example `make sync_data_down` when cloud storage is configured)
+- Not committed by default - folder tree and Markdown tracked, data files gitignored
+- Only small (~50 MB), processed, non-reproducible data may be committed
+- External and large data lives in cloud storage (S3, Azure, GCS); fetch with `make sync_data_down` when configured
+- Every data folder keeps a `README.md` index - one line per dataset: provenance + location
+- Every large file (dump, parquet) gets a `<file>.md` sidecar - contents, origin, how to regenerate or re-download
 
 ## Layout
 
-- `raw/` - original, immutable dumps; never edit in place
-- `interim/` - intermediate, transformed data
+- `raw/` - original, immutable; never edit in place
+- `interim/` - transformed data; processed DB dumps under `interim/dumps/`
 - `processed/` - final, canonical datasets for modeling
-- `external/` - data from third-party sources
+- `external/` - third-party sources; raw DB dumps under `external/dumps/`
