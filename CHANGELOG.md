@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.14 (2026-07-23) - Remove dead release workflow
+
+- Removed `.github/workflows/release.yml` - the stale cookiecutter-era PyPI publish workflow, broken since the v1.0.61 copier migration that deleted the `ccds` module
+- It referenced `import ccds`, a missing `dev-requirements.txt`, and a non-existent `make dist` target, and used deprecated `::set-output` and old action pins
+- The template ships via `git tag` / GitHub URL (no PyPI package; `/release` never creates a GitHub Release), so the workflow was dormant as well as broken
+- CI is now just the two live workflows: `tests.yml` and `integration-tests.yml`
+
 ## v1.3.13 (2026-07-13) - Experiment and data-layout conventions
 
 - Documented how experiments and data are organized in a generated project
