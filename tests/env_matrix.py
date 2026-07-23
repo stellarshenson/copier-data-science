@@ -27,7 +27,6 @@ ALWAYS_PRESENT = [
     "reports/figures/.gitkeep",
     "models/.gitkeep",
     "models/README.md",
-    "src/experiments/__init__.py",
 ]
 
 # Environment specification matrix

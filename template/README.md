@@ -39,7 +39,7 @@ make install
 
 - **Notebooks**: numbered (`01-jqp-data-exploration.ipynb`); import from `src/{{ module_name }}/` instead of redefining code in cells; keep only exploratory or one-off code here
 - **Source code**: graduate stable notebook and experiment code into `src/{{ module_name }}/`
-- **Experiments**: experiment code and scripts in `src/experiments/` (a Python module, source-only, not shipped, safe to delete) - keeps scripts in one place instead of scattered across the project, so experiment notebooks in `notebooks/experiments/` can import unified, shared code from it; results in `reports/experiments/`, experiment data in `data/experiments/`; papers and digests in `references/papers/`
+- **Experiments**: experiment code and scripts in `src/experiments/` (created as needed, source-only, not shipped, safe to delete) - keeps scripts in one place instead of scattered across the project, so experiment notebooks in `notebooks/experiments/` can import unified, shared code from it; results in `reports/experiments/`, experiment data in `data/experiments/`; papers and digests in `references/papers/`
 - **Data**: not committed by default; only small (~50 MB), processed, non-reproducible data belongs in git. Every data folder keeps a `README.md` index; every large file (dump, parquet) gets a `<file>.md` sidecar. DB dumps go under `data/external/dumps/` (raw) or `data/interim/dumps/` (processed), created as needed. See [data/README.md](data/README.md)
 - **Models**: only lightweight self-developed or fine-tuned models (~100 MB, case by case) in purpose-named folders (`embedders/`, `classifiers/`), each with a `.md` sidecar; never commit third-party models (Hugging Face) - use model sync (S3). See [models/README.md](models/README.md)
 - **Logs**: runtime and job logs in `logs/` (gitignored), with a short `logs/README.md`
@@ -81,14 +81,13 @@ make install
 {%- endif %}
 ├── tests              <- Test files
 └── src
-    ├── {{ module_name }}   <- Source code for this project
-    │   ├── __init__.py
-    │   ├── config.py      <- Configuration variables
-    │   ├── dataset.py     <- Data download/generation scripts
-    │   ├── features.py    <- Feature engineering code
-    │   ├── modeling
-    │   │   ├── predict.py <- Model inference
-    │   │   └── train.py   <- Model training
-    │   └── plots.py       <- Visualization code
-    └── experiments        <- Experiment code and scripts (source-only, not shipped)
+    └── {{ module_name }}   <- Source code for this project
+        ├── __init__.py
+        ├── config.py      <- Configuration variables
+        ├── dataset.py     <- Data download/generation scripts
+        ├── features.py    <- Feature engineering code
+        ├── modeling
+        │   ├── predict.py <- Model inference
+        │   └── train.py   <- Model training
+        └── plots.py       <- Visualization code
 ```

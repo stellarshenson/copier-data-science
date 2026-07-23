@@ -65,7 +65,7 @@ Set `SKIP_VERSION_INCREMENT=1` (e.g. `make install SKIP_VERSION_INCREMENT=1`) to
 
 - **Notebooks** - in `notebooks/`, numbered (`1.0-initial-exploration.ipynb`); import from `src/{{ module_name }}/` instead of redefining code in cells; keep only exploratory or one-off code here
 - **Refactor** stable notebook and experiment code into `src/{{ module_name }}/`
-- **Experiments** - experiment code and scripts in `src/experiments/` (a Python module, source-only, not shipped, safe to delete); results in `reports/experiments/`; papers and digests in `references/papers/`; graduate stable code into the module
+- **Experiments** - experiment code and scripts in `src/experiments/` (created as needed, source-only, not shipped, safe to delete); results in `reports/experiments/`; papers and digests in `references/papers/`; graduate stable code into the module
 - **Scripts** - no root `scripts/`; use `src/experiments/`
 - **Data** - not committed by default (tree and Markdown tracked, data files ignored); only small (~50 MB), processed, non-reproducible data may be committed. Every data folder keeps a `README.md` index; every large file (dump, parquet) gets a `<file>.md` sidecar. DB dumps go under `data/external/dumps/` (raw) or `data/interim/dumps/` (processed), created as needed. See `data/README.md`
 - **Models** - only lightweight self-developed or fine-tuned models (~100 MB, case by case), in purpose-named folders (`embedders/`, `classifiers/`), each with a `.md` sidecar; never commit third-party models (Hugging Face) - use model sync (S3). See `models/README.md`

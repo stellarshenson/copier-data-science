@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.16 (2026-07-23) - Experiments folder documented, not scaffolded
+
+- `src/experiments/` is no longer created by the template - it is described in `README.md` and `CLAUDE.md` and created as needed
+- Removed `template/src/experiments/__init__.py`; a generated project's `src/` now contains only the project module
+- Reworded the Experiments bullet from "a Python module" to "created as needed" (still source-only, not shipped, safe to delete)
+- Dropped `experiments` from the README Project Organization tree, matching how `reports/experiments/`, `references/papers/`, and `data/experiments/` are already documented-only
+- Reverted the matching test expectations added in v1.3.15 (`expected_dirs`, `ALWAYS_PRESENT`)
+
 ## v1.3.15 (2026-07-23) - Fix test suite after data/experiments restructure
 
 - Fixed the `tests` CI workflow, which had failed on every `test_copier` config since the v1.3.12/v1.3.13 template changes
