@@ -101,6 +101,7 @@ def verify_folders(root, config):
         "reports/figures",
         "src",
         f"src/{config['module_name']}",
+        "src/experiments",
     ]
 
     if config["include_code_scaffold"] == "Yes":

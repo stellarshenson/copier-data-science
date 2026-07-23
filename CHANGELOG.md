@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.15 (2026-07-23) - Fix test suite after data/experiments restructure
+
+- Fixed the `tests` CI workflow, which had failed on every `test_copier` config since the v1.3.12/v1.3.13 template changes
+- `test_copier.py` and `env_matrix.py` assert the exact folder and file set of a rendered project; they were never synced with the data-README restructure (v1.3.12) or the new `src/experiments/` module (v1.3.13)
+- Added `src/experiments` to `expected_dirs`, and in `ALWAYS_PRESENT` swapped the four `data/*/.gitkeep` for the `data*/README.md` indexes, added `models/README.md`, and added `src/experiments/__init__.py`
+- No template changes; verified against a clean-clone (CI-equivalent) run - full config matrix and a makefile-executing config both green
+
 ## v1.3.14 (2026-07-23) - Remove dead release workflow
 
 - Removed `.github/workflows/release.yml` - the stale cookiecutter-era PyPI publish workflow, broken since the v1.0.61 copier migration that deleted the `ccds` module

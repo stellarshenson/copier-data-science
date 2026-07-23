@@ -15,16 +15,19 @@ ALWAYS_PRESENT = [
     "pyproject.toml",  # Always present for metadata/tools (deps section conditional)
     ".env",
     ".gitignore",
-    "data/external/.gitkeep",
-    "data/interim/.gitkeep",
-    "data/processed/.gitkeep",
-    "data/raw/.gitkeep",
+    "data/README.md",
+    "data/external/README.md",
+    "data/interim/README.md",
+    "data/processed/README.md",
+    "data/raw/README.md",
     "docs/.gitkeep",
     "notebooks/.gitkeep",
     "references/.gitkeep",
     "reports/.gitkeep",
     "reports/figures/.gitkeep",
     "models/.gitkeep",
+    "models/README.md",
+    "src/experiments/__init__.py",
 ]
 
 # Environment specification matrix
