@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.3.17 (2026-07-24) - Sidecar naming drops original extension
+
+- Clarified in `template/README.md` and `template/CLAUDE.md` that a large-file Markdown sidecar is named without the original extension - `sales.parquet` → `sales.md`, not `sales.parquet.md`
+- Removes the ambiguity of the previous `<file>.md` notation
+
 ## v1.3.16 (2026-07-23) - Experiments folder documented, not scaffolded
 
 - `src/experiments/` is no longer created by the template - it is described in `README.md` and `CLAUDE.md` and created as needed
