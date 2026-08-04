@@ -25,6 +25,69 @@ def get_copier_cmd():
     raise RuntimeError("copier not found in .venv/bin or system PATH")
 
 
+SCRIPTS_DIR = REPO_ROOT / "scripts"
+
+# Minimal required argument set for a direct post_gen.py invocation. Update scenarios
+# cannot be reached through `copier copy`, so the tests that exercise them drive the
+# script the same way copier's _tasks step does.
+POST_GEN_BASE = [
+    "--project-name", "p",
+    "--repo-name", "r",
+    "--env-name", "p",
+    "--module-name", "m",
+    "--author-name", "a",
+    "--description", "d",
+    "--python-version", "3.13",
+    "--dataset-storage", "none",
+    "--environment-manager", "uv",
+    "--dependency-file", "pyproject.toml",
+    "--pydata-packages", "none",
+    "--testing-framework", "pytest",
+    "--linting-and-formatting", "ruff",
+    "--open-source-license", "MIT",
+    "--docs", "none",
+    "--include-code-scaffold", "Yes",
+    "--jupyter-kernel-support", "Yes",
+    "--env-encryption", "No",
+]  # fmt: skip
+
+
+# `-d` values matching POST_GEN_BASE for every variable template/CLAUDE.md reads, so a
+# project generated with them renders byte-identically to a later direct post_gen run.
+# Without this the "is the file still untouched template output" comparison can never
+# match, and the tests that rely on it would pass vacuously.
+POST_GEN_MATCHING_DATA = [
+    "project_name=p",
+    "repo_name=r",
+    "env_name=p",
+    "module_name=m",
+    "environment_manager=uv",
+    "env_location=local",
+    "dependency_file=pyproject.toml",
+    "python_version_choice=3.13",
+    "dataset_storage=none",
+    "docs=none",
+    "include_code_scaffold=Yes",
+    "jupyter_kernel_support=Yes",
+    "package_repository=No",
+    "docker_support=No",
+    "scaffold_agents=No",
+]
+
+
+def run_post_gen(project_path, *extra, operation="update"):
+    """Run post_gen.py inside project_path, defaulting to a copier UPDATE."""
+    return subprocess.run(
+        [sys.executable, str(SCRIPTS_DIR / "post_gen.py")]
+        + POST_GEN_BASE
+        + ["--copier-operation", operation]
+        + list(extra),
+        cwd=project_path,
+        capture_output=True,
+        text=True,
+    )
+
+
 default_args = {
     "project_name": "my_test_project",
     "repo_name": "my-test-repo",

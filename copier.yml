@@ -1,5 +1,9 @@
 # Copier configuration for copier-data-science template
 
+# 9.6.0 introduced the _copier_operation variable, which post_gen.py relies on to tell a
+# fresh copy from an update; older copier would silently take the wrong branch
+_min_copier_version: "9.6.0"
+
 _subdirectory: template
 
 # Process all files as Jinja templates (not just .jinja files)
@@ -223,21 +227,24 @@ package_repository_url:
   help: "Package repository URL (e.g., https://upload.pypi.org/legacy/)"
   placeholder: "https://upload.pypi.org/legacy/"
 
-claude_md:
+ai_assistant:
   type: str
   choices:
-    - "No"
-    - "Yes"
-  default: "No"
-  help: "Scaffold a CLAUDE.md with project context and make command reference"
+    - "none"
+    - "claude"
+    - "codex"
+    - "gemini"
+    - "generic"
+  default: "none"
+  help: "AI assistant support - project instructions file and internal resources folder"
 
-scaffold_ai:
+scaffold_agents:
   type: str
   choices:
     - "No"
     - "Yes"
   default: "No"
-  help: "Scaffold an ai/ folder for agentic framework and harness resources"
+  help: "Scaffold an agents/ folder for deployable agentic resources (workflows, exported skills)"
 
 github_actions:
   type: str
@@ -280,12 +287,28 @@ _skip_if_exists:
   - README.md
   - data/**/README.md
   - models/README.md
+  - notebooks/README.md
+  - references/README.md
+  - docs/README.md
   - .env
   - tests/test_data.py
   - tests/
   - docker/
   - CLAUDE.md
-  - ai/
+  # The assistant files and folders are created by post_gen, never rendered by copier, so
+  # these entries do nothing at render time. They are still load-bearing on update:
+  # copier feeds every _skip_if_exists match to `git apply --exclude`, and the update
+  # patch runs AFTER the tasks. Without them the patch restores the very files post_gen
+  # just deleted when switching assistant, leaving a switched-away tool still being read.
+  - .claude/
+  - AGENTS.md
+  - GEMINI.md
+  - .codex/
+  - .gemini/
+  - .agents/
+
+  # Ordinary rendered template paths - skipped at render time so user edits survive
+  - agents/
   - .github/
 
 # Post-generation tasks
@@ -322,8 +345,9 @@ _tasks:
     --package-repository-url "{{ package_repository_url | default('') }}"
     --custom-config "{{ custom_config }}"
     --git-init "{{ git_init }}"
-    --claude-md "{{ claude_md }}"
-    --scaffold-ai "{{ scaffold_ai }}"
+    --copier-operation "{{ _copier_operation }}"
+    --ai-assistant "{{ ai_assistant }}"
+    --scaffold-agents "{{ scaffold_agents }}"
     --github-actions "{{ github_actions }}"
 
 # Answers file for template updates

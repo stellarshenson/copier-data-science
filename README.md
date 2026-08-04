@@ -35,8 +35,8 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 | Build versioning | No | Auto-increment on `make install` (opt-out via `SKIP_VERSION_INCREMENT=1`) |
 | Docker support | No | Optional (Dockerfile + Makefile targets) |
 | Git initialization | No | Optional (`git init -b main` post-generation) |
-| CLAUDE.md scaffold | No | Optional (`claude_md=Yes` - AI assistant guidance with make reference) |
-| Agentic resources folder | No | Optional (`scaffold_ai=Yes` - `ai/` for framework and harness resources) |
+| AI assistant support | none | Optional (`ai_assistant=claude\|codex\|gemini\|generic` - instructions file plus internal folder) |
+| Agentic resources folder | No | Optional (`scaffold_agents=Yes` - `agents/` for deployable workflows and exported skills) |
 | GitHub Actions CI | No | Optional (`github_actions=Yes` - lint + test workflow) |
 | Default make target | First rule | `make` prints help |
 
@@ -55,8 +55,8 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 - **Build versioning** - Auto-increment patch on `make install`; set `SKIP_VERSION_INCREMENT=1` to keep current version during dev iteration
 - **Docker support** - Optional Dockerfile and Makefile targets (`docker_build`, `docker_run`, `docker_push`)
 - **Optional git init** - `git_init=Yes` initializes a `main`-branch repository on project creation
-- **CLAUDE.md scaffold** - `claude_md=Yes` seeds AI assistant guidance: project context, engineering principles, make command reference
-- **Agentic resources** - `scaffold_ai=Yes` creates an `ai/` folder for agentic framework and harness resources
+- **AI assistant support** - `ai_assistant` seeds project instructions and an internal resources folder, placed where the chosen tool reads them: `claude` → `.claude/CLAUDE.md`, `codex` → `AGENTS.md` + `.codex/`, `gemini` → `GEMINI.md` + `.gemini/`, `generic` → `AGENTS.md` + `.agents/`
+- **Agentic resources** - `scaffold_agents=Yes` creates an `agents/` folder for deployable agentic resources (workflows, exported skills)
 - **GitHub Actions CI** - `github_actions=Yes` adds a lint + test workflow matched to the chosen environment manager
 
 This template uses [nb_venv_kernels](https://github.com/stellarshenson/nb_venv_kernels) for automatic Jupyter kernel management - your project environments appear as kernels in JupyterLab without manual registration. For conda environments, [nb_conda_kernels](https://github.com/Anaconda-Platform/nb_conda_kernels) is used instead. Both provide automatic kernel discovery and cleanup when environments are removed.
@@ -113,26 +113,31 @@ The directory structure of your new project will look something like this (depen
 │   ├── processed      <- The final, canonical data sets for modeling
 │   └── raw            <- The original, immutable data dump
 │
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
+├── docs               <- Project documentation: recipes, experiments, SOTA, acceptance criteria
 ├── models             <- Trained and serialized models, model predictions, or model summaries
-├── notebooks          <- Jupyter notebooks (naming: `01-initials-description.ipynb`)
-├── references         <- Data dictionaries, manuals, and all other explanatory materials
+├── notebooks          <- Jupyter notebooks, organized in task-specific folders
+├── references         <- External material: data descriptions, papers, manuals
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
 │   └── figures        <- Generated graphics and figures to be used in reporting
+│
+├── agents             <- Optional: deployable agentic resources (workflows, exported skills)
+├── .claude/CLAUDE.md  <- Optional: AI assistant instructions; AGENTS.md or GEMINI.md
+│                         at the root for codex, generic or gemini
 │
 ├── environment.yml    <- conda only: development dependencies
 ├── requirements-dev.txt <- virtualenv only: development dependencies
 │
-└── lib_<project_name>/  <- Source code module (installable with pip install -e .)
-    ├── __init__.py
-    ├── config.py        <- Store useful variables and configuration
-    ├── dataset.py       <- Scripts to download or generate data
-    ├── features.py      <- Code to create features for modeling
-    ├── plots.py         <- Code to create visualizations
-    └── modeling/
+└── src
+    └── <module_name>/   <- Source code module (installable with pip install -e .)
         ├── __init__.py
-        ├── predict.py   <- Code to run model inference with trained models
-        └── train.py     <- Code to train models
+        ├── config.py        <- Store useful variables and configuration
+        ├── dataset.py       <- Scripts to download or generate data
+        ├── features.py      <- Code to create features for modeling
+        ├── plots.py         <- Code to create visualizations
+        └── modeling/
+            ├── __init__.py
+            ├── predict.py   <- Code to run model inference with trained models
+            └── train.py     <- Code to train models
 ```
 
 ## Upstream

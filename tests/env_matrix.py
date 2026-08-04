@@ -21,8 +21,11 @@ ALWAYS_PRESENT = [
     "data/processed/README.md",
     "data/raw/README.md",
     "docs/.gitkeep",
+    "docs/README.md",
     "notebooks/.gitkeep",
+    "notebooks/README.md",
     "references/.gitkeep",
+    "references/README.md",
     "reports/.gitkeep",
     "reports/figures/.gitkeep",
     "models/.gitkeep",
@@ -223,7 +226,6 @@ def get_expected_files(config: dict) -> list:
         expected.extend(
             [
                 "docs/mkdocs.yml",
-                "docs/README.md",
                 "docs/docs/index.md",
                 "docs/docs/getting-started.md",
             ]

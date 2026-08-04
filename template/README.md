@@ -37,11 +37,13 @@ make install
 
 ## Best Practices
 
-- **Notebooks**: numbered (`01-jqp-data-exploration.ipynb`); import from `src/{{ module_name }}/` instead of redefining code in cells; keep only exploratory or one-off code here
+- **Notebooks**: organized in task-specific folders (`exploration/`, `training/`, `evaluation/`) rather than a flat list, numbered in execution order inside each (`01-data-exploration.ipynb`); import from `src/{{ module_name }}/` instead of redefining code in cells; keep only exploratory or one-off code here. See [notebooks/README.md](notebooks/README.md)
 - **Source code**: graduate stable notebook and experiment code into `src/{{ module_name }}/`
 - **Experiments**: experiment code and scripts in `src/experiments/` (created as needed, source-only, not shipped, safe to delete) - keeps scripts in one place instead of scattered across the project, so experiment notebooks in `notebooks/experiments/` can import unified, shared code from it; results in `reports/experiments/`, experiment data in `data/experiments/`; papers and digests in `references/papers/`
 - **Data**: not committed by default; only small (~50 MB), processed, non-reproducible data belongs in git. Every data folder keeps a `README.md` index; every large file (dump, parquet) gets a `<name>.md` sidecar named without the original extension (`sales.parquet` → `sales.md`, not `sales.parquet.md`). DB dumps go under `data/external/dumps/` (raw) or `data/interim/dumps/` (processed), created as needed. See [data/README.md](data/README.md)
 - **Models**: only lightweight self-developed or fine-tuned models (~100 MB, case by case) in purpose-named folders (`embedders/`, `classifiers/`), each with a `.md` sidecar; never commit third-party models (Hugging Face) - use model sync (S3). See [models/README.md](models/README.md)
+- **Documentation**: `docs/` holds the project's own documentation - dataset and model recipes, exploration and scientific method walkthrough, experiments, SOTA solution, acceptance criteria, defects. See [docs/README.md](docs/README.md)
+- **References**: `references/` holds material brought in from outside the project - data descriptions and dictionaries, papers and digests in `references/papers/`, manuals and API docs. See [references/README.md](references/README.md)
 - **Logs**: runtime and job logs in `logs/` (gitignored), with a short `logs/README.md`
 - **Temporary files**: `tmp/` for throwaway work (gitignored); never keep anything here
 
@@ -50,8 +52,20 @@ make install
 ```
 ├── Makefile           <- Makefile with convenience commands
 ├── README.md          <- The top-level README for developers
-{%- if scaffold_ai == 'Yes' %}
-├── ai                 <- Agentic framework and harness resources
+{%- if ai_assistant == 'claude' %}
+├── .claude            <- Project instructions (CLAUDE.md) and internal assistant resources
+{%- elif ai_assistant == 'codex' %}
+├── AGENTS.md          <- Project instructions for Codex
+├── .codex             <- Internal assistant resources
+{%- elif ai_assistant == 'gemini' %}
+├── GEMINI.md          <- Project instructions for Gemini CLI
+├── .gemini            <- Internal assistant resources
+{%- elif ai_assistant == 'generic' %}
+├── AGENTS.md          <- Project instructions (AGENTS.md standard)
+├── .agents            <- Internal assistant resources
+{%- endif %}
+{%- if scaffold_agents == 'Yes' %}
+├── agents             <- Deployable agentic resources (workflows, exported skills)
 {%- endif %}
 ├── data               <- Each folder keeps a README.md index; large files get a .md sidecar
 │   ├── external       <- Data from third party sources
@@ -59,18 +73,16 @@ make install
 │   ├── processed      <- The final, canonical data sets for modeling
 │   └── raw            <- The original, immutable data dump
 │
-{%- if docs != 'none' %}
-├── docs               <- Documentation ({{ docs }})
-{%- endif %}
+├── docs               <- Project documentation: recipes, experiments, SOTA, acceptance criteria{% if docs != 'none' %} ({{ docs }}){% endif %}
 {%- if docker_support == 'Yes' %}
 ├── docker             <- Docker configuration
 {%- endif %}
 ├── logs               <- Runtime and background-job logs (gitignored)
 ├── models             <- Trained and serialized models
-├── notebooks          <- Jupyter notebooks
+├── notebooks          <- Jupyter notebooks, organized in task-specific folders
 ├── tmp                <- Throwaway scratch: temp scripts, notebooks, data (gitignored)
 ├── pyproject.toml     <- Project configuration and dependencies
-├── references         <- Data dictionaries, manuals, explanatory materials
+├── references         <- External material: data descriptions, papers, manuals
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
 │   └── figures        <- Generated graphics and figures
 {%- if dependency_file == 'requirements.txt' %}

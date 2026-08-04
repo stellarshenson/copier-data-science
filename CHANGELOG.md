@@ -1,5 +1,25 @@
 # Changelog
 
+## v1.3.18 (2026-08-03) - Agents folder, AI assistant choice, folder READMEs
+
+- Renamed the `ai/` folder to `agents/` - it holds deployable agentic resources (workflows, exported skills), as distinct from the assistant's project-internal dot-folder. Question `scaffold_ai` renamed to `scaffold_agents`
+- Replaced the `claude_md` (No/Yes) question with `ai_assistant` (`none`/`claude`/`codex`/`gemini`/`generic`, default `none`)
+- Each assistant's instructions file is placed where that tool actually reads it, alongside an internal dot-folder: `claude` → `.claude/CLAUDE.md`, `codex` → `AGENTS.md` + `.codex/`, `gemini` → `GEMINI.md` + `.gemini/`, `generic` → `AGENTS.md` + `.agents/`
+- Only Claude Code reads its instructions from a project dot-folder; Codex and Gemini CLI scan the repo root, so their files stay there. Switching assistant on update removes the previous empty dot-folder
+- The instructions heading adapts to the selected assistant (Claude Code, Codex, Gemini CLI, AI coding agents)
+- New `notebooks/README.md` - notebooks organized in task-specific folders, numbered in execution order within each
+- New `references/README.md` - material brought in from outside the project: data descriptions and dictionaries, papers, manuals
+- New `docs/README.md` - the project's own documentation: dataset and model recipes, exploration and scientific method walkthrough, experiments, SOTA solution, acceptance criteria, defects
+- Removed `template/docs/mkdocs/README.md`; the mkdocs build instructions are now a conditional section of the always-shipped `docs/README.md`, avoiding a post-generation overwrite that silently dropped the purpose text
+- Recursive deletes in `post_gen.py` are now guarded: `agents/` and an unselected assistant's dot-folder are removed only when they hold nothing but the template's own `.gitkeep`, so user content is never destroyed
+- Switching assistant carries the existing instructions file over to the new location, preserving the user's edits, and removes the one left behind so a switched-away tool stops reading stale instructions. Edits are never destroyed - an existing file is moved, not overwritten
+- `ai_assistant=none` no longer deletes an instructions file the user has edited; only a copy still byte-identical to the template's own output is removed. The check compares against the answers of the run in progress, so a file generated with different answers or an older template version reads as edited and is kept - erring towards keeping the file. This holds on `copier recopy` too, which reports itself as a copy
+- Added `_min_copier_version: "9.6.0"` - the release that introduced `_copier_operation` - and dropped the `.copier-answers.yml` `_commit` fallback, which reported every fresh copy from a VCS ref as an update
+- Listed the assistant files and folders (`.claude/`, `AGENTS.md`, `GEMINI.md`, `.codex/`, `.gemini/`, `.agents/`) in `_skip_if_exists`. They are never rendered by copier, so the entries do nothing at render time, but copier also feeds every match to `git apply --exclude` and the update patch runs after the tasks - without them the patch restores the files post_gen just deleted when switching assistant
+- Refreshed the root README's generated-project tree, which still showed the pre-v1.3.0 `lib_<project_name>/` flat layout
+
+**Upgrade note**: `copier update` on a project generated before this release does not carry over `claude_md` or `scaffold_ai` - the renamed questions fall back to their defaults (`none` and `No`). Nothing is deleted: an existing `CLAUDE.md` and any `ai/` or `agents/` content are preserved. Re-answer `ai_assistant` and `scaffold_agents` to get the instructions file moved into place and the agents folder scaffolded. Content in the old `ai/` folder stays where it is - move it to `agents/` by hand. In a project using mkdocs, `docs/README.md` keeps the old mkdocs stub (it is protected by `_skip_if_exists`); delete it and re-run the update to pick up the new documentation index.
+
 ## v1.3.17 (2026-07-24) - Sidecar naming drops original extension
 
 - Clarified in `template/README.md` and `template/CLAUDE.md` that a large-file Markdown sidecar is named without the original extension - `sales.parquet` → `sales.md`, not `sales.parquet.md`

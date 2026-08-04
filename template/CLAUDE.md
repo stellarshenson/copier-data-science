@@ -1,6 +1,7 @@
-# Project Configuration for Claude Code
+{%- set assistant_name = {'claude': 'Claude Code', 'codex': 'Codex', 'gemini': 'Gemini CLI'}.get(ai_assistant, 'AI coding agents') -%}
+# Project Configuration for {{ assistant_name }}
 
-Guidance for Claude Code and other AI assistants working in this repository.
+Guidance for {{ assistant_name }} working in this repository.
 
 ## Project Context
 
@@ -63,16 +64,18 @@ Set `SKIP_VERSION_INCREMENT=1` (e.g. `make install SKIP_VERSION_INCREMENT=1`) to
 
 ## Data Science Conventions
 
-- **Notebooks** - in `notebooks/`, numbered (`1.0-initial-exploration.ipynb`); import from `src/{{ module_name }}/` instead of redefining code in cells; keep only exploratory or one-off code here
+- **Notebooks** - in `notebooks/`, organized in task-specific folders (`exploration/`, `training/`, `evaluation/`) rather than a flat list, numbered in execution order inside each (`01-data-exploration.ipynb`); import from `src/{{ module_name }}/` instead of redefining code in cells; keep only exploratory or one-off code here
 - **Refactor** stable notebook and experiment code into `src/{{ module_name }}/`
 - **Experiments** - experiment code and scripts in `src/experiments/` (created as needed, source-only, not shipped, safe to delete); results in `reports/experiments/`; papers and digests in `references/papers/`; graduate stable code into the module
 - **Scripts** - no root `scripts/`; use `src/experiments/`
 - **Data** - not committed by default (tree and Markdown tracked, data files ignored); only small (~50 MB), processed, non-reproducible data may be committed. Every data folder keeps a `README.md` index; every large file (dump, parquet) gets a `<name>.md` sidecar named without the original extension (`sales.parquet` → `sales.md`, not `sales.parquet.md`). DB dumps go under `data/external/dumps/` (raw) or `data/interim/dumps/` (processed), created as needed. See `data/README.md`
 - **Models** - only lightweight self-developed or fine-tuned models (~100 MB, case by case), in purpose-named folders (`embedders/`, `classifiers/`), each with a `.md` sidecar; never commit third-party models (Hugging Face) - use model sync (S3). See `models/README.md`
+- **Documentation** - `docs/` holds the project's own documentation: dataset and model recipes, exploration and scientific method walkthrough, experiments, SOTA solution, acceptance criteria, defects. See `docs/README.md`
+- **References** - `references/` holds material brought in from outside the project: data descriptions and dictionaries, papers and digests in `references/papers/`, manuals and API docs. See `references/README.md`
 - **Logs** - `logs/` holds runtime and job logs (gitignored); `... 2>&1 | tee logs/<name>.log`, with a short `logs/README.md`
 - **Temporary files** - `tmp/` is gitignored throwaway scratch (subfolders like `tmp/scripts/`, `tmp/data/` are fine); never keep anything here
-{%- if scaffold_ai == 'Yes' %}
-- **Agentic resources** - `ai/` holds agentic framework and harness resources (skills, hooks, workflow files); its internal layout follows whatever framework the project adopts
+{%- if scaffold_agents == 'Yes' %}
+- **Agentic resources** - `agents/` holds deployable agentic resources (workflows, exported skills); its internal layout follows whatever framework the project adopts. Project-internal assistant resources belong in `{{ {'claude': '.claude/', 'codex': '.codex/', 'gemini': '.gemini/'}.get(ai_assistant, '.agents/') }}` instead
 {%- endif %}
 {%- if jupyter_kernel_support == 'Yes' %}
 - **Jupyter kernel** is auto-registered as `{{ env_name }}`; re-register with `make register_environment` if it goes missing

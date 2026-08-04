@@ -284,8 +284,9 @@ def parse_args():
     parser.add_argument("--package-repository-url", default="")
     parser.add_argument("--custom-config", default="")
     parser.add_argument("--git-init", default="No")
-    parser.add_argument("--claude-md", default="No")
-    parser.add_argument("--scaffold-ai", default="No")
+    parser.add_argument("--copier-operation", default="copy")
+    parser.add_argument("--ai-assistant", default="none")
+    parser.add_argument("--scaffold-agents", default="No")
     parser.add_argument("--github-actions", default="No")
     return parser.parse_args()
 
@@ -299,17 +300,54 @@ def main():
     _do_post_gen()
 
 
-def is_copier_update():
+def is_copier_update(copier_operation):
     """Check if this is a copier update (vs fresh copy).
 
-    During update, .copier-answers.yml exists with _commit field.
-    During fresh copy, it either doesn't exist or doesn't have _commit.
+    Copier exposes the operation it is running as `_copier_operation` ("copy" or
+    "update", added in copier 9.6.0); copier.yml passes it through as --copier-operation
+    and pins _min_copier_version accordingly.
+
+    There is deliberately no fallback heuristic. The obvious one - sniffing
+    .copier-answers.yml for a _commit field - is wrong whenever the template is copied
+    from a VCS ref, because copier records _commit on a fresh copy too, so it reports
+    every fresh copy as an update.
+
+    Note `copier recopy` reports "copy", not "update", so anything gated on this must
+    stay safe for a run over a directory that already holds the user's files.
     """
-    answers_file = Path(".copier-answers.yml")
-    if answers_file.exists():
-        content = answers_file.read_text()
-        return "_commit:" in content
-    return False
+    return copier_operation == "update"
+
+
+def is_same_text(left, right):
+    """Compare two file bodies, ignoring a difference in the trailing newline.
+
+    Jinja's Template() drops the final newline while copier keeps it, so a byte
+    comparison between a re-render and the file copier wrote never matches.
+    """
+    if left is None or right is None:
+        return False
+    return left.rstrip("\n") == right.rstrip("\n")
+
+
+def is_untouched_instructions(text, variants):
+    """Check whether an instructions file is still exactly what the template produced.
+
+    The heading follows the selected assistant, so a file written for a different
+    assistant is compared against that assistant's variant too - otherwise a
+    switched-away copy would look user-edited and never be cleaned up.
+    """
+    return any(is_same_text(text, variant) for variant in variants)
+
+
+def is_template_owned_dir(path):
+    """Check whether a directory holds nothing but the .gitkeep this script writes.
+
+    Gates the recursive deletes below: a folder the user has put real content into is
+    never removed, however the corresponding question was answered.
+    """
+    if not path.is_dir():
+        return False
+    return {child.name for child in path.iterdir()} <= {".gitkeep"}
 
 
 def _do_post_gen():
@@ -319,7 +357,7 @@ def _do_post_gen():
     # Resolve any conflict markers in pyproject.toml (preserves custom license)
     resolve_pyproject_conflicts()
 
-    is_update = is_copier_update()
+    is_update = is_copier_update(args.copier_operation)
 
     # Migrate flat layout to src layout during copier update (v1.2.x -> v1.3.x)
     if is_update:
@@ -472,49 +510,131 @@ def _do_post_gen():
                     rendered = Template(content).render(**context)
                     (docker_path / template_file.name).write_text(rendered)
 
-    # Handle CLAUDE.md based on claude_md setting
+    # Handle the AI assistant instructions file and internal resources folder.
+    # Each assistant reads its project instructions from a different path: Claude Code
+    # reads .claude/CLAUDE.md, Gemini CLI reads GEMINI.md at the project root, and Codex
+    # and the generic AGENTS.md standard read AGENTS.md at the project root. The
+    # dot-folder is the home for that assistant's project-internal resources.
+    ai_assistant_layout = {
+        "claude": (Path(".claude") / "CLAUDE.md", Path(".claude")),
+        "codex": (Path("AGENTS.md"), Path(".codex")),
+        "gemini": (Path("GEMINI.md"), Path(".gemini")),
+        "generic": (Path("AGENTS.md"), Path(".agents")),
+    }
+    # The template ships the instructions as CLAUDE.md at the project root
     claude_md_path = Path("CLAUDE.md")
-    if args.claude_md == "No":
-        # Remove CLAUDE.md when scaffolding is not selected
-        if claude_md_path.exists():
-            claude_md_path.unlink()
-    elif args.claude_md == "Yes":
-        # Render CLAUDE.md if missing (fresh copy already has it; this covers
-        # enabling during update where copier removes files not in the original).
-        # Render-if-missing preserves user edits on subsequent updates.
-        if not claude_md_path.exists():
-            template_claude = Path(__file__).parent.parent / "template" / "CLAUDE.md"
-            if template_claude.exists():
-                context = {
-                    "module_name": args.module_name,
-                    "python_version_number": args.python_version,
-                    "environment_manager": args.environment_manager,
-                    "env_location": args.env_location,
-                    "env_name": args.env_name,
-                    "include_code_scaffold": args.include_code_scaffold,
-                    "dataset_storage": args.dataset_storage,
-                    "docs": args.docs,
-                    "package_repository": args.package_repository,
-                    "docker_support": args.docker_support,
-                    "jupyter_kernel_support": args.jupyter_kernel_support,
-                    "scaffold_ai": args.scaffold_ai,
-                }
-                rendered = Template(template_claude.read_text()).render(**context)
-                claude_md_path.write_text(rendered)
 
-    # Handle ai/ folder based on scaffold_ai setting
-    # Holds agentic framework and harness resources; only a .gitkeep is scaffolded
-    # since the internal structure depends on the framework the user adopts.
-    ai_path = Path("ai")
-    if args.scaffold_ai == "No":
-        if ai_path.exists():
-            shutil.rmtree(ai_path)
-    elif args.scaffold_ai == "Yes":
-        # Ensure ai/.gitkeep exists (covers enabling during update where copier
+    # Rendering the template up front lets us tell an untouched copy of the instructions
+    # apart from one the user has edited, so we never delete their work
+    template_claude = Path(__file__).parent.parent / "template" / "CLAUDE.md"
+    rendered_instructions = None
+    untouched_variants = []
+    if template_claude.exists():
+        instructions_template = Template(template_claude.read_text(), keep_trailing_newline=True)
+        instructions_context = {
+            "module_name": args.module_name,
+            "python_version_number": args.python_version,
+            "environment_manager": args.environment_manager,
+            "env_location": args.env_location,
+            "env_name": args.env_name,
+            "include_code_scaffold": args.include_code_scaffold,
+            "dataset_storage": args.dataset_storage,
+            "docs": args.docs,
+            "package_repository": args.package_repository,
+            "docker_support": args.docker_support,
+            "jupyter_kernel_support": args.jupyter_kernel_support,
+            "scaffold_agents": args.scaffold_agents,
+        }
+        rendered_instructions = instructions_template.render(
+            ai_assistant=args.ai_assistant, **instructions_context
+        )
+        # One variant per assistant: a copy written for the assistant being switched away
+        # from is still template output, and must be recognised as such to be cleaned up
+        untouched_variants = [
+            instructions_template.render(ai_assistant=name, **instructions_context)
+            for name in ("none", "claude", "codex", "gemini", "generic")
+        ]
+
+    # Where an existing instructions file may be found, most specific first - the template
+    # drops its copy at the project root, so that one is the last resort
+    known_instructions = []
+    for path, _ in ai_assistant_layout.values():
+        if path not in known_instructions:
+            known_instructions.append(path)
+    known_instructions.append(claude_md_path)
+
+    layout = ai_assistant_layout.get(args.ai_assistant)
+    if layout is None:
+        # "none" - drop every untouched copy the template produced, whichever assistant it
+        # was written for, so a switched-away tool stops being read. The content check is
+        # the only gate: a copy into a directory that already holds a hand-written
+        # instructions file (copier copy --overwrite, or copier recopy, both of which
+        # report the operation as "copy") must not delete the user's work.
+        for stale in known_instructions:
+            if stale.exists() and is_untouched_instructions(stale.read_text(), untouched_variants):
+                stale.unlink()
+    else:
+        instructions_path, internal_dir = layout
+        source = None
+        # Write the instructions file if missing (a fresh copy has it at the root; this
+        # covers enabling during update where copier removes files not in the original).
+        # Write-if-missing preserves user edits on subsequent updates.
+        if not instructions_path.exists():
+            # Carry an existing file over so switching assistant keeps the user's edits.
+            # Only an update is a switch - on a copy there is no previous answer to switch
+            # from, so only the template's own root drop may be moved into place.
+            candidates = known_instructions if is_update else [claude_md_path]
+            source = next(
+                (p for p in candidates if p != instructions_path and p.exists()),
+                None,
+            )
+            content = source.read_text() if source else rendered_instructions
+            if content is not None:
+                instructions_path.parent.mkdir(parents=True, exist_ok=True)
+                instructions_path.write_text(content)
+        # Drop the other layouts' copies so a switched-away assistant stops being read.
+        # Only the file just carried over to the new location and untouched template
+        # output are removed, so edits are never destroyed - but note a file the user
+        # wrote for another tool is carried over rather than left where it was, since
+        # that is indistinguishable from a genuine switch.
+        for stale in known_instructions:
+            if stale == instructions_path or not stale.exists():
+                continue
+            if stale == source or is_untouched_instructions(stale.read_text(), untouched_variants):
+                stale.unlink()
+        # Keep the internal folder tracked when the instructions file lives outside it
+        internal_dir.mkdir(parents=True, exist_ok=True)
+        if not any(internal_dir.iterdir()):
+            (internal_dir / ".gitkeep").write_text("")
+
+    # Remove the internal folders of the assistants that were not selected, so switching
+    # assistant during an update does not leave the previous one behind. Only a folder
+    # holding nothing but our own .gitkeep goes - user content is never touched.
+    for _, unused_dir in ai_assistant_layout.values():
+        if layout is not None and unused_dir == layout[1]:
+            continue
+        if is_template_owned_dir(unused_dir):
+            shutil.rmtree(unused_dir)
+
+    # Handle agents/ folder based on scaffold_agents setting
+    # Holds deployable agentic resources (workflows, exported skills); only a .gitkeep is
+    # scaffolded since the internal structure depends on the framework the user adopts.
+    agents_path = Path("agents")
+    if args.scaffold_agents == "No":
+        # Only the folder the template created is removed - a user's own agents/ content
+        # survives, including when an older project takes this question's default of No
+        if is_template_owned_dir(agents_path):
+            shutil.rmtree(agents_path)
+        else:
+            # The template always renders agents/.gitkeep, so drop that marker when a
+            # user-owned agents/ is being kept - otherwise it reappears on every update
+            (agents_path / ".gitkeep").unlink(missing_ok=True)
+    elif args.scaffold_agents == "Yes":
+        # Ensure agents/.gitkeep exists (covers enabling during update where copier
         # removes files not present in the original project)
-        if not ai_path.exists():
-            ai_path.mkdir(parents=True, exist_ok=True)
-            (ai_path / ".gitkeep").write_text("")
+        if not agents_path.exists():
+            agents_path.mkdir(parents=True, exist_ok=True)
+            (agents_path / ".gitkeep").write_text("")
 
     # Handle .github folder based on github_actions setting
     github_path = Path(".github")
