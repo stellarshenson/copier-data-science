@@ -12,6 +12,7 @@ See docs/docs/env-management.md for the full matrix documentation.
 ALWAYS_PRESENT = [
     "Makefile",
     "README.md",
+    "CHANGELOG.md",
     "pyproject.toml",  # Always present for metadata/tools (deps section conditional)
     ".env",
     ".gitignore",
@@ -20,15 +21,11 @@ ALWAYS_PRESENT = [
     "data/interim/README.md",
     "data/processed/README.md",
     "data/raw/README.md",
-    "docs/.gitkeep",
     "docs/README.md",
-    "notebooks/.gitkeep",
     "notebooks/README.md",
-    "references/.gitkeep",
     "references/README.md",
     "reports/.gitkeep",
     "reports/figures/.gitkeep",
-    "models/.gitkeep",
     "models/README.md",
 ]
 

@@ -34,6 +34,8 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 | .env tiers ignored | `.env` only | `.env`, `.env.dev`, `.env.prod`, `.env.stg`, `.env.test` |
 | Build versioning | No | Auto-increment on `make install` (opt-out via `SKIP_VERSION_INCREMENT=1`) |
 | Docker support | No | Optional (Dockerfile + Makefile targets) |
+| Package publishing | No | Optional (`package_repository=pypi\|other` - twine `make publish`) |
+| Project CHANGELOG | No | Always, Keep a Changelog + SemVer |
 | Git initialization | No | Optional (`git init -b main` post-generation) |
 | AI assistant support | none | Optional (`ai_assistant=claude\|codex\|gemini\|generic` - instructions file plus internal folder) |
 | Agentic resources folder | No | Optional (`scaffold_agents=Yes` - `agents/` for deployable workflows and exported skills) |
@@ -54,6 +56,8 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 - **Per-tier .env ignores** - `.env.dev`, `.env.prod`, `.env.stg`, `.env.test` gitignored by default
 - **Build versioning** - Auto-increment patch on `make install`; set `SKIP_VERSION_INCREMENT=1` to keep current version during dev iteration
 - **Docker support** - Optional Dockerfile and Makefile targets (`docker_build`, `docker_run`, `docker_push`)
+- **Package publishing** - `package_repository=pypi` uploads to PyPI with twine; `package_repository=other` asks for the repository's upload URL, which is required
+- **Project CHANGELOG** - every generated project ships a `CHANGELOG.md` in [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format, versioned with SemVer
 - **Optional git init** - `git_init=Yes` initializes a `main`-branch repository on project creation
 - **AI assistant support** - `ai_assistant` seeds project instructions and an internal resources folder, placed where the chosen tool reads them: `claude` → `.claude/CLAUDE.md`, `codex` → `AGENTS.md` + `.codex/`, `gemini` → `GEMINI.md` + `.gemini/`, `generic` → `AGENTS.md` + `.agents/`
 - **Agentic resources** - `scaffold_agents=Yes` creates an `agents/` folder for deployable agentic resources (workflows, exported skills)
@@ -104,6 +108,7 @@ The directory structure of your new project will look something like this (depen
 ├── LICENSE            <- Open-source license if one is chosen
 ├── Makefile           <- Makefile with convenience commands like `make install` or `make test`
 ├── README.md          <- The top-level README for developers using this project
+├── CHANGELOG.md       <- Release notes, Keep a Changelog format
 ├── pyproject.toml     <- Project configuration with package metadata and dev dependencies
 ├── .copier-answers.yml <- Copier answers for template updates
 │

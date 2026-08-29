@@ -1,8 +1,9 @@
 """Package repository configuration tests for the Copier template.
 
 These tests verify that:
-- When package_repository=Yes: PACKAGE_REPOSITORY, publish target, and twine are present
-- When package_repository=No: None of these are included in the generated project
+- When package_repository=pypi: PACKAGE_REPOSITORY is PyPI's own upload URL, no URL is asked
+- When package_repository=other: PACKAGE_REPOSITORY is the URL given, which is required
+- When package_repository=none: no PACKAGE_REPOSITORY, no publish target, no twine
 - Twine is correctly added to dev dependencies based on dependency_file type
 """
 
@@ -39,13 +40,58 @@ PKG_REPO_CONFIG_BASE = {
 }
 
 
-class TestPackageRepositoryEnabled:
-    """Tests when package_repository=Yes."""
+PYPI_UPLOAD_URL = "https://upload.pypi.org/legacy/"
+
+
+class TestPackageRepositoryPyPI:
+    """Tests when package_repository=pypi - PyPI supplies its own upload URL."""
+
+    def test_makefile_has_pypi_upload_url(self):
+        """PyPI needs no URL from the user; the template fills in the canonical one."""
+        config = PKG_REPO_CONFIG_BASE.copy()
+        config["package_repository"] = "pypi"
+
+        with bake_project(config) as project_dir:
+            content = (project_dir / "Makefile").read_text()
+
+            assert f"PACKAGE_REPOSITORY = {PYPI_UPLOAD_URL}" in content, (
+                "pypi should set PACKAGE_REPOSITORY to PyPI's upload URL"
+            )
+
+    def test_publish_target_and_twine_present(self):
+        """pypi is a publishing target like any other, so publish and twine ship with it."""
+        config = PKG_REPO_CONFIG_BASE.copy()
+        config["package_repository"] = "pypi"
+
+        with bake_project(config) as project_dir:
+            makefile = (project_dir / "Makefile").read_text()
+            pyproject = (project_dir / "pyproject.toml").read_text()
+
+            assert "publish: build" in makefile, "publish target should exist"
+            assert "twine upload" in makefile, "publish target should use twine"
+            assert '"twine"' in pyproject, "twine should be in dev dependencies"
+
+    def test_url_question_is_not_asked(self):
+        """package_repository_url is only asked for 'other', so it is absent from the answers."""
+        config = PKG_REPO_CONFIG_BASE.copy()
+        config["package_repository"] = "pypi"
+
+        with bake_project(config) as project_dir:
+            answers = (project_dir / ".copier-answers.yml").read_text()
+
+            assert "package_repository: pypi" in answers
+            assert "package_repository_url" not in answers, (
+                "the URL question should be skipped for pypi"
+            )
+
+
+class TestPackageRepositoryOther:
+    """Tests when package_repository=other - the user supplies the upload URL."""
 
     def test_makefile_has_package_repository_variable(self):
         """Test that PACKAGE_REPOSITORY variable is in Makefile when enabled."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "Yes"
+        config["package_repository"] = "other"
         config["package_repository_url"] = "https://test.pypi.org/legacy/"
 
         with bake_project(config) as project_dir:
@@ -59,7 +105,7 @@ class TestPackageRepositoryEnabled:
     def test_makefile_has_publish_target(self):
         """Test that publish target is in Makefile when enabled."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "Yes"
+        config["package_repository"] = "other"
         config["package_repository_url"] = "https://test.pypi.org/legacy/"
 
         with bake_project(config) as project_dir:
@@ -73,7 +119,7 @@ class TestPackageRepositoryEnabled:
     def test_twine_in_pyproject_toml_dev_deps(self):
         """Test that twine is in pyproject.toml dev dependencies when using pyproject.toml."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "Yes"
+        config["package_repository"] = "other"
         config["package_repository_url"] = "https://test.pypi.org/legacy/"
         config["dependency_file"] = "pyproject.toml"
 
@@ -86,7 +132,7 @@ class TestPackageRepositoryEnabled:
     def test_twine_in_requirements_dev_txt(self):
         """Test that twine is in requirements-dev.txt when using requirements.txt."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "Yes"
+        config["package_repository"] = "other"
         config["package_repository_url"] = "https://test.pypi.org/legacy/"
         config["dependency_file"] = "requirements.txt"
 
@@ -99,7 +145,7 @@ class TestPackageRepositoryEnabled:
     def test_twine_in_environment_yml(self):
         """Test that twine is in environment.yml when using conda with environment.yml."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "Yes"
+        config["package_repository"] = "other"
         config["package_repository_url"] = "https://test.pypi.org/legacy/"
         config["environment_manager"] = "conda"
         config["dependency_file"] = "environment.yml"
@@ -114,7 +160,7 @@ class TestPackageRepositoryEnabled:
     def test_publish_target_for_each_env_manager(self, env_manager):
         """Test that publish target works for all environment managers."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "Yes"
+        config["package_repository"] = "other"
         config["package_repository_url"] = "https://test.pypi.org/legacy/"
         config["environment_manager"] = env_manager
         config["repo_name"] = f"pkg_repo_{env_manager}"
@@ -137,12 +183,12 @@ class TestPackageRepositoryEnabled:
 
 
 class TestPackageRepositoryDisabled:
-    """Tests when package_repository=No (default)."""
+    """Tests when package_repository=none (default)."""
 
     def test_makefile_no_package_repository_variable(self):
         """Test that PACKAGE_REPOSITORY variable is NOT in Makefile when disabled."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "No"
+        config["package_repository"] = "none"
 
         with bake_project(config) as project_dir:
             makefile = project_dir / "Makefile"
@@ -155,7 +201,7 @@ class TestPackageRepositoryDisabled:
     def test_makefile_no_publish_target(self):
         """Test that publish target is NOT in Makefile when disabled."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "No"
+        config["package_repository"] = "none"
 
         with bake_project(config) as project_dir:
             makefile = project_dir / "Makefile"
@@ -174,7 +220,7 @@ class TestPackageRepositoryDisabled:
     def test_twine_not_in_pyproject_toml(self):
         """Test that twine is NOT in pyproject.toml when disabled."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "No"
+        config["package_repository"] = "none"
         config["dependency_file"] = "pyproject.toml"
 
         with bake_project(config) as project_dir:
@@ -186,7 +232,7 @@ class TestPackageRepositoryDisabled:
     def test_twine_not_in_requirements_dev_txt(self):
         """Test that twine is NOT in requirements-dev.txt when disabled."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "No"
+        config["package_repository"] = "none"
         config["dependency_file"] = "requirements.txt"
 
         with bake_project(config) as project_dir:
@@ -200,7 +246,7 @@ class TestPackageRepositoryDisabled:
     def test_twine_not_in_environment_yml(self):
         """Test that twine is NOT in environment.yml when disabled."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "No"
+        config["package_repository"] = "none"
         config["environment_manager"] = "conda"
         config["dependency_file"] = "environment.yml"
 
@@ -214,25 +260,20 @@ class TestPackageRepositoryDisabled:
 class TestPackageRepositoryUrlHandling:
     """Tests for package_repository_url handling."""
 
-    def test_empty_url_still_creates_variable(self):
-        """Test that empty URL still creates PACKAGE_REPOSITORY variable."""
+    def test_empty_url_is_rejected_for_other(self):
+        """'other' without a URL would render an unusable publish target, so copier refuses."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "Yes"
+        config["package_repository"] = "other"
         config["package_repository_url"] = ""
 
-        with bake_project(config) as project_dir:
-            makefile = project_dir / "Makefile"
-            content = makefile.read_text()
-
-            # Variable should exist but be empty
-            assert "PACKAGE_REPOSITORY =" in content, (
-                "PACKAGE_REPOSITORY variable should exist even with empty URL"
-            )
+        with pytest.raises(RuntimeError):
+            with bake_project(config):
+                pass
 
     def test_custom_repository_url(self):
         """Test that custom repository URL is correctly set."""
         config = PKG_REPO_CONFIG_BASE.copy()
-        config["package_repository"] = "Yes"
+        config["package_repository"] = "other"
         config["package_repository_url"] = "https://my-private-pypi.example.com/simple/"
 
         with bake_project(config) as project_dir:

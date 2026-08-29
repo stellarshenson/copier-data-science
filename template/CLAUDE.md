@@ -43,7 +43,7 @@ make docs                 # build the documentation
 make docs_serve           # serve the documentation locally
 {%- endif %}
 make build                # build the wheel package
-{%- if package_repository == 'Yes' %}
+{%- if package_repository != 'none' %}
 make publish              # publish the package to the configured repository
 {%- endif %}
 {%- if docker_support == 'Yes' %}
@@ -86,3 +86,4 @@ Set `SKIP_VERSION_INCREMENT=1` (e.g. `make install SKIP_VERSION_INCREMENT=1`) to
 - No emojis in code or documentation; keep a professional, technical tone
 - Prefer clear names and short functions over clever one-liners
 - Keep secrets in `.env` (gitignored); never commit credentials
+- Record notable changes in `CHANGELOG.md` under `[Unreleased]` until a version is cut ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format)

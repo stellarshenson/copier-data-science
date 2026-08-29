@@ -280,7 +280,7 @@ def parse_args():
     parser.add_argument("--env-encryption", required=True)
     parser.add_argument("--docker-support", default="No")
     parser.add_argument("--docker-package-manager", default="uv")
-    parser.add_argument("--package-repository", default="No")
+    parser.add_argument("--package-repository", default="none")
     parser.add_argument("--package-repository-url", default="")
     parser.add_argument("--custom-config", default="")
     parser.add_argument("--git-init", default="No")

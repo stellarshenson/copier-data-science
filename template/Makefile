@@ -1,4 +1,4 @@
-.PHONY: clean data lint format requirements upgrade build install help{% if package_repository == 'Yes' %} publish{% endif %} sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve create_environment remove_environment register_environment increment_version_number preflight{% if docker_support == 'Yes' %} docker_build docker_run docker_push{% endif %}
+.PHONY: clean data lint format requirements upgrade build install help{% if package_repository != 'none' %} publish{% endif %} sync_data_up sync_data_down sync_models_up sync_models_down test docs docs_serve create_environment remove_environment register_environment increment_version_number preflight{% if docker_support == 'Yes' %} docker_build docker_run docker_push{% endif %}
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -33,9 +33,9 @@ GCS_BUCKET = {{ gcs_bucket }}
 {%- endif %}
 {%- endif %}
 
-{%- if package_repository == 'Yes' %}
-# Package repository URL (set to publish packages, e.g., https://upload.pypi.org/legacy/)
-PACKAGE_REPOSITORY = {{ package_repository_url }}
+{%- if package_repository != 'none' %}
+# Package repository upload URL, used by the publish target
+PACKAGE_REPOSITORY = {% if package_repository == 'pypi' %}https://upload.pypi.org/legacy/{% else %}{{ package_repository_url }}{% endif %}
 {%- endif %}
 
 #################################################################################
@@ -682,7 +682,7 @@ install: create_environment requirements clean increment_version_number{% if env
 build: clean install test
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	$(PROJECT_DIR)/.venv/bin/python -m build --wheel
-{%- if package_repository == 'Yes' %}
+{%- if package_repository != 'none' %}
 
 ## Publish package to repository
 publish: build
@@ -818,7 +818,7 @@ install: create_environment requirements clean increment_version_number{% if env
 build: clean install test
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	$(PROJECT_DIR)/.venv/bin/python -m build --wheel
-{%- if package_repository == 'Yes' %}
+{%- if package_repository != 'none' %}
 
 ## Publish package to repository
 publish: build
@@ -877,7 +877,7 @@ install: preflight clean create_environment increment_version_number{% if env_en
 build: preflight clean install test
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	@conda run $(CONDA_ENV_SELECTOR) $(CONDA_OPTS) python -m build --wheel
-{%- if package_repository == 'Yes' %}
+{%- if package_repository != 'none' %}
 
 ## Publish package to repository
 publish: build

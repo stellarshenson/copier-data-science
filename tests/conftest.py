@@ -69,7 +69,7 @@ POST_GEN_MATCHING_DATA = [
     "docs=none",
     "include_code_scaffold=Yes",
     "jupyter_kernel_support=Yes",
-    "package_repository=No",
+    "package_repository=none",
     "docker_support=No",
     "scaffold_agents=No",
 ]

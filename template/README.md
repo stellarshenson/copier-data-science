@@ -52,6 +52,7 @@ make install
 ```
 ├── Makefile           <- Makefile with convenience commands
 ├── README.md          <- The top-level README for developers
+├── CHANGELOG.md       <- Release notes, Keep a Changelog format
 {%- if ai_assistant == 'claude' %}
 ├── .claude            <- Project instructions (CLAUDE.md) and internal assistant resources
 {%- elif ai_assistant == 'codex' %}

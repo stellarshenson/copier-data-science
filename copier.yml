@@ -215,17 +215,19 @@ docker_package_manager:
 package_repository:
   type: str
   choices:
-    - "No"
-    - "Yes"
-  default: "No"
-  help: "Enable publishing to a Python package repository"
+    - "none"
+    - "pypi"
+    - "other"
+  default: "none"
+  help: "Publish the package to PyPI, to another repository, or not at all"
 
 package_repository_url:
   type: str
   default: ""
-  when: "{{ package_repository == 'Yes' }}"
-  help: "Package repository URL (e.g., https://upload.pypi.org/legacy/)"
-  placeholder: "https://upload.pypi.org/legacy/"
+  when: "{{ package_repository == 'other' }}"
+  help: "Upload URL of the package repository"
+  placeholder: "https://pypi.example.com/legacy/"
+  validator: "{% if not package_repository_url %}An upload URL is required for 'other'{% endif %}"
 
 ai_assistant:
   type: str
@@ -285,6 +287,7 @@ _exclude:
 # tests/ and docker/ can be created by post_gen during updates (from none to enabled)
 _skip_if_exists:
   - README.md
+  - CHANGELOG.md
   - data/**/README.md
   - models/README.md
   - notebooks/README.md

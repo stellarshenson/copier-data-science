@@ -26,6 +26,6 @@ awscli
 {%- elif dataset_storage == 'gcs' %}
 gsutil
 {%- endif %}
-{%- if package_repository == 'Yes' %}
+{%- if package_repository != 'none' %}
 twine
 {%- endif %}

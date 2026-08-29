@@ -5,11 +5,12 @@ These tests verify that:
 - make docker_run executes successfully
 - Both uv and pip package managers work in Docker
 
-Tests are skipped if Docker is not available or not running.
+Tests are skipped when Docker cannot actually build and run an image here.
 """
 
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -18,28 +19,53 @@ from conftest import bake_project
 # Check if Docker is available
 DOCKER_AVAILABLE = shutil.which("docker") is not None
 
+PROBE_IMAGE = "ccds-docker-probe"
+PROBE_MARKER = "docker-probe-ok"
+PROBE_DOCKERFILE = f'FROM busybox:latest\nCMD ["echo", "{PROBE_MARKER}"]\n'
 
-def docker_is_running():
-    """Check if Docker daemon is running."""
+
+def docker_can_build_and_run():
+    """Check that Docker can do the two things these tests need, not merely that it answers.
+
+    `docker info` is too weak a guard. Behind a socket proxy the daemon answers it
+    happily while refusing BuildKit's gRPC session - every `docker build` then dies with
+    "failed to list workers" - and refusing the attach stream `docker run` uses to relay
+    container stdout, so the container runs correctly but its output never arrives. Both
+    look exactly like a broken template and are not, so probe the two capabilities with a
+    throwaway image and skip when either is missing.
+    """
     if not DOCKER_AVAILABLE:
         return False
     try:
-        result = subprocess.run(
-            ["docker", "info"],
+        with tempfile.TemporaryDirectory() as probe_dir:
+            (Path(probe_dir) / "Dockerfile").write_text(PROBE_DOCKERFILE)
+            build = subprocess.run(
+                ["docker", "build", "-t", PROBE_IMAGE, probe_dir],
+                capture_output=True,
+                timeout=120,
+            )
+        if build.returncode != 0:
+            return False
+        run = subprocess.run(
+            ["docker", "run", "--rm", PROBE_IMAGE],
             capture_output=True,
-            timeout=10,
+            timeout=60,
         )
-        return result.returncode == 0
-    except (subprocess.TimeoutExpired, Exception):
+        return run.returncode == 0 and PROBE_MARKER in run.stdout.decode("utf-8", "replace")
+    except Exception:
         return False
 
 
-DOCKER_RUNNING = docker_is_running()
+DOCKER_RUNNING = docker_can_build_and_run()
 
-# Skip all tests in this module if Docker is not available or not running
-pytestmark = pytest.mark.skipif(
+# Only the two workflow tests below shell out to Docker. The rest inspect rendered files
+# and must keep running on a machine with no Docker at all.
+requires_working_docker = pytest.mark.skipif(
     not DOCKER_RUNNING,
-    reason="Docker is not available or not running",
+    reason=(
+        "Docker cannot build and run an image here - no daemon, or a socket proxy "
+        "without BuildKit and attach support"
+    ),
 )
 
 
@@ -113,6 +139,7 @@ def run_docker_workflow(project_directory, package_manager):
 class TestDockerWorkflow:
     """Test Docker build and run workflow."""
 
+    @requires_working_docker
     def test_docker_build_and_run_with_uv(self):
         """Test full Docker workflow with uv package manager."""
         config = DOCKER_CONFIG_BASE.copy()
@@ -134,6 +161,7 @@ class TestDockerWorkflow:
             )
             assert "docker_test_project" in stdout or "docker_test_project" in stderr
 
+    @requires_working_docker
     def test_docker_build_and_run_with_pip(self):
         """Test full Docker workflow with pip package manager."""
         config = DOCKER_CONFIG_BASE.copy()

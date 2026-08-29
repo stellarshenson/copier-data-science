@@ -28,7 +28,7 @@ dependencies:
   - flake8
   - isort
 {%- endif %}
-{%- if package_repository == 'Yes' %}
+{%- if package_repository != 'none' %}
   - twine
 {%- endif %}
 {%- endif %}

@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.3.19 (2026-08-29) - Project CHANGELOG, PyPI publishing choice
+
+- Every generated project now ships a `CHANGELOG.md` in [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format with Semantic Versioning, seeded with an `[Unreleased]` section and a `[0.1.0]` entry matching `pyproject.toml`. Shipped unconditionally like `README.md`, with no new question, and listed in `_skip_if_exists` so `copier update` never overwrites a project's own changelog
+- `package_repository` changed from `No`/`Yes` to `none`/`pypi`/`other`, matching how `dataset_storage` and `docs` name their off-value. Selecting `pypi` fills in PyPI's own upload URL, `https://upload.pypi.org/legacy/`, and skips the URL question entirely
+- `package_repository_url` is now asked only for `other`, and a validator rejects an empty value - previously an enabled repository with a blank URL rendered a publish target that could never work
+- The publish target itself is unchanged: `twine upload --repository-url $(PACKAGE_REPOSITORY) dist/*` for all three environment managers. Only the source of the URL moved
+- Removed the redundant `.gitkeep` from `docs/`, `notebooks/`, `references/` and `models/` - each already ships a tracked `README.md`, which is what keeps the folder in a clone. Matches the v1.3.12 cleanup of the data leaf folders. `reports/` and `reports/figures/` keep theirs (no README), and `agents/.gitkeep` stays because `post_gen.is_template_owned_dir` uses it to decide whether a folder is safe to delete
+- `test_docker.py` gated its whole module on `docker info`, which succeeds behind a socket proxy that cannot carry BuildKit's gRPC session or the attach stream `docker run` uses to relay container stdout. Such an environment reported two fake template defects. The guard is now `docker_can_build_and_run()`, which builds a throwaway image and requires its output back, and it applies only to the two tests that shell out to Docker - the other four inspect rendered files and now run on any machine
+- Root `README.md` gained rows and bullets for package publishing and the project changelog
+
+**Upgrade note**: `copier update` on a project generated before this release does not carry over `package_repository: 'Yes'` - copier silently falls back to the question's default when a stored answer is no longer among the choices, so publishing turns off and `PACKAGE_REPOSITORY`, the publish target and the twine dev dependency disappear from the generated files. Nothing else is touched. Re-answer `package_repository` as `pypi` or `other` to restore it. Projects answering `No` are unaffected, since that already meant publishing was off. The four removed `.gitkeep` files are deleted by the update patch; the folders survive on their `README.md`
+
 ## v1.3.18 (2026-08-03) - Agents folder, AI assistant choice, folder READMEs
 
 - Renamed the `ai/` folder to `agents/` - it holds deployable agentic resources (workflows, exported skills), as distinct from the assistant's project-internal dot-folder. Question `scaffold_ai` renamed to `scaffold_agents`
