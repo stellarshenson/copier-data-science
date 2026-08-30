@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.3.20 (2026-08-30) - GitHub Actions option removed
+
+- Removed the `github_actions` question and the `.github/workflows/tests.yml` it scaffolded. Continuous integration belongs to the repository that hosts a project, not to the scaffold that creates it, and the generated workflow was a fixed lint-and-test pipeline that most projects replaced immediately
+- `scripts/post_gen.py` no longer takes `--github-actions` and no longer renders or removes a `.github` folder. `copier.yml` drops the question, the `--github-actions` task argument and the `.github/` entry in `_skip_if_exists`
+- `tests/test_github_actions.py` removed with the feature. The suite is 107 passed, 2 skipped on a clean checkout, down from 110 because the three tests covered only the removed option
+- Root `README.md` drops the feature-table row and the key-enhancements bullet
+
+**Upgrade note**: `copier update` on a project that answered `github_actions: Yes` deletes `.github/workflows/tests.yml` and drops the `github_actions` answer from `.copier-answers.yml`. This was measured, not assumed - the update exits 0 with no conflict and no `.rej` file. Keeping `.github/` in `_skip_if_exists` does not prevent the deletion; that was tested separately and made no difference. The removal arrives as an ordinary working-tree change in the project's own repository, so a project that wants to keep its workflow restores it with `git checkout -- .github` before committing the update. Projects that answered `No` are unaffected
+
 ## v1.3.19 (2026-08-29) - Project CHANGELOG, PyPI publishing choice
 
 - Every generated project now ships a `CHANGELOG.md` in [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format with Semantic Versioning, seeded with an `[Unreleased]` section and a `[0.1.0]` entry matching `pyproject.toml`. Shipped unconditionally like `README.md`, with no new question, and listed in `_skip_if_exists` so `copier update` never overwrites a project's own changelog

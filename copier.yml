@@ -248,14 +248,6 @@ scaffold_agents:
   default: "No"
   help: "Scaffold an agents/ folder for deployable agentic resources (workflows, exported skills)"
 
-github_actions:
-  type: str
-  choices:
-    - "No"
-    - "Yes"
-  default: "No"
-  help: "Include GitHub Actions workflow running lint and tests on push"
-
 git_init:
   type: str
   choices:
@@ -312,7 +304,6 @@ _skip_if_exists:
 
   # Ordinary rendered template paths - skipped at render time so user edits survive
   - agents/
-  - .github/
 
 # Post-generation tasks
 # Pass all variables as command-line arguments since extra_env isn't supported
@@ -351,7 +342,6 @@ _tasks:
     --copier-operation "{{ _copier_operation }}"
     --ai-assistant "{{ ai_assistant }}"
     --scaffold-agents "{{ scaffold_agents }}"
-    --github-actions "{{ github_actions }}"
 
 # Answers file for template updates
 _answers_file: .copier-answers.yml

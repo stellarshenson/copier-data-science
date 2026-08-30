@@ -287,7 +287,6 @@ def parse_args():
     parser.add_argument("--copier-operation", default="copy")
     parser.add_argument("--ai-assistant", default="none")
     parser.add_argument("--scaffold-agents", default="No")
-    parser.add_argument("--github-actions", default="No")
     return parser.parse_args()
 
 
@@ -635,30 +634,6 @@ def _do_post_gen():
         if not agents_path.exists():
             agents_path.mkdir(parents=True, exist_ok=True)
             (agents_path / ".gitkeep").write_text("")
-
-    # Handle .github folder based on github_actions setting
-    github_path = Path(".github")
-    if args.github_actions == "No":
-        if github_path.exists():
-            shutil.rmtree(github_path)
-    elif args.github_actions == "Yes":
-        # Render workflow if missing (covers enabling during update where copier
-        # strips files absent from the original project); preserves user edits otherwise
-        workflow_path = github_path / "workflows" / "tests.yml"
-        if not workflow_path.exists():
-            template_workflow = (
-                Path(__file__).parent.parent / "template" / ".github" / "workflows" / "tests.yml"
-            )
-            if template_workflow.exists():
-                workflow_path.parent.mkdir(parents=True, exist_ok=True)
-                context = {
-                    "environment_manager": args.environment_manager,
-                    "python_version_number": args.python_version,
-                    "testing_framework": args.testing_framework,
-                    "env_encryption": args.env_encryption,
-                }
-                rendered = Template(template_workflow.read_text()).render(**context)
-                workflow_path.write_text(rendered)
 
     # Remove .ipynb_checkpoints if present
     checkpoints_path = Path(".ipynb_checkpoints")

@@ -39,7 +39,6 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 | Git initialization | No | Optional (`git init -b main` post-generation) |
 | AI assistant support | none | Optional (`ai_assistant=claude\|codex\|gemini\|generic` - instructions file plus internal folder) |
 | Agentic resources folder | No | Optional (`scaffold_agents=Yes` - `agents/` for deployable workflows and exported skills) |
-| GitHub Actions CI | No | Optional (`github_actions=Yes` - lint + test workflow) |
 | Default make target | First rule | `make` prints help |
 
 **Key enhancements:**
@@ -61,7 +60,6 @@ _A modern [Copier](https://copier.readthedocs.io/)-based alternative to [Cookiec
 - **Optional git init** - `git_init=Yes` initializes a `main`-branch repository on project creation
 - **AI assistant support** - `ai_assistant` seeds project instructions and an internal resources folder, placed where the chosen tool reads them: `claude` → `.claude/CLAUDE.md`, `codex` → `AGENTS.md` + `.codex/`, `gemini` → `GEMINI.md` + `.gemini/`, `generic` → `AGENTS.md` + `.agents/`
 - **Agentic resources** - `scaffold_agents=Yes` creates an `agents/` folder for deployable agentic resources (workflows, exported skills)
-- **GitHub Actions CI** - `github_actions=Yes` adds a lint + test workflow matched to the chosen environment manager
 
 This template uses [nb_venv_kernels](https://github.com/stellarshenson/nb_venv_kernels) for automatic Jupyter kernel management - your project environments appear as kernels in JupyterLab without manual registration. For conda environments, [nb_conda_kernels](https://github.com/Anaconda-Platform/nb_conda_kernels) is used instead. Both provide automatic kernel discovery and cleanup when environments are removed.
 
